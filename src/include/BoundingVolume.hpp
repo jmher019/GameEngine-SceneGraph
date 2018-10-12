@@ -14,15 +14,13 @@ protected:
     vector<Vertex> vertices;
     
     BoundingVolume(const string& name = string(""), const Transform& transform = Transform()):
-        SceneObject(name, transform) {
-        initialize();
+        SceneObject(name, transform) {        
     };
 
     void initialize(void) noexcept {
         if (!VAO) {
             glGenVertexArrays(1, &VAO);
             glGenBuffers(1, &VBO);
-            vertices = getVerticesForGrid();
         }
 
         glBindVertexArray(VAO);

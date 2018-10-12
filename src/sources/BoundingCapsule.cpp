@@ -4,6 +4,8 @@ BoundingCapsule::BoundingCapsule(const GLfloat& capsuleLineLength, const GLfloat
     capsuleLineLength(capsuleLineLength),
     radius(radius),
     BoundingVolume(name, transform) {
+    vertices = getVerticesForGrid();
+    initialize();
 }
 
 BoundingCapsule::BoundingCapsule(const BoundingCapsule& capsule):
@@ -12,7 +14,7 @@ BoundingCapsule::BoundingCapsule(const BoundingCapsule& capsule):
     BoundingVolume(name, transform) {
     vertices = capsule.vertices;
     children = capsule.children;
-    updateVBO();
+    initialize();
 }
 
 BoundingCapsule::BoundingCapsule(BoundingCapsule&& capsule) {

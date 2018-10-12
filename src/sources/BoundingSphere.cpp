@@ -3,6 +3,8 @@
 BoundingSphere::BoundingSphere(const GLfloat& radius, const string& name, const Transform& transform):
     radius(radius),
     BoundingVolume(name, transform) {
+    vertices = getVerticesForGrid();
+    initialize();
 }
 
 BoundingSphere::BoundingSphere(const BoundingSphere& sphere):
@@ -10,7 +12,7 @@ BoundingSphere::BoundingSphere(const BoundingSphere& sphere):
     BoundingVolume(sphere.name, sphere.transform) {
     vertices = sphere.vertices;
     children = sphere.children;
-    updateVBO();
+    initialize();
 }
 
 BoundingSphere::BoundingSphere(BoundingSphere&& sphere) {

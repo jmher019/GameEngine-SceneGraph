@@ -4,6 +4,8 @@ AxisAlignedBoundingBox::AxisAlignedBoundingBox(const vec3& initialHalfExtents, c
     initialHalfExtents(initialHalfExtents),
     halfExtents(halfExtents),
     BoundingVolume(name, transform) {
+    vertices = getVerticesForGrid();
+    initialize();
 }
 
 AxisAlignedBoundingBox::AxisAlignedBoundingBox(const AxisAlignedBoundingBox& aabb):
@@ -12,7 +14,7 @@ AxisAlignedBoundingBox::AxisAlignedBoundingBox(const AxisAlignedBoundingBox& aab
     BoundingVolume(aabb.name, aabb.transform) {
     vertices = aabb.vertices;
     children = aabb.children;
-    updateVBO();
+    initialize();
 }
 
 AxisAlignedBoundingBox::AxisAlignedBoundingBox(AxisAlignedBoundingBox&& aabb) {

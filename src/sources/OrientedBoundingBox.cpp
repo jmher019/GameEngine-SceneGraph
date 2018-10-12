@@ -3,6 +3,8 @@
 OrientedBoundingBox::OrientedBoundingBox(const vec3& halfExtents, const string& name, const Transform& transform):
     halfExtents(halfExtents),
     BoundingVolume(name, transform) {
+    vertices = getVerticesForGrid();
+    initialize();
 }
 
 OrientedBoundingBox::OrientedBoundingBox(const OrientedBoundingBox& obb):
@@ -13,7 +15,7 @@ OrientedBoundingBox::OrientedBoundingBox(const OrientedBoundingBox& obb):
     BoundingVolume(obb.name, obb.transform) {
     vertices = obb.vertices;
     children = obb.children;
-    updateVBO();
+    initialize();
 }
 
 OrientedBoundingBox::OrientedBoundingBox(OrientedBoundingBox&& obb) {
