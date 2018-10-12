@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -132,22 +132,37 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\lib\glad\src\glad.c" />
+    <ClCompile Include="..\src\sources\AxisAlignedBoundingBox.cpp" />
+    <ClCompile Include="..\src\sources\BoundingCapsule.cpp" />
+    <ClCompile Include="..\src\sources\BoundingSphere.cpp" />
     <ClCompile Include="..\src\sources\Camera.cpp" />
+    <ClCompile Include="..\src\sources\Line.cpp" />
     <ClCompile Include="..\src\sources\main.cpp" />
     <ClCompile Include="..\src\sources\Mesh.cpp" />
+    <ClCompile Include="..\src\sources\OrientedBoundingBox.cpp" />
+    <ClCompile Include="..\src\sources\Plane.cpp" />
     <ClCompile Include="..\src\sources\SceneGraph.cpp" />
     <ClCompile Include="..\src\sources\SceneObject.cpp" />
     <ClCompile Include="..\src\sources\Shader.cpp" />
     <ClCompile Include="..\src\sources\Transform.cpp" />
+    <ClCompile Include="..\src\sources\Triangle.cpp" />
     <ClCompile Include="..\src\sources\Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\include\AxisAlignedBoundingBox.hpp" />
+    <ClInclude Include="..\src\include\BoundingCapsule.hpp" />
+    <ClInclude Include="..\src\include\BoundingSphere.hpp" />
+    <ClInclude Include="..\src\include\BoundingVolume.hpp" />
     <ClInclude Include="..\src\include\Camera.hpp" />
+    <ClInclude Include="..\src\include\Line.hpp" />
     <ClInclude Include="..\src\include\Mesh.hpp" />
+    <ClInclude Include="..\src\include\OrientedBoundingBox.hpp" />
+    <ClInclude Include="..\src\include\Plane.hpp" />
     <ClInclude Include="..\src\include\SceneGraph.hpp" />
     <ClInclude Include="..\src\include\SceneObject.hpp" />
     <ClInclude Include="..\src\include\Shader.hpp" />
     <ClInclude Include="..\src\include\Transform.hpp" />
+    <ClInclude Include="..\src\include\Triangle.hpp" />
     <ClInclude Include="..\src\include\Vertex.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
