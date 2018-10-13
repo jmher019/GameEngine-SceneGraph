@@ -79,7 +79,7 @@ vector<Vertex> BoundingSphere::getVerticesForGrid(void) const noexcept {
     R = mat3x3(glm::rotate(mat4(1.f), ANGLE_SPACING, vec3(0.f, 1.f, 0.f)));
     vertices[DOUBLE_POINTS_PER_RING].position = vec3(0.f, 0.f, radius);
     vertices[DOUBLE_POINTS_PER_RING].normal = vec3(0.f, 1.f, 0.f);
-    vertices[DOUBLE_POINTS_PER_RING + 1].position = R * vertices[0].position;
+    vertices[DOUBLE_POINTS_PER_RING + 1].position = R * vertices[DOUBLE_POINTS_PER_RING].position;
     vertices[DOUBLE_POINTS_PER_RING + 1].normal = vec3(0.f, 1.f, 0.f);
     for (GLint i = DOUBLE_POINTS_PER_RING + 2; i < DOUBLE_POINTS_PER_RING_TIMES_TWO; i += 2) {
         vertices[i].position = vertices[i - 1].position;
@@ -92,7 +92,7 @@ vector<Vertex> BoundingSphere::getVerticesForGrid(void) const noexcept {
     R = mat3x3(glm::rotate(mat4(1.f), ANGLE_SPACING, vec3(0.f, 0.f, 1.f)));
     vertices[DOUBLE_POINTS_PER_RING_TIMES_TWO].position = vec3(0.f, radius, 0.f);
     vertices[DOUBLE_POINTS_PER_RING_TIMES_TWO].normal = vec3(0.f, 0.f, 1.f);
-    vertices[DOUBLE_POINTS_PER_RING_TIMES_TWO + 1].position = R * vertices[0].position;
+    vertices[DOUBLE_POINTS_PER_RING_TIMES_TWO + 1].position = R * vertices[DOUBLE_POINTS_PER_RING_TIMES_TWO].position;
     vertices[DOUBLE_POINTS_PER_RING_TIMES_TWO + 1].normal = vec3(0.f, 0.f, 1.f);
     for (GLint i = DOUBLE_POINTS_PER_RING_TIMES_TWO + 2; i < DOUBLE_POINTS_PER_RING_TIMES_THREE; i += 2) {
         vertices[i].position = vertices[i - 1].position;
