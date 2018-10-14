@@ -115,7 +115,7 @@ GLfloat BoundingSphere::getActualRadius(void) const noexcept {
     return max(max(scaledRadii.x, scaledRadii.y), scaledRadii.z);
 }
 
-bool BoundingSphere::intersectsVolume(BoundingVolume*& boundingVolume) const noexcept {
+bool BoundingSphere::intersectsVolume(BoundingVolume* boundingVolume) const noexcept {
     // handle bounding sphere here
     if (const BoundingSphere* bSphere = dynamic_cast<BoundingSphere*>(boundingVolume)) {
         const GLfloat radius = getActualRadius();
@@ -131,7 +131,7 @@ bool BoundingSphere::intersectsVolume(BoundingVolume*& boundingVolume) const noe
     return boundingVolume->intersectsVolume(self);
 }
 
-bool BoundingSphere::enclosesVolume(BoundingVolume*& boundingVolume) const noexcept {
+bool BoundingSphere::enclosesVolume(BoundingVolume* boundingVolume) const noexcept {
     // handle bounding sphere here
     if (const BoundingSphere* bSphere = dynamic_cast<BoundingSphere*>(boundingVolume)) {
         const GLfloat radius = getActualRadius();
@@ -146,7 +146,7 @@ bool BoundingSphere::enclosesVolume(BoundingVolume*& boundingVolume) const noexc
     return boundingVolume->isEnclosedByVolume(self);
 }
 
-bool BoundingSphere::isEnclosedByVolume(BoundingVolume*& boundingVolume) const noexcept {
+bool BoundingSphere::isEnclosedByVolume(BoundingVolume* boundingVolume) const noexcept {
     // handle bounding sphere here
     if (const BoundingSphere* bSphere = dynamic_cast<BoundingSphere*>(boundingVolume)) {
         const GLfloat radius = getActualRadius();

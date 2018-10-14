@@ -228,7 +228,7 @@ void BoundingCapsule::setRadius(const GLfloat& radius) noexcept {
     this->radius = radius;
 }
 
-bool BoundingCapsule::intersectsVolume(BoundingVolume*& boundingVolume) const noexcept {
+bool BoundingCapsule::intersectsVolume(BoundingVolume* boundingVolume) const noexcept {
     Line line = getActualLine();
     GLfloat radius = getActualRadius();
 
@@ -254,7 +254,7 @@ bool BoundingCapsule::intersectsVolume(BoundingVolume*& boundingVolume) const no
     return boundingVolume->intersectsVolume(self);
 }
 
-bool BoundingCapsule::enclosesVolume(BoundingVolume*& boundingVolume) const noexcept {
+bool BoundingCapsule::enclosesVolume(BoundingVolume* boundingVolume) const noexcept {
     Line line = getActualLine();
     GLfloat radius = getActualRadius();
 
@@ -284,7 +284,7 @@ bool BoundingCapsule::enclosesVolume(BoundingVolume*& boundingVolume) const noex
     return boundingVolume->isEnclosedByVolume(self);
 }
 
-bool BoundingCapsule::isEnclosedByVolume(BoundingVolume*& boundingVolume) const noexcept {
+bool BoundingCapsule::isEnclosedByVolume(BoundingVolume* boundingVolume) const noexcept {
     Line line = getActualLine();
     GLfloat radius = getActualRadius();
 

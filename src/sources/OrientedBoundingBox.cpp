@@ -241,7 +241,7 @@ vec3 OrientedBoundingBox::getClosestPtPointOBB(const vec3& pt) const noexcept {
     return result;
 }
 
-bool OrientedBoundingBox::intersectsVolume(BoundingVolume*& boundingVolume) const noexcept {
+bool OrientedBoundingBox::intersectsVolume(BoundingVolume* boundingVolume) const noexcept {
     // handle bounding sphere here
     if (const BoundingSphere* bSphere = dynamic_cast<BoundingSphere*>(boundingVolume)) {
         const vec3 bCenter = bSphere->getCenter();
@@ -371,7 +371,7 @@ bool OrientedBoundingBox::intersectsVolume(BoundingVolume*& boundingVolume) cons
     return boundingVolume->intersectsVolume(self);
 }
 
-bool OrientedBoundingBox::enclosesVolume(BoundingVolume*& boundingVolume) const noexcept {
+bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const noexcept {
     // handle bounding sphere here
     if (const BoundingSphere* bSphere = dynamic_cast<BoundingSphere*>(boundingVolume)) {
         vector<vec3> axis;
@@ -541,7 +541,7 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume*& boundingVolume) const 
     return boundingVolume->isEnclosedByVolume(self);
 }
 
-bool OrientedBoundingBox::isEnclosedByVolume(BoundingVolume*& boundingVolume) const noexcept {
+bool OrientedBoundingBox::isEnclosedByVolume(BoundingVolume* boundingVolume) const noexcept {
     // handle bounding sphere here
     if (const BoundingSphere* bSphere = dynamic_cast<BoundingSphere*>(boundingVolume)) {
         const vec3 center = getCenter();

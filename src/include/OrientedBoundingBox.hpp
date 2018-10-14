@@ -38,11 +38,11 @@ public:
 
     vec3 getClosestPtPointOBB(const vec3& pt) const noexcept;
 
-    bool intersectsVolume(BoundingVolume*& boundingVolume) const noexcept override;
+    bool intersectsVolume(BoundingVolume* boundingVolume) const noexcept override;
 
-    bool enclosesVolume(BoundingVolume*& boundingVolume) const noexcept override;
+    bool enclosesVolume(BoundingVolume* boundingVolume) const noexcept override;
 
-    bool isEnclosedByVolume(BoundingVolume*& boundingVolume) const noexcept override;
+    bool isEnclosedByVolume(BoundingVolume* boundingVolume) const noexcept override;
 
     void draw(const mat4& ProjectionViewMatrix) const override;
 };
