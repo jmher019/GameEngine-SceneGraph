@@ -380,9 +380,9 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
         axis.push_back(move(getZAxis()));
 
         vector<vec3> bAxis;
-        bAxis.push_back(vec3(1.f, 0.f, 0.f));
-        bAxis.push_back(vec3(0.f, 1.f, 0.f));
-        bAxis.push_back(vec3(0.f, 0.f, 1.f));
+        bAxis.push_back(axis[0]);
+        bAxis.push_back(axis[1]);
+        bAxis.push_back(axis[2]);
 
         mat3 R;
 
