@@ -248,7 +248,7 @@ bool OrientedBoundingBox::intersectsVolume(BoundingVolume* boundingVolume) const
         const vec3 diff = getClosestPtPointOBB(bCenter) - bCenter;
         const GLfloat dist2 = dot(diff, diff);
         const GLfloat bRadius = bSphere->getActualRadius();
-        return dist2 <= bRadius * bRadius;
+        return dist2 - bRadius * bRadius <= GeometryUtils::epsilon;
     }
     // handle bounding capsule here
     else if (const BoundingCapsule* bCapsule = dynamic_cast<BoundingCapsule*>(boundingVolume)) {
@@ -265,7 +265,7 @@ bool OrientedBoundingBox::intersectsVolume(BoundingVolume* boundingVolume) const
         }
 
         const GLfloat bRadius = bCapsule->getActualRadius();
-        return dist2 <= bRadius * bRadius;
+        return dist2 - bRadius * bRadius <= GeometryUtils::epsilon;
     }
     // handle oriented bounding box here
     else if (const OrientedBoundingBox* bOBB = dynamic_cast<OrientedBoundingBox*>(boundingVolume)) {
@@ -286,7 +286,7 @@ bool OrientedBoundingBox::intersectsVolume(BoundingVolume* boundingVolume) const
         // compute rotation matrix expressing b in a's coordinate frame
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                R[j][i] = dot(axis[i], bAxis[j]);
+                R[i][j] = dot(axis[i], bAxis[j]);
             }
         }
 
@@ -299,7 +299,7 @@ bool OrientedBoundingBox::intersectsVolume(BoundingVolume* boundingVolume) const
         // when two edges are parallel and their cross product is (near) null
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                absR[j][i] = fabs(R[j][i]) + 1e-8f;
+                absR[i][j] = glm::abs(R[i][j]) + GeometryUtils::epsilon;
             }
         }
 
@@ -389,14 +389,15 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
         mat3 R;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                R[j][i] = dot(axis[i], bAxis[j]);
+                R[i][j] = dot(axis[i], bAxis[j]);
             }
         }
 
         const GLfloat& bRadius = bSphere->getActualRadius();
         const vec3 bCenter = bSphere->getCenter();
-        const vec3 bMin = bCenter - vec3(bRadius, bRadius, bRadius);
-        const vec3 bMax = bCenter + vec3(bRadius, bRadius, bRadius);
+        const vec3 rotateRadiusExtent = vec3(bModel * vec4(bRadius, bRadius, bRadius, 0.f));
+        const vec3 bMin = bCenter - rotateRadiusExtent;
+        const vec3 bMax = bCenter + rotateRadiusExtent;
 
         vector<vec3> testPoints;
         testPoints.push_back(bMin);
@@ -442,7 +443,7 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
         mat3 R;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                R[j][i] = dot(axis[i], bAxis[j]);
+                R[i][j] = dot(axis[i], bAxis[j]);
             }
         }
 
@@ -450,10 +451,11 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
         const Line bLine = move(bCapsule->getActualLine());
         const vec3& bPoint1 = bLine.getPointStart();
         const vec3& bPoint2 = bLine.getPointEnd();
-        const vec3 bMin1 = bPoint1 - vec3(bRadius, bRadius, bRadius);
-        const vec3 bMax1 = bPoint1 + vec3(bRadius, bRadius, bRadius);
-        const vec3 bMin2 = bPoint2 - vec3(bRadius, bRadius, bRadius);
-        const vec3 bMax2 = bPoint2 + vec3(bRadius, bRadius, bRadius);
+        const vec3 rotateRadiusExtent = vec3(bModel * vec4(bRadius, bRadius, bRadius, 0.f));
+        const vec3 bMin1 = bPoint1 - rotateRadiusExtent;
+        const vec3 bMax1 = bPoint1 + rotateRadiusExtent;
+        const vec3 bMin2 = bPoint2 - rotateRadiusExtent;
+        const vec3 bMax2 = bPoint2 + rotateRadiusExtent;
 
         vector<vec3> testPoints;
         testPoints.push_back(bMin1);
