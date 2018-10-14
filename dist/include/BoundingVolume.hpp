@@ -12,17 +12,16 @@ protected:
     GLuint VAO = 0;
     shared_ptr<Shader> shader = nullptr;
     vector<Vertex> vertices;
+    GLboolean renderVolume = false;
     
     BoundingVolume(const string& name = string(""), const Transform& transform = Transform()):
-        SceneObject(name, transform) {
-        initialize();
+        SceneObject(name, transform) {        
     };
 
-    void initialize(void) noexcept {
+    virtual void initialize(void) noexcept {
         if (!VAO) {
             glGenVertexArrays(1, &VAO);
             glGenBuffers(1, &VBO);
-            vertices = getVerticesForGrid();
         }
 
         glBindVertexArray(VAO);
@@ -46,7 +45,7 @@ protected:
         glBindVertexArray(0);
     };
 
-    void deallocate(void) noexcept {
+    virtual void deallocate(void) noexcept {
         if (VAO) {
             glDeleteVertexArrays(1, &VAO);
             glDeleteBuffers(1, &VBO);
@@ -114,6 +113,10 @@ public:
     void setShader(const shared_ptr<Shader>& shader) noexcept {
         this->shader = shader;
     };
+
+    void enableRenderVolume(const GLboolean& enable) noexcept {
+        this->renderVolume = enable;
+    }
 };
 
 #endif // !BOUNDING_VOLUME_HPP

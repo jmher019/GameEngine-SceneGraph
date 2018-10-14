@@ -113,6 +113,14 @@ const GLuint Shader::getUniformBlockIdx(const std::string& uniformBlockName) con
     return glGetUniformBlockIndex(id, uniformBlockName.c_str());
 }
 
+void Shader::setFloat(const std::string& name, const GLfloat value) const {
+    return glUniform1f(glGetUniformLocation(id, name.c_str()), value);
+}
+
+void Shader::setVec3(const std::string& name, const GLfloat* vec) const {
+    glUniform3fv(glGetUniformLocation(id, name.c_str()), 1, vec);
+}
+
 void Shader::setVec4(const std::string& name, const GLfloat* vec) const {
     glUniform4fv(glGetUniformLocation(id, name.c_str()), 1, vec);
 }

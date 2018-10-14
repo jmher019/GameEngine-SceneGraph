@@ -5,7 +5,7 @@
 
 class BoundingSphere : public BoundingVolume {
 private:
-    static constexpr GLint POINTS_PER_RING = 60;
+    static constexpr GLint POINTS_PER_RING = 16;
 
     GLfloat radius = 0.f;
 
@@ -27,13 +27,15 @@ public:
 
     void setRadius(const GLfloat& radius) noexcept;
 
+    GLfloat getActualRadius(void) const noexcept;
+
     bool intersectsVolume(BoundingVolume*& boundingVolume) const noexcept override;
 
     bool enclosesVolume(BoundingVolume*& boundingVolume) const noexcept override;
 
     bool isEnclosedByVolume(BoundingVolume*& boundingVolume) const noexcept override;
 
-    void update(const Transform& newTransform) override;
+    void draw(const mat4& ProjectionViewMatrix) const override;
 };
 
 #endif // !BOUNDING_SPHERE_HPP

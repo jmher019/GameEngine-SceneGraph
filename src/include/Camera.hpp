@@ -29,7 +29,13 @@ public:
 
     Camera& operator=(Camera&& camera) noexcept;
 
-    void update(const Transform& newTransform) override;
+    void translate(const float& tX, const float& tY, const float& tZ) noexcept override;
+
+    void rotate(const float& degreesX, const float& degreesY, const float& degreesZ) noexcept override;
+
+    void orbit(const float& degreesX, const float& degreesY, const float& degreesZ) noexcept override;
+
+    void resize(const float& sX, const float& sY, const float& sZ) noexcept override;
 
     const vec3& getEyePosition(void) const noexcept;
 

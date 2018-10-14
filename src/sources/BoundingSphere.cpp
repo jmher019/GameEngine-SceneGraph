@@ -30,9 +30,6 @@ BoundingSphere& BoundingSphere::operator=(const BoundingSphere& sphere) noexcept
     transform = sphere.transform;
     children = sphere.children;
     radius = sphere.radius;
-    vertices = sphere.vertices;
-
-    updateVBO();
     
     return *this;
 }
@@ -48,18 +45,19 @@ BoundingSphere& BoundingSphere::operator=(BoundingSphere&& sphere) noexcept {
     radius = move(sphere.radius);
     vertices = move(sphere.vertices);
 
-    updateVBO();
-
     return *this;
 }
 
 vector<Vertex> BoundingSphere::getVerticesForGrid(void) const noexcept {
-    vector<Vertex> vertices = vector<Vertex>(BoundingSphere::POINTS_PER_RING * 6, {
-        vec3(0.f, 0.f, 0.f),
-        vec3(1.f, 0.f, 0.f),
-        vec3(1.f, 1.f, 1.f),
-        vec2()
-    });
+    vector<Vertex> vertices = vector<Vertex>(
+        BoundingSphere::POINTS_PER_RING * 6,
+        {
+            vec3(0.f, 0.f, 0.f),
+            vec3(1.f, 0.f, 0.f),
+            vec3(1.f, 1.f, 1.f),
+            vec2()
+        }
+    );
 
     constexpr GLfloat ANGLE_SPACING = 2.f * pi<GLfloat>() / static_cast<GLfloat>(BoundingSphere::POINTS_PER_RING);
     constexpr GLint DOUBLE_POINTS_PER_RING = BoundingSphere::POINTS_PER_RING * 2;
@@ -68,7 +66,7 @@ vector<Vertex> BoundingSphere::getVerticesForGrid(void) const noexcept {
     
     // ring centered along the x axis
     mat3x3 R = mat3x3(glm::rotate(mat4(1.f), ANGLE_SPACING, vec3(1.f, 0.f, 0.f)));
-    vertices[0].position = vec3(0.f, 0.f, radius);
+    vertices[0].position = vec3(0.f, 0.f, 1.f);
     vertices[1].position = R * vertices[0].position;
     for (GLint i = 2; i < DOUBLE_POINTS_PER_RING; i += 2) {
         vertices[i].position = vertices[i - 1].position;
@@ -77,7 +75,7 @@ vector<Vertex> BoundingSphere::getVerticesForGrid(void) const noexcept {
 
     // ring centered along the y axis
     R = mat3x3(glm::rotate(mat4(1.f), ANGLE_SPACING, vec3(0.f, 1.f, 0.f)));
-    vertices[DOUBLE_POINTS_PER_RING].position = vec3(0.f, 0.f, radius);
+    vertices[DOUBLE_POINTS_PER_RING].position = vec3(0.f, 0.f, 1.f);
     vertices[DOUBLE_POINTS_PER_RING].normal = vec3(0.f, 1.f, 0.f);
     vertices[DOUBLE_POINTS_PER_RING + 1].position = R * vertices[DOUBLE_POINTS_PER_RING].position;
     vertices[DOUBLE_POINTS_PER_RING + 1].normal = vec3(0.f, 1.f, 0.f);
@@ -90,7 +88,7 @@ vector<Vertex> BoundingSphere::getVerticesForGrid(void) const noexcept {
 
     // ring centered along the z axis
     R = mat3x3(glm::rotate(mat4(1.f), ANGLE_SPACING, vec3(0.f, 0.f, 1.f)));
-    vertices[DOUBLE_POINTS_PER_RING_TIMES_TWO].position = vec3(0.f, radius, 0.f);
+    vertices[DOUBLE_POINTS_PER_RING_TIMES_TWO].position = vec3(0.f, 1.f, 0.f);
     vertices[DOUBLE_POINTS_PER_RING_TIMES_TWO].normal = vec3(0.f, 0.f, 1.f);
     vertices[DOUBLE_POINTS_PER_RING_TIMES_TWO + 1].position = R * vertices[DOUBLE_POINTS_PER_RING_TIMES_TWO].position;
     vertices[DOUBLE_POINTS_PER_RING_TIMES_TWO + 1].normal = vec3(0.f, 0.f, 1.f);
@@ -110,20 +108,20 @@ const GLfloat& BoundingSphere::getRadius(void) const noexcept {
 
 void BoundingSphere::setRadius(const GLfloat& radius) noexcept {
     this->radius = radius;
-    vertices = getVerticesForGrid();
+}
 
-    vec4 temp = transform.getMatrix() * vec4(radius, 0.f, 0.f, 0.f);
-    this->radius = length(temp);
-    
-    updateVBO();
+GLfloat BoundingSphere::getActualRadius(void) const noexcept {
+    const vec3 scaledRadii = glm::abs(transform.getScale()) * vec3(radius, radius, radius);
+    return max(max(scaledRadii.x, scaledRadii.y), scaledRadii.z);
 }
 
 bool BoundingSphere::intersectsVolume(BoundingVolume*& boundingVolume) const noexcept {
     // handle bounding sphere here
     if (const BoundingSphere* bSphere = dynamic_cast<BoundingSphere*>(boundingVolume)) {
+        const GLfloat radius = getActualRadius();
         const vec3 offset = bSphere->getCenter() - getCenter();
         const float dist2 = dot(offset, offset);
-        const float radiusSum = radius + bSphere->getRadius();
+        const float radiusSum = radius + bSphere->getActualRadius();
 
         return dist2 <= radiusSum * radiusSum;
     }
@@ -136,8 +134,9 @@ bool BoundingSphere::intersectsVolume(BoundingVolume*& boundingVolume) const noe
 bool BoundingSphere::enclosesVolume(BoundingVolume*& boundingVolume) const noexcept {
     // handle bounding sphere here
     if (const BoundingSphere* bSphere = dynamic_cast<BoundingSphere*>(boundingVolume)) {
+        const GLfloat radius = getActualRadius();
         const vec3 diff = getCenter() - bSphere->getCenter();
-        const float fullDist = length(diff) + bSphere->getRadius();
+        const float fullDist = length(diff) + bSphere->getActualRadius();
 
         return fullDist <= radius;
     }
@@ -150,9 +149,10 @@ bool BoundingSphere::enclosesVolume(BoundingVolume*& boundingVolume) const noexc
 bool BoundingSphere::isEnclosedByVolume(BoundingVolume*& boundingVolume) const noexcept {
     // handle bounding sphere here
     if (const BoundingSphere* bSphere = dynamic_cast<BoundingSphere*>(boundingVolume)) {
+        const GLfloat radius = getActualRadius();
         const vec3 diff = getCenter() - bSphere->getCenter();
         const float fullDist = length(diff) + radius;
-        const float& bRadius = bSphere->getRadius();
+        const float& bRadius = bSphere->getActualRadius();
 
         return fullDist <= bRadius;
     }
@@ -162,10 +162,20 @@ bool BoundingSphere::isEnclosedByVolume(BoundingVolume*& boundingVolume) const n
     return boundingVolume->enclosesVolume(self);
 }
 
-void BoundingSphere::update(const Transform& newTransform) {
-    SceneObject::update(newTransform);
+void BoundingSphere::draw(const mat4& ProjectionViewMatrix) const {
+    if (shader != nullptr && this->renderVolume) {
+        const mat4 model = (Transform(transform.getTranslationAndRotation()).getMatrix());
+        const GLfloat radius = getActualRadius();
 
-    // update radius
-    vec4 temp = transform.getMatrix() * vec4(radius, 0.f, 0.f, 0.f);
-    radius = length(temp);
+        shader->use();
+        shader->setMat4("PVM", value_ptr(ProjectionViewMatrix * model));
+        shader->setMat4("model", value_ptr(model));
+        shader->setFloat("radius", radius);
+
+        glBindVertexArray(getVAO());
+        glDrawArrays(GL_LINES, 0, (GLsizei)getVertices().size());
+        glBindVertexArray(0);
+    }
+
+    SceneObject::draw(ProjectionViewMatrix);
 }

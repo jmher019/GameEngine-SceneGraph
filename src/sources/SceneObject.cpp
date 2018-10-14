@@ -35,14 +35,6 @@ SceneObject& SceneObject::operator=(SceneObject&& other) noexcept {
     return *this;
 }
 
-void SceneObject::update(const Transform& newTransform) {
-    transform = newTransform * transform;
-    
-    for (auto& child : children) {
-        child->update(newTransform);
-    }
-}
-
 void SceneObject::draw(const mat4& ProjectionViewMatrix) const {
     for (auto& child : children) {
         child->draw(ProjectionViewMatrix);
@@ -57,7 +49,7 @@ void SceneObject::translate(const float& tX, const float& tY, const float& tZ) n
     transform = newTransform * transform;
 
     for (auto& child : children) {
-        child->update(newTransform);
+        child->translate(tX, tY, tZ);
     }
 }
 
@@ -74,7 +66,7 @@ void SceneObject::rotate(const float& degreesX, const float& degreesY, const flo
     transform = newTransform * transform;
 
     for (auto& child : children) {
-        child->update(newTransform);
+        child->rotate(degreesX, degreesY, degreesZ);
     }
 }
 
@@ -88,17 +80,25 @@ void SceneObject::orbit(const float& degreesX, const float& degreesY, const floa
     transform = newTransform * transform;
 
     for (auto& child : children) {
-        child->update(newTransform);
+        child->orbit(degreesX, degreesY, degreesZ);
+    }
+}
+
+void SceneObject::resize(const float& sX, const float& sY, const float& sZ) noexcept {
+    Transform newTransform(
+        fdualquat(fquat(1.f, 0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f)),
+        vec3(sX, sY, sZ)
+    );
+
+    transform = newTransform * transform;
+
+    for (auto& child : children) {
+        child->resize(sX, sY, sZ);
     }
 }
 
 const Transform& SceneObject::getTransform(void) const noexcept {
     return transform;
-}
-
-void SceneObject::setTransform(const Transform& transform) noexcept {
-    update(inverse(transform));
-    update(transform);
 }
 
 const string& SceneObject::getName(void) const noexcept {

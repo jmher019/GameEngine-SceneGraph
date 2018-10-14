@@ -132,7 +132,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\lib\glad\src\glad.c" />
-    <ClCompile Include="..\src\sources\AxisAlignedBoundingBox.cpp" />
     <ClCompile Include="..\src\sources\BoundingCapsule.cpp" />
     <ClCompile Include="..\src\sources\BoundingSphere.cpp" />
     <ClCompile Include="..\src\sources\Camera.cpp" />
@@ -149,7 +148,6 @@
     <ClCompile Include="..\src\sources\Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\include\AxisAlignedBoundingBox.hpp" />
     <ClInclude Include="..\src\include\BoundingCapsule.hpp" />
     <ClInclude Include="..\src\include\BoundingSphere.hpp" />
     <ClInclude Include="..\src\include\BoundingVolume.hpp" />

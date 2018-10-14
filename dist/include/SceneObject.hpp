@@ -29,8 +29,6 @@ public:
 
     virtual ~SceneObject(void);
 
-    virtual void update(const Transform& newTransform);
-
     virtual void draw(const mat4& ProjectionViewMatrix) const;
 
     virtual void translate(const float& tX, const float& tY, const float& tZ) noexcept;
@@ -39,9 +37,9 @@ public:
 
     virtual void orbit(const float& degreesX, const float& degreesY, const float& degreesZ) noexcept;
 
-    const Transform& getTransform(void) const noexcept;
+    virtual void resize(const float& sX, const float& sY, const float& sZ) noexcept;
 
-    void setTransform(const Transform& transform) noexcept;
+    const Transform& getTransform(void) const noexcept;
 
     const string& getName(void) const noexcept;
 

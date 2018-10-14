@@ -61,8 +61,23 @@ void Camera::updateCameraMatrix(void) noexcept {
     );
 }
 
-void Camera::update(const Transform& newTransform) {
-    SceneObject::update(newTransform);
+void Camera::translate(const float& tX, const float& tY, const float& tZ) noexcept {
+    SceneObject::translate(tX, tY, tZ);
+    updateCameraMatrix();
+}
+
+void Camera::rotate(const float& degreesX, const float& degreesY, const float& degreesZ) noexcept {
+    SceneObject::rotate(degreesX, degreesY, degreesZ);
+    updateCameraMatrix();
+}
+
+void Camera::orbit(const float& degreesX, const float& degreesY, const float& degreesZ) noexcept {
+    SceneObject::orbit(degreesX, degreesY, degreesZ);
+    updateCameraMatrix();
+}
+
+void Camera::resize(const float& sX, const float& sY, const float& sZ) noexcept {
+    SceneObject::resize(sX, sY, sZ);
     updateCameraMatrix();
 }
 
