@@ -380,13 +380,13 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
         axis.push_back(move(getZAxis()));
 
         vector<vec3> bAxis;
-        bAxis.push_back(vec3(1.f, 0.f, 0.f));
-        bAxis.push_back(vec3(0.f, 1.f, 0.f));
-        bAxis.push_back(vec3(0.f, 0.f, 1.f));
-
-        mat3 R;
+        mat4 bModel = (Transform(bSphere->getTransform().getTranslationAndRotation())).getMatrix();
+        bAxis.push_back(normalize(vec3(bModel * vec4(1.f, 0.f, 0.f, 0.f))));
+        bAxis.push_back(normalize(vec3(bModel * vec4(0.f, 1.f, 0.f, 0.f))));
+        bAxis.push_back(normalize(vec3(bModel * vec4(0.f, 0.f, 1.f, 0.f))));
 
         // compute rotation matrix expressing b in a's coordinate frame
+        mat3 R;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 R[j][i] = dot(axis[i], bAxis[j]);
@@ -433,13 +433,13 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
         axis.push_back(move(getZAxis()));
 
         vector<vec3> bAxis;
-        bAxis.push_back(vec3(1.f, 0.f, 0.f));
-        bAxis.push_back(vec3(0.f, 1.f, 0.f));
-        bAxis.push_back(vec3(0.f, 0.f, 1.f));
-
-        mat3 R;
+        mat4 bModel = (Transform(bCapsule->getTransform().getTranslationAndRotation())).getMatrix();
+        bAxis.push_back(normalize(vec3(bModel * vec4(1.f, 0.f, 0.f, 0.f))));
+        bAxis.push_back(normalize(vec3(bModel * vec4(0.f, 1.f, 0.f, 0.f))));
+        bAxis.push_back(normalize(vec3(bModel * vec4(0.f, 0.f, 1.f, 0.f))));
 
         // compute rotation matrix expressing b in a's coordinate frame
+        mat3 R;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 R[j][i] = dot(axis[i], bAxis[j]);
