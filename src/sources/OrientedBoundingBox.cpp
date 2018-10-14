@@ -413,12 +413,12 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
         for (size_t i = 0; i < testPoints.size(); i++) {
             const vec3 pt = R * (testPoints[i] - center);
 
-            if (pt.x - halfExtents.x > GeometryUtils::epsilon  ||
-                pt.x + halfExtents.x < GeometryUtils::epsilon ||
+            if (pt.x - halfExtents.x > GeometryUtils::epsilon ||
+                pt.x + halfExtents.x < -GeometryUtils::epsilon ||
                 pt.y - halfExtents.y > GeometryUtils::epsilon ||
-                pt.y + halfExtents.y < GeometryUtils::epsilon ||
+                pt.y + halfExtents.y < -GeometryUtils::epsilon ||
                 pt.z - halfExtents.z > GeometryUtils::epsilon ||
-                pt.z + halfExtents.z < GeometryUtils::epsilon) {
+                pt.z + halfExtents.z < -GeometryUtils::epsilon) {
                 return false;
             }
         }
@@ -480,11 +480,11 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
             const vec3 pt = R * (testPoints[i] - center);
 
             if (pt.x - halfExtents.x > GeometryUtils::epsilon ||
-                pt.x + halfExtents.x < GeometryUtils::epsilon ||
+                pt.x + halfExtents.x < -GeometryUtils::epsilon ||
                 pt.y - halfExtents.y > GeometryUtils::epsilon ||
-                pt.y + halfExtents.y < GeometryUtils::epsilon ||
+                pt.y + halfExtents.y < -GeometryUtils::epsilon ||
                 pt.z - halfExtents.z > GeometryUtils::epsilon ||
-                pt.z + halfExtents.z < GeometryUtils::epsilon) {
+                pt.z + halfExtents.z < -GeometryUtils::epsilon) {
                 return false;
             }
         }
@@ -533,11 +533,11 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
             const vec3 pt = R * (testPoints[i] - center);
 
             if (pt.x - halfExtents.x > GeometryUtils::epsilon ||
-                pt.x + halfExtents.x < GeometryUtils::epsilon ||
+                pt.x + halfExtents.x < -GeometryUtils::epsilon ||
                 pt.y - halfExtents.y > GeometryUtils::epsilon ||
-                pt.y + halfExtents.y < GeometryUtils::epsilon ||
+                pt.y + halfExtents.y < -GeometryUtils::epsilon ||
                 pt.z - halfExtents.z > GeometryUtils::epsilon ||
-                pt.z + halfExtents.z < GeometryUtils::epsilon) {
+                pt.z + halfExtents.z < -GeometryUtils::epsilon) {
                 return false;
             }
         }
@@ -656,11 +656,11 @@ bool OrientedBoundingBox::isEnclosedByVolume(BoundingVolume* boundingVolume) con
             const vec3 pt = R * (testPoints[i] - bCenter);
 
             if (pt.x - halfExtents.x > GeometryUtils::epsilon ||
-                pt.x + halfExtents.x < GeometryUtils::epsilon ||
+                pt.x + halfExtents.x < -GeometryUtils::epsilon ||
                 pt.y - halfExtents.y > GeometryUtils::epsilon ||
-                pt.y + halfExtents.y < GeometryUtils::epsilon ||
+                pt.y + halfExtents.y < -GeometryUtils::epsilon ||
                 pt.z - halfExtents.z > GeometryUtils::epsilon ||
-                pt.z + halfExtents.z < GeometryUtils::epsilon) {
+                pt.z + halfExtents.z < -GeometryUtils::epsilon) {
                 return false;
             }
         }
