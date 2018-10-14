@@ -119,20 +119,20 @@ GLfloat Line::getClosestPtSegmentSegment(vec3& c1, vec3& c2, const Line& line2) 
     float s = 0.f, t = 0.f;
 
     // Check if either or both segments degenerate into points
-    if (b <= 1e-8f && e <= 1e-8f) {
+    if (b <= GeometryUtils::epsilon && e <= GeometryUtils::epsilon) {
         // Both segments degenerate into points
         c1 = vec3(start);
         c2 = vec3(line2.start);
         return dot(c2 - c1, c2 - c1);
     }
 
-    if (b <= 1e-8f) {
+    if (b <= GeometryUtils::epsilon) {
         // First segment degenerates into a point
         t = clamp(f / e, 0.f, 1.f);
     }
     else {
         const float c = dot(d1, r);
-        if (e <= 1e-8f) {
+        if (e <= GeometryUtils::epsilon) {
             // second segment degenerates to a point
             s = clamp(-c / b, 0.f, 1.f);
         }
@@ -179,20 +179,20 @@ GLfloat Line::getClosestPtSegmentSegment(vec3& c1, vec3& c2, const vec3& start2,
     float s = 0.f, t = 0.f;
 
     // Check if either or both segments degenerate into points
-    if (b <= 1e-8f && e <= 1e-8f) {
+    if (b <= GeometryUtils::epsilon && e <= GeometryUtils::epsilon) {
         // Both segments degenerate into points
         c1 = vec3(start);
         c2 = vec3(start2);
         return dot(c2 - c1, c2 - c1);
     }
 
-    if (b <= 1e-8f) {
+    if (b <= GeometryUtils::epsilon) {
         // First segment degenerates into a point
         t = clamp(f / e, 0.f, 1.f);
     }
     else {
         const float c = dot(d1, r);
-        if (e <= 1e-8f) {
+        if (e <= GeometryUtils::epsilon) {
             // second segment degenerates to a point
             s = clamp(-c / b, 0.f, 1.f);
         }
@@ -239,20 +239,20 @@ GLfloat Line::getClosestPtSegmentSegment(vec3& c1, vec3& c2, const Line& line1, 
     float s = 0.f, t = 0.f;
 
     // Check if either or both segments degenerate into points
-    if (b <= 1e-8f && e <= 1e-8f) {
+    if (b <= GeometryUtils::epsilon && e <= GeometryUtils::epsilon) {
         // Both segments degenerate into points
         c1 = vec3(line1.start);
         c2 = vec3(line2.start);
         return dot(c2 - c1, c2 - c1);
     }
 
-    if (b <= 1e-8f) {
+    if (b <= GeometryUtils::epsilon) {
         // First segment degenerates into a point
         t = clamp(f / e, 0.f, 1.f);
     }
     else {
         const float c = dot(d1, r);
-        if (e <= 1e-8f) {
+        if (e <= GeometryUtils::epsilon) {
             // second segment degenerates to a point
             s = clamp(-c / b, 0.f, 1.f);
         }
@@ -299,20 +299,20 @@ GLfloat Line::getClosestPtSegmentSegment(vec3& c1, vec3& c2, const vec3& start1,
     float s = 0.f, t = 0.f;
 
     // Check if either or both segments degenerate into points
-    if (b <= 1e-8f && e <= 1e-8f) {
+    if (b <= GeometryUtils::epsilon && e <= GeometryUtils::epsilon) {
         // Both segments degenerate into points
         c1 = vec3(start1);
         c2 = vec3(line2.start);
         return dot(c2 - c1, c2 - c1);
     }
 
-    if (b <= 1e-8f) {
+    if (b <= GeometryUtils::epsilon) {
         // First segment degenerates into a point
         t = clamp(f / e, 0.f, 1.f);
     }
     else {
         const float c = dot(d1, r);
-        if (e <= 1e-8f) {
+        if (e <= GeometryUtils::epsilon) {
             // second segment degenerates to a point
             s = clamp(-c / b, 0.f, 1.f);
         }
@@ -359,20 +359,20 @@ GLfloat Line::getClosestPtSegmentSegment(vec3& c1, vec3& c2, const Line& line1, 
     float s = 0.f, t = 0.f;
 
     // Check if either or both segments degenerate into points
-    if (b <= 1e-8f && e <= 1e-8f) {
+    if (b <= GeometryUtils::epsilon && e <= GeometryUtils::epsilon) {
         // Both segments degenerate into points
         c1 = vec3(line1.start);
         c2 = vec3(start2);
         return dot(c2 - c1, c2 - c1);
     }
 
-    if (b <= 1e-8f) {
+    if (b <= GeometryUtils::epsilon) {
         // First segment degenerates into a point
         t = clamp(f / e, 0.f, 1.f);
     }
     else {
         const float c = dot(d1, r);
-        if (e <= 1e-8f) {
+        if (e <= GeometryUtils::epsilon) {
             // second segment degenerates to a point
             s = clamp(-c / b, 0.f, 1.f);
         }
@@ -419,20 +419,20 @@ GLfloat Line::getClosestPtSegmentSegment(vec3& c1, vec3& c2, const vec3& start1,
     float s = 0.f, t = 0.f;
 
     // Check if either or both segments degenerate into points
-    if (b <= 1e-8f && e <= 1e-8f) {
+    if (b <= GeometryUtils::epsilon && e <= GeometryUtils::epsilon) {
         // Both segments degenerate into points
         c1 = start1;
         c2 = start2;
         return dot(c2 - c1, c2 - c1);
     }
 
-    if (b <= 1e-8f) {
+    if (b <= GeometryUtils::epsilon) {
         // First segment degenerates into a point
         t = clamp(f / e, 0.f, 1.f);
     }
     else {
         const float c = dot(d1, r);
-        if (e <= 1e-8f) {
+        if (e <= GeometryUtils::epsilon) {
             // second segment degenerates to a point
             s = clamp(-c / b, 0.f, 1.f);
         }

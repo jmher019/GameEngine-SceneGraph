@@ -123,7 +123,7 @@ bool BoundingSphere::intersectsVolume(BoundingVolume* boundingVolume) const noex
         const float dist2 = dot(offset, offset);
         const float radiusSum = radius + bSphere->getActualRadius();
 
-        return dist2 <= radiusSum * radiusSum;
+        return dist2 - radiusSum * radiusSum <= GeometryUtils::epsilon;
     }
 
     // handle all others here
@@ -138,7 +138,7 @@ bool BoundingSphere::enclosesVolume(BoundingVolume* boundingVolume) const noexce
         const vec3 diff = getCenter() - bSphere->getCenter();
         const float fullDist = length(diff) + bSphere->getActualRadius();
 
-        return fullDist <= radius;
+        return fullDist - radius <= GeometryUtils::epsilon;
     }
 
     // handle all others here
@@ -154,7 +154,7 @@ bool BoundingSphere::isEnclosedByVolume(BoundingVolume* boundingVolume) const no
         const float fullDist = length(diff) + radius;
         const float& bRadius = bSphere->getActualRadius();
 
-        return fullDist <= bRadius;
+        return fullDist - bRadius <= GeometryUtils::epsilon;
     }
 
     // handle all others here

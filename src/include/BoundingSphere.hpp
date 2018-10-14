@@ -2,6 +2,7 @@
 #define BOUNDING_SPHERE_HPP
 
 #include <BoundingVolume.hpp>
+#include <GeometryUtils.hpp>
 
 class BoundingSphere : public BoundingVolume {
 private:

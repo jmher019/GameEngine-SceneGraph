@@ -173,7 +173,7 @@ vector<Vertex> BoundingCapsule::getVerticesForGrid(void) const noexcept {
 
     // rings centered along the y axis
     R = mat3x3(glm::rotate(mat4(1.f), ANGLE_SPACING, vec3(0.f, 1.f, 0.f)));
-    vertices[DOUBLE_POINTS_PER_RING].position = vec3(0.f, -0.000001f, 1.f);
+    vertices[DOUBLE_POINTS_PER_RING].position = vec3(0.f, -GeometryUtils::epsilon, 1.f);
     vertices[DOUBLE_POINTS_PER_RING].normal = vec3(0.f, 1.f, 0.f);
     vertices[DOUBLE_POINTS_PER_RING + 1].position = R * vertices[DOUBLE_POINTS_PER_RING].position;
     vertices[DOUBLE_POINTS_PER_RING + 1].normal = vec3(0.f, 1.f, 0.f);
@@ -185,7 +185,7 @@ vector<Vertex> BoundingCapsule::getVerticesForGrid(void) const noexcept {
     }
 
     R = mat3x3(glm::rotate(mat4(1.f), ANGLE_SPACING, vec3(0.f, 1.f, 0.f)));
-    vertices[DOUBLE_POINTS_PER_RING_TIMES_TWO].position = vec3(0.f, 0.000001f, 1.f);
+    vertices[DOUBLE_POINTS_PER_RING_TIMES_TWO].position = vec3(0.f, GeometryUtils::epsilon, 1.f);
     vertices[DOUBLE_POINTS_PER_RING_TIMES_TWO].normal = vec3(0.f, 1.f, 0.f);
     vertices[DOUBLE_POINTS_PER_RING_TIMES_TWO + 1].position = R * vertices[DOUBLE_POINTS_PER_RING_TIMES_TWO].position;
     vertices[DOUBLE_POINTS_PER_RING_TIMES_TWO + 1].normal = vec3(0.f, 1.f, 0.f);
@@ -237,7 +237,7 @@ bool BoundingCapsule::intersectsVolume(BoundingVolume* boundingVolume) const noe
         const vec3 bCenter = bSphere->getCenter();
         const vec3 diff = line.getClosestPtPointSegment(bCenter) - bCenter;
         const GLfloat radiusSum = radius + bSphere->getActualRadius();
-        return dot(diff, diff) <= radiusSum * radiusSum;
+        return dot(diff, diff) - radiusSum * radiusSum <= GeometryUtils::epsilon;
     }
     // handle bounding capsule here
     else if (const BoundingCapsule* bCapsule = dynamic_cast<BoundingCapsule*>(boundingVolume)) {
@@ -246,7 +246,7 @@ bool BoundingCapsule::intersectsVolume(BoundingVolume* boundingVolume) const noe
         vec3 c1, c2;
         const GLfloat dist2 = line.getClosestPtSegmentSegment(c1, c2, bLine);
         const GLfloat radiusSum = radius + bCapsule->getActualRadius();
-        return dist2 <= radiusSum * radiusSum;
+        return dist2 - radiusSum * radiusSum <= GeometryUtils::epsilon;
     }
 
     // handle all others here
@@ -264,7 +264,7 @@ bool BoundingCapsule::enclosesVolume(BoundingVolume* boundingVolume) const noexc
         const vec3 diff = line.getClosestPtPointSegment(bCenter) - bCenter;
         const GLfloat fullDist = length(diff) + bSphere->getActualRadius();
 
-        return fullDist <= radius;
+        return fullDist - radius <= GeometryUtils::epsilon;
     }
     // handle bounding capsule
     else if (const BoundingCapsule* bCapsule = dynamic_cast<BoundingCapsule*>(boundingVolume)) {
@@ -276,7 +276,7 @@ bool BoundingCapsule::enclosesVolume(BoundingVolume* boundingVolume) const noexc
         const GLfloat fullDist1 = length(diff1) + bRadius;
         const GLfloat fullDist2 = length(diff2) + bRadius;
 
-        return fullDist1 <= radius && fullDist2 <= radius;
+        return fullDist1 - radius <= GeometryUtils::epsilon && fullDist2 - radius <= GeometryUtils::epsilon;
     }
 
     // handle all others here
@@ -297,7 +297,7 @@ bool BoundingCapsule::isEnclosedByVolume(BoundingVolume* boundingVolume) const n
         const GLfloat fullDist2 = length(diff2) + radius;
         const GLfloat bRadius = bSphere->getActualRadius();
 
-        return fullDist1 <= bRadius && fullDist2 <= bRadius;
+        return fullDist1 - bRadius <= GeometryUtils::epsilon && fullDist2 - bRadius <= GeometryUtils::epsilon;
     }
     // handle bounding capsule
     else if (const BoundingCapsule* bCapsule = dynamic_cast<BoundingCapsule*>(boundingVolume)) {
@@ -309,7 +309,7 @@ bool BoundingCapsule::isEnclosedByVolume(BoundingVolume* boundingVolume) const n
         const GLfloat fullDist2 = length(diff2) + radius;
         const GLfloat bRadius = bCapsule->getActualRadius();
 
-        return fullDist1 <= bRadius && fullDist2 <= bRadius;
+        return fullDist1 - bRadius <= GeometryUtils::epsilon && fullDist2 - bRadius <= GeometryUtils::epsilon;
     }
 
     // handle all others here

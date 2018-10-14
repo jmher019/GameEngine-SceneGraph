@@ -210,7 +210,7 @@ bool Triangle::isSegmentIntersecting(vec3& c, const Line& line) const noexcept {
     const GLfloat len2 = dot(lVec, lVec);
 
     // if the line degenerates to a point
-    if (len2 < 1e-8f) {
+    if (len2 < GeometryUtils::epsilon) {
         c = line.getPointStart();
         return isWithinTriangle(c);
     }
@@ -233,7 +233,7 @@ bool Triangle::isSegmentIntersecting(vec3& c, const vec3& start, const vec3& end
     const GLfloat len2 = dot(lVec, lVec);
 
     // if the line degenerates to a point
-    if (len2 < 1e-8f) {
+    if (len2 < GeometryUtils::epsilon) {
         c = start;
         return isWithinTriangle(c);
     }
@@ -256,7 +256,7 @@ bool Triangle::isSegmentIntersecting(vec3& c, const Line& line, const vec3& v1, 
     const GLfloat len2 = dot(lVec, lVec);
 
     // if the line degenerates to a point
-    if (len2 < 1e-8f) {
+    if (len2 < GeometryUtils::epsilon) {
         c = line.getPointStart();
         return isWithinTriangle(c, v1, v2, v3);
     }
@@ -279,7 +279,7 @@ bool Triangle::isSegmentIntersecting(vec3& c, const vec3& start, const vec3& end
     const GLfloat len2 = dot(lVec, lVec);
 
     // if the line degenerates to a point
-    if (len2 < 1e-8f) {
+    if (len2 < GeometryUtils::epsilon) {
         c = start;
         return isWithinTriangle(c, v1, v2, v3);
     }

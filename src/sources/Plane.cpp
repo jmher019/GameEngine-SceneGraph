@@ -47,11 +47,11 @@ vec3 Plane::closestPtPointPlane(const vec3& p, const vec3& n, const GLfloat& d) 
 }
 
 bool Plane::isPointOutsideOfPlane(const vec3& p) const noexcept {
-    return fabs(dot(p, n) - d) > 1e-8f;
+    return fabs(dot(p, n) - d) > GeometryUtils::epsilon;
 }
 
 bool Plane::isPointOutsideOfPlane(const vec3& p, const vec3& n, const GLfloat& d) noexcept {
-    return fabs(dot(p, n) - d) > 1e-8f;
+    return fabs(dot(p, n) - d) > GeometryUtils::epsilon;
 }
 
 bool Plane::arePointsOnOppositeSides(const vec3& p1, const vec3& p2) const noexcept {

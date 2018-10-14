@@ -152,6 +152,7 @@
     <ClInclude Include="..\src\include\BoundingSphere.hpp" />
     <ClInclude Include="..\src\include\BoundingVolume.hpp" />
     <ClInclude Include="..\src\include\Camera.hpp" />
+    <ClInclude Include="..\src\include\GeometryUtils.hpp" />
     <ClInclude Include="..\src\include\Line.hpp" />
     <ClInclude Include="..\src\include\Mesh.hpp" />
     <ClInclude Include="..\src\include\OrientedBoundingBox.hpp" />
