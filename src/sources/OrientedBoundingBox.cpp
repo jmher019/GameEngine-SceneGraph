@@ -393,24 +393,26 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
             }
         }
 
+        // compute translation vector t
+        vec3 t = bSphere->getCenter() - getCenter();
+        // bring translation into a's coordinate frame
+        t = vec3(dot(t, axis[0]), dot(t, axis[1]), dot(t, axis[2]));
+
         const GLfloat& bRadius = bSphere->getActualRadius();
-        const vec3 bCenter = bSphere->getCenter();
-
         vector<vec3> testPoints;
-        testPoints.push_back(bCenter + vec3(bModel * vec4(-bRadius, -bRadius, -bRadius, 0.f)));
-        testPoints.push_back(bCenter + vec3(bModel * vec4(-bRadius, -bRadius, bRadius, 0.f)));
-        testPoints.push_back(bCenter + vec3(bModel * vec4(bRadius, -bRadius, -bRadius, 0.f)));
-        testPoints.push_back(bCenter + vec3(bModel * vec4(bRadius, -bRadius, bRadius, 0.f)));
-        testPoints.push_back(bCenter + vec3(bModel * vec4(bRadius, bRadius, bRadius, 0.f)));
-        testPoints.push_back(bCenter + vec3(bModel * vec4(bRadius, bRadius, -bRadius, 0.f)));
-        testPoints.push_back(bCenter + vec3(bModel * vec4(-bRadius, bRadius, bRadius, 0.f)));
-        testPoints.push_back(bCenter + vec3(bModel * vec4(-bRadius, bRadius, -bRadius, 0.f)));
+        testPoints.push_back(vec3(bModel * vec4(-bRadius, -bRadius, -bRadius, 0.f)));
+        testPoints.push_back(vec3(bModel * vec4(-bRadius, -bRadius, bRadius, 0.f)));
+        testPoints.push_back(vec3(bModel * vec4(bRadius, -bRadius, -bRadius, 0.f)));
+        testPoints.push_back(vec3(bModel * vec4(bRadius, -bRadius, bRadius, 0.f)));
+        testPoints.push_back(vec3(bModel * vec4(bRadius, bRadius, bRadius, 0.f)));
+        testPoints.push_back(vec3(bModel * vec4(bRadius, bRadius, -bRadius, 0.f)));
+        testPoints.push_back(vec3(bModel * vec4(-bRadius, bRadius, bRadius, 0.f)));
+        testPoints.push_back(vec3(bModel * vec4(-bRadius, bRadius, -bRadius, 0.f)));
 
-        const vec3 center = getCenter();
         const mat4 model = (Transform(transform.getTranslationAndRotation())).getMatrix();
         const vec3 halfExtents = vec3(model * vec4(getActualHalfExtents(), 0.f));
         for (size_t i = 0; i < testPoints.size(); i++) {
-            const vec3 pt = R * (testPoints[i] - center);
+            const vec3 pt = t + R * testPoints[i];
 
             if (pt.x - halfExtents.x > GeometryUtils::epsilon ||
                 pt.x + halfExtents.x < -GeometryUtils::epsilon ||
@@ -445,35 +447,45 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
             }
         }
 
-        const GLfloat& bRadius = bCapsule->getActualRadius();
+        // compute translation vector t
         const Line bLine = move(bCapsule->getActualLine());
+        vec3 t1 = bLine.getPointStart() - getCenter();
+        vec3 t2 = bLine.getPointEnd() - getCenter();
+        // bring translation into a's coordinate frame
+        t1 = vec3(dot(t1, axis[0]), dot(t1, axis[1]), dot(t1, axis[2]));
+        t2 = vec3(dot(t2, axis[0]), dot(t2, axis[1]), dot(t2, axis[2]));
+        
         const vec3& bPoint1 = bLine.getPointStart();
         const vec3& bPoint2 = bLine.getPointEnd();
 
+        const GLfloat& bRadius = bCapsule->getActualRadius();
         vector<vec3> testPoints;
-        testPoints.push_back(bPoint1 + vec3(bModel * vec4(-bRadius, -bRadius, -bRadius, 0.f)));
-        testPoints.push_back(bPoint1 + vec3(bModel * vec4(-bRadius, -bRadius, bRadius, 0.f)));
-        testPoints.push_back(bPoint1 + vec3(bModel * vec4(bRadius, -bRadius, -bRadius, 0.f)));
-        testPoints.push_back(bPoint1 + vec3(bModel * vec4(bRadius, -bRadius, bRadius, 0.f)));
-        testPoints.push_back(bPoint1 + vec3(bModel * vec4(bRadius, bRadius, bRadius, 0.f)));
-        testPoints.push_back(bPoint1 + vec3(bModel * vec4(bRadius, bRadius, -bRadius, 0.f)));
-        testPoints.push_back(bPoint1 + vec3(bModel * vec4(-bRadius, bRadius, bRadius, 0.f)));
-        testPoints.push_back(bPoint1 + vec3(bModel * vec4(-bRadius, bRadius, -bRadius, 0.f)));
+        testPoints.push_back(vec3(bModel * vec4(-bRadius, -bRadius, -bRadius, 0.f)));
+        testPoints.push_back(vec3(bModel * vec4(-bRadius, -bRadius, bRadius, 0.f)));
+        testPoints.push_back(vec3(bModel * vec4(bRadius, -bRadius, -bRadius, 0.f)));
+        testPoints.push_back(vec3(bModel * vec4(bRadius, -bRadius, bRadius, 0.f)));
+        testPoints.push_back(vec3(bModel * vec4(bRadius, bRadius, bRadius, 0.f)));
+        testPoints.push_back(vec3(bModel * vec4(bRadius, bRadius, -bRadius, 0.f)));
+        testPoints.push_back(vec3(bModel * vec4(-bRadius, bRadius, bRadius, 0.f)));
+        testPoints.push_back(vec3(bModel * vec4(-bRadius, bRadius, -bRadius, 0.f)));
 
-        testPoints.push_back(bPoint2 + vec3(bModel * vec4(-bRadius, -bRadius, -bRadius, 0.f)));
-        testPoints.push_back(bPoint2 + vec3(bModel * vec4(-bRadius, -bRadius, bRadius, 0.f)));
-        testPoints.push_back(bPoint2 + vec3(bModel * vec4(bRadius, -bRadius, -bRadius, 0.f)));
-        testPoints.push_back(bPoint2 + vec3(bModel * vec4(bRadius, -bRadius, bRadius, 0.f)));
-        testPoints.push_back(bPoint2 + vec3(bModel * vec4(bRadius, bRadius, bRadius, 0.f)));
-        testPoints.push_back(bPoint2 + vec3(bModel * vec4(bRadius, bRadius, -bRadius, 0.f)));
-        testPoints.push_back(bPoint2 + vec3(bModel * vec4(-bRadius, bRadius, bRadius, 0.f)));
-        testPoints.push_back(bPoint2 + vec3(bModel * vec4(-bRadius, bRadius, -bRadius, 0.f)));
-
-        const vec3 center = getCenter();
         const mat4 model = (Transform(transform.getTranslationAndRotation())).getMatrix();
         const vec3 halfExtents = vec3(model * vec4(getActualHalfExtents(), 0.f));
         for (size_t i = 0; i < testPoints.size(); i++) {
-            const vec3 pt = R * (testPoints[i] - center);
+            const vec3 pt = t1 + R * testPoints[i];
+
+            if (pt.x - halfExtents.x > GeometryUtils::epsilon ||
+                pt.x + halfExtents.x < -GeometryUtils::epsilon ||
+                pt.y - halfExtents.y > GeometryUtils::epsilon ||
+                pt.y + halfExtents.y < -GeometryUtils::epsilon ||
+                pt.z - halfExtents.z > GeometryUtils::epsilon ||
+                pt.z + halfExtents.z < -GeometryUtils::epsilon) {
+                return false;
+            }
+        }
+
+        for (size_t i = 0; i < testPoints.size(); i++) {
+            const vec3 pt = t2 + R * testPoints[i];
 
             if (pt.x - halfExtents.x > GeometryUtils::epsilon ||
                 pt.x + halfExtents.x < -GeometryUtils::epsilon ||
@@ -507,27 +519,30 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
             }
         }
 
-        const vec3 bCenter = bOBB->getCenter();
+        // compute translation vector t
+        vec3 t = bOBB->getCenter() - getCenter();
+        // bring translation into a's coordinate frame
+        t = vec3(dot(t, axis[0]), dot(t, axis[1]), dot(t, axis[2]));
+
         const vec3 bHalfExtents = move(bOBB->getActualHalfExtents());
         const vec3 xLen = bAxis[0] * bHalfExtents.x;
         const vec3 yLen = bAxis[1] * bHalfExtents.y;
         const vec3 zLen = bAxis[2] * bHalfExtents.z;
 
         vector<vec3> testPoints;
-        testPoints.push_back(bCenter - xLen - yLen - zLen);
-        testPoints.push_back(bCenter - xLen - yLen + zLen);
-        testPoints.push_back(bCenter + xLen - yLen - zLen);
-        testPoints.push_back(bCenter + xLen - yLen + zLen);
-        testPoints.push_back(bCenter + xLen + yLen + zLen);
-        testPoints.push_back(bCenter + xLen + yLen - zLen);
-        testPoints.push_back(bCenter - xLen + yLen + zLen);
-        testPoints.push_back(bCenter - xLen + yLen - zLen);
+        testPoints.push_back(-xLen - yLen - zLen);
+        testPoints.push_back(-xLen - yLen + zLen);
+        testPoints.push_back(xLen - yLen - zLen);
+        testPoints.push_back(xLen - yLen + zLen);
+        testPoints.push_back(xLen + yLen + zLen);
+        testPoints.push_back(xLen + yLen - zLen);
+        testPoints.push_back(-xLen + yLen + zLen);
+        testPoints.push_back(-xLen + yLen - zLen);
 
-        const vec3 center = getCenter();
         const mat4 model = (Transform(transform.getTranslationAndRotation())).getMatrix();
         const vec3 halfExtents = vec3(model * vec4(getActualHalfExtents(), 0.f));
         for (size_t i = 0; i < testPoints.size(); i++) {
-            const vec3 pt = R * (testPoints[i] - center);
+            const vec3 pt = t + R * testPoints[i];
 
             if (pt.x - halfExtents.x > GeometryUtils::epsilon ||
                 pt.x + halfExtents.x < -GeometryUtils::epsilon ||
@@ -631,27 +646,30 @@ bool OrientedBoundingBox::isEnclosedByVolume(BoundingVolume* boundingVolume) con
             }
         }
 
-        const vec3 center = getCenter();
+        // compute translation vector t
+        vec3 t = getCenter() - bOBB->getCenter();
+        // bring translation into a's coordinate frame
+        t = vec3(dot(t, bAxis[0]), dot(t, bAxis[1]), dot(t, bAxis[2]));
+
         const vec3 halfExtents = move(getActualHalfExtents());
         const vec3 xLen = axis[0] * halfExtents.x;
         const vec3 yLen = axis[1] * halfExtents.y;
         const vec3 zLen = axis[2] * halfExtents.z;
 
         vector<vec3> testPoints;
-        testPoints.push_back(center - xLen - yLen - zLen);
-        testPoints.push_back(center - xLen - yLen + zLen);
-        testPoints.push_back(center + xLen - yLen - zLen);
-        testPoints.push_back(center + xLen - yLen + zLen);
-        testPoints.push_back(center + xLen + yLen + zLen);
-        testPoints.push_back(center + xLen + yLen - zLen);
-        testPoints.push_back(center - xLen + yLen + zLen);
-        testPoints.push_back(center - xLen + yLen - zLen);
+        testPoints.push_back(-xLen - yLen - zLen);
+        testPoints.push_back(-xLen - yLen + zLen);
+        testPoints.push_back(xLen - yLen - zLen);
+        testPoints.push_back(xLen - yLen + zLen);
+        testPoints.push_back(xLen + yLen + zLen);
+        testPoints.push_back(xLen + yLen - zLen);
+        testPoints.push_back(-xLen + yLen + zLen);
+        testPoints.push_back(-xLen + yLen - zLen);
 
-        const vec3 bCenter = vec3(bOBB->getCenter());
         mat4 bModel = (Transform(bOBB->getTransform().getTranslationAndRotation())).getMatrix();
         const vec3& bHalfExtents = vec3(bModel * vec4(bOBB->getActualHalfExtents(), 0.f));
         for (size_t i = 0; i < testPoints.size(); i++) {
-            const vec3 pt = R * (testPoints[i] - bCenter);
+            const vec3 pt = t + R * testPoints[i];
 
             if (pt.x - bHalfExtents.x > GeometryUtils::epsilon ||
                 pt.x + bHalfExtents.x < -GeometryUtils::epsilon ||
