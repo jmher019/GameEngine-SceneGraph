@@ -400,17 +400,16 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
 
         const GLfloat& bRadius = bSphere->getActualRadius();
         vector<vec3> testPoints;
-        testPoints.push_back(vec3(bModel * vec4(-bRadius, -bRadius, -bRadius, 0.f)));
-        testPoints.push_back(vec3(bModel * vec4(-bRadius, -bRadius, bRadius, 0.f)));
-        testPoints.push_back(vec3(bModel * vec4(bRadius, -bRadius, -bRadius, 0.f)));
-        testPoints.push_back(vec3(bModel * vec4(bRadius, -bRadius, bRadius, 0.f)));
-        testPoints.push_back(vec3(bModel * vec4(bRadius, bRadius, bRadius, 0.f)));
-        testPoints.push_back(vec3(bModel * vec4(bRadius, bRadius, -bRadius, 0.f)));
-        testPoints.push_back(vec3(bModel * vec4(-bRadius, bRadius, bRadius, 0.f)));
-        testPoints.push_back(vec3(bModel * vec4(-bRadius, bRadius, -bRadius, 0.f)));
+        testPoints.push_back(vec3(-bRadius, -bRadius, -bRadius));
+        testPoints.push_back(vec3(-bRadius, -bRadius, bRadius));
+        testPoints.push_back(vec3(bRadius, -bRadius, -bRadius));
+        testPoints.push_back(vec3(bRadius, -bRadius, bRadius));
+        testPoints.push_back(vec3(bRadius, bRadius, bRadius));
+        testPoints.push_back(vec3(bRadius, bRadius, -bRadius));
+        testPoints.push_back(vec3(-bRadius, bRadius, bRadius));
+        testPoints.push_back(vec3(-bRadius, bRadius, -bRadius));
 
-        const mat4 model = (Transform(transform.getTranslationAndRotation())).getMatrix();
-        const vec3 halfExtents = vec3(model * vec4(getActualHalfExtents(), 0.f));
+        const vec3 halfExtents = move(getActualHalfExtents());
         for (size_t i = 0; i < testPoints.size(); i++) {
             const vec3 pt = t + R * testPoints[i];
 
@@ -460,17 +459,16 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
 
         const GLfloat& bRadius = bCapsule->getActualRadius();
         vector<vec3> testPoints;
-        testPoints.push_back(vec3(bModel * vec4(-bRadius, -bRadius, -bRadius, 0.f)));
-        testPoints.push_back(vec3(bModel * vec4(-bRadius, -bRadius, bRadius, 0.f)));
-        testPoints.push_back(vec3(bModel * vec4(bRadius, -bRadius, -bRadius, 0.f)));
-        testPoints.push_back(vec3(bModel * vec4(bRadius, -bRadius, bRadius, 0.f)));
-        testPoints.push_back(vec3(bModel * vec4(bRadius, bRadius, bRadius, 0.f)));
-        testPoints.push_back(vec3(bModel * vec4(bRadius, bRadius, -bRadius, 0.f)));
-        testPoints.push_back(vec3(bModel * vec4(-bRadius, bRadius, bRadius, 0.f)));
-        testPoints.push_back(vec3(bModel * vec4(-bRadius, bRadius, -bRadius, 0.f)));
+        testPoints.push_back(vec3(-bRadius, -bRadius, -bRadius));
+        testPoints.push_back(vec3(-bRadius, -bRadius, bRadius));
+        testPoints.push_back(vec3(bRadius, -bRadius, -bRadius));
+        testPoints.push_back(vec3(bRadius, -bRadius, bRadius));
+        testPoints.push_back(vec3(bRadius, bRadius, bRadius));
+        testPoints.push_back(vec3(bRadius, bRadius, -bRadius));
+        testPoints.push_back(vec3(-bRadius, bRadius, bRadius));
+        testPoints.push_back(vec3(-bRadius, bRadius, -bRadius));
 
-        const mat4 model = (Transform(transform.getTranslationAndRotation())).getMatrix();
-        const vec3 halfExtents = vec3(model * vec4(getActualHalfExtents(), 0.f));
+        const vec3 halfExtents = move(getActualHalfExtents());
         for (size_t i = 0; i < testPoints.size(); i++) {
             const vec3 pt = t1 + R * testPoints[i];
 
@@ -539,8 +537,7 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
         testPoints.push_back(-xLen + yLen + zLen);
         testPoints.push_back(-xLen + yLen - zLen);
 
-        const mat4 model = (Transform(transform.getTranslationAndRotation())).getMatrix();
-        const vec3 halfExtents = vec3(model * vec4(getActualHalfExtents(), 0.f));
+        const vec3 halfExtents = move(getActualHalfExtents());
         for (size_t i = 0; i < testPoints.size(); i++) {
             const vec3 pt = t + R * testPoints[i];
 
@@ -572,20 +569,20 @@ bool OrientedBoundingBox::isEnclosedByVolume(BoundingVolume* boundingVolume) con
         const vec3 zLen = getZAxis() * halfExtents.z;
 
         vector<vec3> testPoints;
-        testPoints.push_back(center - xLen - yLen - zLen);
-        testPoints.push_back(center - xLen - yLen + zLen);
-        testPoints.push_back(center + xLen - yLen - zLen);
-        testPoints.push_back(center + xLen - yLen + zLen);
-        testPoints.push_back(center + xLen + yLen + zLen);
-        testPoints.push_back(center + xLen + yLen - zLen);
-        testPoints.push_back(center - xLen + yLen + zLen);
-        testPoints.push_back(center - xLen + yLen - zLen);
+        testPoints.push_back(-xLen - yLen - zLen);
+        testPoints.push_back(-xLen - yLen + zLen);
+        testPoints.push_back(xLen - yLen - zLen);
+        testPoints.push_back(xLen - yLen + zLen);
+        testPoints.push_back(xLen + yLen + zLen);
+        testPoints.push_back(xLen + yLen - zLen);
+        testPoints.push_back(-xLen + yLen + zLen);
+        testPoints.push_back(-xLen + yLen - zLen);
 
-        const vec3 bCenter = bSphere->getCenter();
+        const vec3 t = center - bSphere->getCenter();
         const GLfloat bRadius = bSphere->getActualRadius();
         const GLfloat radius2 = bRadius * bRadius;
         for (size_t i = 0; i < testPoints.size(); i++) {
-            const vec3& diff = testPoints[i] - bCenter;
+            const vec3& diff = testPoints[i] + t;
 
             if (dot(diff, diff) - radius2 > GeometryUtils::epsilon) {
                 return false;
@@ -666,8 +663,7 @@ bool OrientedBoundingBox::isEnclosedByVolume(BoundingVolume* boundingVolume) con
         testPoints.push_back(-xLen + yLen + zLen);
         testPoints.push_back(-xLen + yLen - zLen);
 
-        mat4 bModel = (Transform(bOBB->getTransform().getTranslationAndRotation())).getMatrix();
-        const vec3& bHalfExtents = vec3(bModel * vec4(bOBB->getActualHalfExtents(), 0.f));
+        const vec3& bHalfExtents = move(bOBB->getActualHalfExtents());
         for (size_t i = 0; i < testPoints.size(); i++) {
             const vec3 pt = t + R * testPoints[i];
 
