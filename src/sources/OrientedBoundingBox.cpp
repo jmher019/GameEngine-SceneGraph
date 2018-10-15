@@ -513,7 +513,7 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
         mat3 R;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                R[j][i] = dot(axis[i], bAxis[j]);
+                R[i][j] = dot(axis[i], bAxis[j]);
             }
         }
 
@@ -523,19 +523,16 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
         t = vec3(dot(t, axis[0]), dot(t, axis[1]), dot(t, axis[2]));
 
         const vec3 bHalfExtents = move(bOBB->getActualHalfExtents());
-        const vec3 xLen = bAxis[0] * bHalfExtents.x;
-        const vec3 yLen = bAxis[1] * bHalfExtents.y;
-        const vec3 zLen = bAxis[2] * bHalfExtents.z;
 
         vector<vec3> testPoints;
-        testPoints.push_back(-xLen - yLen - zLen);
-        testPoints.push_back(-xLen - yLen + zLen);
-        testPoints.push_back(xLen - yLen - zLen);
-        testPoints.push_back(xLen - yLen + zLen);
-        testPoints.push_back(xLen + yLen + zLen);
-        testPoints.push_back(xLen + yLen - zLen);
-        testPoints.push_back(-xLen + yLen + zLen);
-        testPoints.push_back(-xLen + yLen - zLen);
+        testPoints.push_back(vec3(-bHalfExtents.x - bHalfExtents.y - bHalfExtents.z));
+        testPoints.push_back(vec3(-bHalfExtents.x - bHalfExtents.y + bHalfExtents.z));
+        testPoints.push_back(vec3(bHalfExtents.x - bHalfExtents.y - bHalfExtents.z));
+        testPoints.push_back(vec3(bHalfExtents.x - bHalfExtents.y + bHalfExtents.z));
+        testPoints.push_back(vec3(bHalfExtents.x + bHalfExtents.y + bHalfExtents.z));
+        testPoints.push_back(vec3(bHalfExtents.x + bHalfExtents.y - bHalfExtents.z));
+        testPoints.push_back(vec3(-bHalfExtents.x + bHalfExtents.y + bHalfExtents.z));
+        testPoints.push_back(vec3(-bHalfExtents.x + bHalfExtents.y - bHalfExtents.z));
 
         const vec3 halfExtents = move(getActualHalfExtents());
         for (size_t i = 0; i < testPoints.size(); i++) {
@@ -639,7 +636,7 @@ bool OrientedBoundingBox::isEnclosedByVolume(BoundingVolume* boundingVolume) con
         // compute rotation matrix expressing b in a's coordinate frame
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                R[j][i] = dot(bAxis[j], axis[i]);
+                R[i][j] = dot(bAxis[j], axis[i]);
             }
         }
 
@@ -649,19 +646,16 @@ bool OrientedBoundingBox::isEnclosedByVolume(BoundingVolume* boundingVolume) con
         t = vec3(dot(t, bAxis[0]), dot(t, bAxis[1]), dot(t, bAxis[2]));
 
         const vec3 halfExtents = move(getActualHalfExtents());
-        const vec3 xLen = axis[0] * halfExtents.x;
-        const vec3 yLen = axis[1] * halfExtents.y;
-        const vec3 zLen = axis[2] * halfExtents.z;
 
         vector<vec3> testPoints;
-        testPoints.push_back(-xLen - yLen - zLen);
-        testPoints.push_back(-xLen - yLen + zLen);
-        testPoints.push_back(xLen - yLen - zLen);
-        testPoints.push_back(xLen - yLen + zLen);
-        testPoints.push_back(xLen + yLen + zLen);
-        testPoints.push_back(xLen + yLen - zLen);
-        testPoints.push_back(-xLen + yLen + zLen);
-        testPoints.push_back(-xLen + yLen - zLen);
+        testPoints.push_back(vec3(-halfExtents.x - halfExtents.y - halfExtents.z));
+        testPoints.push_back(vec3(-halfExtents.x - halfExtents.y + halfExtents.z));
+        testPoints.push_back(vec3(halfExtents.x - halfExtents.y - halfExtents.z));
+        testPoints.push_back(vec3(halfExtents.x - halfExtents.y + halfExtents.z));
+        testPoints.push_back(vec3(halfExtents.x + halfExtents.y + halfExtents.z));
+        testPoints.push_back(vec3(halfExtents.x + halfExtents.y - halfExtents.z));
+        testPoints.push_back(vec3(-halfExtents.x + halfExtents.y + halfExtents.z));
+        testPoints.push_back(vec3(-halfExtents.x + halfExtents.y - halfExtents.z));
 
         const vec3& bHalfExtents = move(bOBB->getActualHalfExtents());
         for (size_t i = 0; i < testPoints.size(); i++) {
