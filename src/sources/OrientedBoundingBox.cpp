@@ -525,14 +525,14 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
         const vec3 bHalfExtents = move(bOBB->getActualHalfExtents());
 
         vector<vec3> testPoints;
-        testPoints.push_back(vec3(-bHalfExtents.x - bHalfExtents.y - bHalfExtents.z));
-        testPoints.push_back(vec3(-bHalfExtents.x - bHalfExtents.y + bHalfExtents.z));
-        testPoints.push_back(vec3(bHalfExtents.x - bHalfExtents.y - bHalfExtents.z));
-        testPoints.push_back(vec3(bHalfExtents.x - bHalfExtents.y + bHalfExtents.z));
-        testPoints.push_back(vec3(bHalfExtents.x + bHalfExtents.y + bHalfExtents.z));
-        testPoints.push_back(vec3(bHalfExtents.x + bHalfExtents.y - bHalfExtents.z));
-        testPoints.push_back(vec3(-bHalfExtents.x + bHalfExtents.y + bHalfExtents.z));
-        testPoints.push_back(vec3(-bHalfExtents.x + bHalfExtents.y - bHalfExtents.z));
+        testPoints.push_back(vec3(-bHalfExtents.x, -bHalfExtents.y, -bHalfExtents.z));
+        testPoints.push_back(vec3(-bHalfExtents.x, -bHalfExtents.y, bHalfExtents.z));
+        testPoints.push_back(vec3(bHalfExtents.x, -bHalfExtents.y, -bHalfExtents.z));
+        testPoints.push_back(vec3(bHalfExtents.x, -bHalfExtents.y, bHalfExtents.z));
+        testPoints.push_back(vec3(bHalfExtents.x, bHalfExtents.y, bHalfExtents.z));
+        testPoints.push_back(vec3(bHalfExtents.x, bHalfExtents.y, -bHalfExtents.z));
+        testPoints.push_back(vec3(-bHalfExtents.x, bHalfExtents.y, bHalfExtents.z));
+        testPoints.push_back(vec3(-bHalfExtents.x, bHalfExtents.y, -bHalfExtents.z));
 
         const vec3 halfExtents = move(getActualHalfExtents());
         for (size_t i = 0; i < testPoints.size(); i++) {
@@ -648,14 +648,14 @@ bool OrientedBoundingBox::isEnclosedByVolume(BoundingVolume* boundingVolume) con
         const vec3 halfExtents = move(getActualHalfExtents());
 
         vector<vec3> testPoints;
-        testPoints.push_back(vec3(-halfExtents.x - halfExtents.y - halfExtents.z));
-        testPoints.push_back(vec3(-halfExtents.x - halfExtents.y + halfExtents.z));
-        testPoints.push_back(vec3(halfExtents.x - halfExtents.y - halfExtents.z));
-        testPoints.push_back(vec3(halfExtents.x - halfExtents.y + halfExtents.z));
-        testPoints.push_back(vec3(halfExtents.x + halfExtents.y + halfExtents.z));
-        testPoints.push_back(vec3(halfExtents.x + halfExtents.y - halfExtents.z));
-        testPoints.push_back(vec3(-halfExtents.x + halfExtents.y + halfExtents.z));
-        testPoints.push_back(vec3(-halfExtents.x + halfExtents.y - halfExtents.z));
+        testPoints.push_back(vec3(-halfExtents.x, -halfExtents.y, -halfExtents.z));
+        testPoints.push_back(vec3(-halfExtents.x, -halfExtents.y, halfExtents.z));
+        testPoints.push_back(vec3(halfExtents.x, -halfExtents.y, -halfExtents.z));
+        testPoints.push_back(vec3(halfExtents.x, -halfExtents.y, halfExtents.z));
+        testPoints.push_back(vec3(halfExtents.x, halfExtents.y, halfExtents.z));
+        testPoints.push_back(vec3(halfExtents.x, halfExtents.y, -halfExtents.z));
+        testPoints.push_back(vec3(-halfExtents.x, halfExtents.y, halfExtents.z));
+        testPoints.push_back(vec3(-halfExtents.x, halfExtents.y, -halfExtents.z));
 
         const vec3& bHalfExtents = move(bOBB->getActualHalfExtents());
         for (size_t i = 0; i < testPoints.size(); i++) {
