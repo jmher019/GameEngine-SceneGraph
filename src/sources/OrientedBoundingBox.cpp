@@ -407,7 +407,8 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
         testPoints.push_back(bCenter + vec3(bModel * vec4(-bRadius, bRadius, -bRadius, 0.f)));
 
         const vec3 center = getCenter();
-        const vec3 halfExtents = getActualHalfExtents();
+        const mat4 model = (Transform(transform.getTranslationAndRotation())).getMatrix();
+        const vec3 halfExtents = vec3(model * vec4(getActualHalfExtents(), 0.f));
         for (size_t i = 0; i < testPoints.size(); i++) {
             const vec3 pt = R * (testPoints[i] - center);
 
@@ -469,7 +470,8 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
         testPoints.push_back(bPoint2 + vec3(bModel * vec4(-bRadius, bRadius, -bRadius, 0.f)));
 
         const vec3 center = getCenter();
-        const vec3 halfExtents = move(getActualHalfExtents());
+        const mat4 model = (Transform(transform.getTranslationAndRotation())).getMatrix();
+        const vec3 halfExtents = vec3(model * vec4(getActualHalfExtents(), 0.f));
         for (size_t i = 0; i < testPoints.size(); i++) {
             const vec3 pt = R * (testPoints[i] - center);
 
@@ -522,7 +524,8 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
         testPoints.push_back(bCenter - xLen + yLen - zLen);
 
         const vec3 center = getCenter();
-        const vec3 halfExtents = move(getActualHalfExtents());
+        const mat4 model = (Transform(transform.getTranslationAndRotation())).getMatrix();
+        const vec3 halfExtents = vec3(model * vec4(getActualHalfExtents(), 0.f));
         for (size_t i = 0; i < testPoints.size(); i++) {
             const vec3 pt = R * (testPoints[i] - center);
 
@@ -645,16 +648,17 @@ bool OrientedBoundingBox::isEnclosedByVolume(BoundingVolume* boundingVolume) con
         testPoints.push_back(center - xLen + yLen - zLen);
 
         const vec3 bCenter = vec3(bOBB->getCenter());
-        const vec3& bHalfExtents = vec3(bOBB->getActualHalfExtents());
+        mat4 bModel = (Transform(bOBB->getTransform().getTranslationAndRotation())).getMatrix();
+        const vec3& bHalfExtents = vec3(bModel * vec4(bOBB->getActualHalfExtents(), 0.f));
         for (size_t i = 0; i < testPoints.size(); i++) {
             const vec3 pt = R * (testPoints[i] - bCenter);
 
-            if (pt.x - halfExtents.x > GeometryUtils::epsilon ||
-                pt.x + halfExtents.x < -GeometryUtils::epsilon ||
-                pt.y - halfExtents.y > GeometryUtils::epsilon ||
-                pt.y + halfExtents.y < -GeometryUtils::epsilon ||
-                pt.z - halfExtents.z > GeometryUtils::epsilon ||
-                pt.z + halfExtents.z < -GeometryUtils::epsilon) {
+            if (pt.x - bHalfExtents.x > GeometryUtils::epsilon ||
+                pt.x + bHalfExtents.x < -GeometryUtils::epsilon ||
+                pt.y - bHalfExtents.y > GeometryUtils::epsilon ||
+                pt.y + bHalfExtents.y < -GeometryUtils::epsilon ||
+                pt.z - bHalfExtents.z > GeometryUtils::epsilon ||
+                pt.z + bHalfExtents.z < -GeometryUtils::epsilon) {
                 return false;
             }
         }
