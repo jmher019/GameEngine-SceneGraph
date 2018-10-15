@@ -395,19 +395,16 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
 
         const GLfloat& bRadius = bSphere->getActualRadius();
         const vec3 bCenter = bSphere->getCenter();
-        const vec3 rotateRadiusExtent = vec3(bModel * vec4(bRadius, bRadius, bRadius, 0.f));
-        const vec3 bMin = bCenter - rotateRadiusExtent;
-        const vec3 bMax = bCenter + rotateRadiusExtent;
 
         vector<vec3> testPoints;
-        testPoints.push_back(bMin);
-        testPoints.push_back(vec3(bMin.x, bMin.y, bMax.z));
-        testPoints.push_back(vec3(bMax.x, bMin.y, bMin.z));
-        testPoints.push_back(vec3(bMax.x, bMin.y, bMax.z));
-        testPoints.push_back(vec3(bMax.x, bMax.y, bMax.z));
-        testPoints.push_back(vec3(bMax.x, bMax.y, bMin.z));
-        testPoints.push_back(vec3(bMin.x, bMax.y, bMax.z));
-        testPoints.push_back(vec3(bMin.x, bMax.y, bMin.z));
+        testPoints.push_back(bCenter + vec3(bModel * vec4(-bRadius, -bRadius, -bRadius, 0.f)));
+        testPoints.push_back(bCenter + vec3(bModel * vec4(-bRadius, -bRadius, bRadius, 0.f)));
+        testPoints.push_back(bCenter + vec3(bModel * vec4(bRadius, -bRadius, -bRadius, 0.f)));
+        testPoints.push_back(bCenter + vec3(bModel * vec4(bRadius, -bRadius, bRadius, 0.f)));
+        testPoints.push_back(bCenter + vec3(bModel * vec4(bRadius, bRadius, bRadius, 0.f)));
+        testPoints.push_back(bCenter + vec3(bModel * vec4(bRadius, bRadius, -bRadius, 0.f)));
+        testPoints.push_back(bCenter + vec3(bModel * vec4(-bRadius, bRadius, bRadius, 0.f)));
+        testPoints.push_back(bCenter + vec3(bModel * vec4(-bRadius, bRadius, -bRadius, 0.f)));
 
         const vec3 center = getCenter();
         const vec3 halfExtents = getActualHalfExtents();
@@ -451,30 +448,25 @@ bool OrientedBoundingBox::enclosesVolume(BoundingVolume* boundingVolume) const n
         const Line bLine = move(bCapsule->getActualLine());
         const vec3& bPoint1 = bLine.getPointStart();
         const vec3& bPoint2 = bLine.getPointEnd();
-        const vec3 rotateRadiusExtent = vec3(bModel * vec4(bRadius, bRadius, bRadius, 0.f));
-        const vec3 bMin1 = bPoint1 - rotateRadiusExtent;
-        const vec3 bMax1 = bPoint1 + rotateRadiusExtent;
-        const vec3 bMin2 = bPoint2 - rotateRadiusExtent;
-        const vec3 bMax2 = bPoint2 + rotateRadiusExtent;
 
         vector<vec3> testPoints;
-        testPoints.push_back(bMin1);
-        testPoints.push_back(vec3(bMin1.x, bMin1.y, bMax1.z));
-        testPoints.push_back(vec3(bMax1.x, bMin1.y, bMin1.z));
-        testPoints.push_back(vec3(bMax1.x, bMin1.y, bMax1.z));
-        testPoints.push_back(vec3(bMax1.x, bMax1.y, bMax1.z));
-        testPoints.push_back(vec3(bMax1.x, bMax1.y, bMin1.z));
-        testPoints.push_back(vec3(bMin1.x, bMax1.y, bMax1.z));
-        testPoints.push_back(vec3(bMin1.x, bMax1.y, bMin1.z));
+        testPoints.push_back(bPoint1 + vec3(bModel * vec4(-bRadius, -bRadius, -bRadius, 0.f)));
+        testPoints.push_back(bPoint1 + vec3(bModel * vec4(-bRadius, -bRadius, bRadius, 0.f)));
+        testPoints.push_back(bPoint1 + vec3(bModel * vec4(bRadius, -bRadius, -bRadius, 0.f)));
+        testPoints.push_back(bPoint1 + vec3(bModel * vec4(bRadius, -bRadius, bRadius, 0.f)));
+        testPoints.push_back(bPoint1 + vec3(bModel * vec4(bRadius, bRadius, bRadius, 0.f)));
+        testPoints.push_back(bPoint1 + vec3(bModel * vec4(bRadius, bRadius, -bRadius, 0.f)));
+        testPoints.push_back(bPoint1 + vec3(bModel * vec4(-bRadius, bRadius, bRadius, 0.f)));
+        testPoints.push_back(bPoint1 + vec3(bModel * vec4(-bRadius, bRadius, -bRadius, 0.f)));
 
-        testPoints.push_back(bMin2);
-        testPoints.push_back(vec3(bMin2.x, bMin2.y, bMax2.z));
-        testPoints.push_back(vec3(bMax2.x, bMin2.y, bMin2.z));
-        testPoints.push_back(vec3(bMax2.x, bMin2.y, bMax2.z));
-        testPoints.push_back(vec3(bMax2.x, bMax2.y, bMax2.z));
-        testPoints.push_back(vec3(bMax2.x, bMax2.y, bMin2.z));
-        testPoints.push_back(vec3(bMin2.x, bMax2.y, bMax2.z));
-        testPoints.push_back(vec3(bMin2.x, bMax2.y, bMin2.z));
+        testPoints.push_back(bPoint2 + vec3(bModel * vec4(-bRadius, -bRadius, -bRadius, 0.f)));
+        testPoints.push_back(bPoint2 + vec3(bModel * vec4(-bRadius, -bRadius, bRadius, 0.f)));
+        testPoints.push_back(bPoint2 + vec3(bModel * vec4(bRadius, -bRadius, -bRadius, 0.f)));
+        testPoints.push_back(bPoint2 + vec3(bModel * vec4(bRadius, -bRadius, bRadius, 0.f)));
+        testPoints.push_back(bPoint2 + vec3(bModel * vec4(bRadius, bRadius, bRadius, 0.f)));
+        testPoints.push_back(bPoint2 + vec3(bModel * vec4(bRadius, bRadius, -bRadius, 0.f)));
+        testPoints.push_back(bPoint2 + vec3(bModel * vec4(-bRadius, bRadius, bRadius, 0.f)));
+        testPoints.push_back(bPoint2 + vec3(bModel * vec4(-bRadius, bRadius, -bRadius, 0.f)));
 
         const vec3 center = getCenter();
         const vec3 halfExtents = move(getActualHalfExtents());
