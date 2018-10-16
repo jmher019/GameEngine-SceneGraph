@@ -18,9 +18,9 @@ public:
 
     MeshWrapper& operator=(MeshWrapper&& meshWrapper) noexcept;
 
-    void setMeshWrapper(const shared_ptr<Mesh>& mesh) noexcept;
+    void setMesh(const shared_ptr<Mesh>& mesh) noexcept;
 
-    const shared_ptr<Mesh>& getMeshWrapper(void) const noexcept;
+    shared_ptr<Mesh>& getMesh(void) noexcept;
 
     void draw(const mat4& ProjectionViewMatrix) const override;
 };

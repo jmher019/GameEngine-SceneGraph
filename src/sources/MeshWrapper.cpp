@@ -36,11 +36,11 @@ MeshWrapper& MeshWrapper::operator=(MeshWrapper&& meshWrapper) noexcept {
     return *this;
 }
 
-void MeshWrapper::setMeshWrapper(const shared_ptr<Mesh>& mesh) noexcept {
+void MeshWrapper::setMesh(const shared_ptr<Mesh>& mesh) noexcept {
     this->mesh = mesh;
 }
 
-const shared_ptr<Mesh>& MeshWrapper::getMeshWrapper(void) const noexcept {
+shared_ptr<Mesh>& MeshWrapper::getMesh(void) noexcept {
     return mesh;
 }
 
