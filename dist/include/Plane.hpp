@@ -1,7 +1,7 @@
 #ifndef PLANE_HPP
 #define PLANE_HPP
 
-#include <Vertex.hpp>
+#include <GeometryUtils.hpp>
 
 class Plane {
 private:
