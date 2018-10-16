@@ -138,8 +138,10 @@
     <ClCompile Include="..\src\sources\Line.cpp" />
     <ClCompile Include="..\src\sources\main.cpp" />
     <ClCompile Include="..\src\sources\Mesh.cpp" />
+    <ClCompile Include="..\src\sources\MeshWrapper.cpp" />
     <ClCompile Include="..\src\sources\OrientedBoundingBox.cpp" />
     <ClCompile Include="..\src\sources\Plane.cpp" />
+    <ClCompile Include="..\src\sources\Rigidbody.cpp" />
     <ClCompile Include="..\src\sources\SceneGraph.cpp" />
     <ClCompile Include="..\src\sources\SceneObject.cpp" />
     <ClCompile Include="..\src\sources\Shader.cpp" />
@@ -155,8 +157,10 @@
     <ClInclude Include="..\src\include\GeometryUtils.hpp" />
     <ClInclude Include="..\src\include\Line.hpp" />
     <ClInclude Include="..\src\include\Mesh.hpp" />
+    <ClInclude Include="..\src\include\MeshWrapper.hpp" />
     <ClInclude Include="..\src\include\OrientedBoundingBox.hpp" />
     <ClInclude Include="..\src\include\Plane.hpp" />
+    <ClInclude Include="..\src\include\Rigidbody.hpp" />
     <ClInclude Include="..\src\include\SceneGraph.hpp" />
     <ClInclude Include="..\src\include\SceneObject.hpp" />
     <ClInclude Include="..\src\include\Shader.hpp" />

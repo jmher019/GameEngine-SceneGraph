@@ -80,6 +80,18 @@ void Mesh::draw(const mat4& ProjectionViewMatrix) const {
     SceneObject::draw(ProjectionViewMatrix);
 }
 
+void Mesh::draw(const mat4& ProjectionViewMatrix, const mat4& model) const {
+    if (shader != nullptr) {
+        shader->use();
+        shader->setMat4("PVM", value_ptr(ProjectionViewMatrix * model));
+        shader->setMat4("model", value_ptr(model));
+
+        glBindVertexArray(getVAO());
+        glDrawArrays(GL_TRIANGLES, 0, (GLsizei)getVertices().size());
+        glBindVertexArray(0);
+    }
+}
+
 const vector<Vertex>& Mesh::getVertices(void) const noexcept {
     return vertices;
 }

@@ -49,6 +49,8 @@ public:
 
     void appendChild(const shared_ptr<SceneObject>& child) noexcept;
 
+    bool replaceChild(const shared_ptr<SceneObject>& existingChild, const shared_ptr<SceneObject>& newChild) noexcept;
+
     bool removeChild(const shared_ptr<SceneObject>& child) noexcept;
 };
 

@@ -117,6 +117,17 @@ void SceneObject::appendChild(const shared_ptr<SceneObject>& child) noexcept {
     children.push_back(child);
 }
 
+bool SceneObject::replaceChild(const shared_ptr<SceneObject>& existingChild, const shared_ptr<SceneObject>& newChild) noexcept {
+    for (size_t i = 0; i < children.size(); i++) {
+        if (children[i] == existingChild) {
+            children[i] = newChild;
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool SceneObject::removeChild(const shared_ptr<SceneObject>& child) noexcept {
     auto it = children.begin();
     for (; it != children.end(); it++) {

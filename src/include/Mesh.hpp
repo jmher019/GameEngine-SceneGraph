@@ -32,6 +32,8 @@ public:
 
     void draw(const mat4& ProjectionViewMatrix) const override;
 
+    void draw(const mat4& ProjectionViewMatrix, const mat4& model) const;
+
     const vector<Vertex>& getVertices(void) const noexcept;
     
     const GLuint& getVBO(void) const noexcept;
