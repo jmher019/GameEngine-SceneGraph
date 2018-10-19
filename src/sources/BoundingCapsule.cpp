@@ -16,6 +16,8 @@ BoundingCapsule::BoundingCapsule(const BoundingCapsule& capsule):
     vertices = capsule.vertices;
     lineVertices = capsule.lineVertices;
     children = capsule.children;
+    shader = capsule.shader;
+    capsuleLineShader = capsule.capsuleLineShader;
     initialize();
 }
 
@@ -31,6 +33,8 @@ BoundingCapsule::BoundingCapsule(BoundingCapsule&& capsule) {
     radius = move(capsule.radius);
     lineVertices = move(capsule.lineVertices);
     vertices = move(capsule.vertices);
+    shader = move(capsule.shader);
+    capsuleLineShader = move(capsule.capsuleLineShader);
 }
 
 BoundingCapsule& BoundingCapsule::operator=(const BoundingCapsule& capsule) noexcept {
@@ -39,6 +43,8 @@ BoundingCapsule& BoundingCapsule::operator=(const BoundingCapsule& capsule) noex
     children = capsule.children;
     capsuleLineLength = capsule.capsuleLineLength;
     radius = capsule.radius;
+    shader = capsule.shader;
+    capsuleLineShader = capsule.capsuleLineShader;
 
     return *this;
 }
@@ -57,6 +63,8 @@ BoundingCapsule& BoundingCapsule::operator=(BoundingCapsule&& capsule) noexcept 
     radius = move(capsule.radius);
     lineVertices = move(capsule.lineVertices);
     vertices = move(capsule.vertices);
+    shader = move(capsule.shader);
+    capsuleLineShader = move(capsule.capsuleLineShader);
 
     return *this;
 }

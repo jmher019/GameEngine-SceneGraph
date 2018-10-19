@@ -46,7 +46,7 @@ shared_ptr<Mesh>& MeshWrapper::getMesh(void) noexcept {
 
 void MeshWrapper::draw(const mat4& ProjectionViewMatrix) const {
     if (mesh != nullptr) {
-        mesh->draw(ProjectionViewMatrix);
+        mesh->draw(ProjectionViewMatrix, transform.getMatrix());
     }
 
     SceneObject::draw(ProjectionViewMatrix);

@@ -12,6 +12,7 @@ BoundingSphere::BoundingSphere(const BoundingSphere& sphere):
     BoundingVolume(sphere.name, sphere.transform) {
     vertices = sphere.vertices;
     children = sphere.children;
+    shader = sphere.shader;
     initialize();
 }
 
@@ -23,6 +24,7 @@ BoundingSphere::BoundingSphere(BoundingSphere&& sphere) {
     VBO = move(sphere.VBO);
     radius = move(sphere.radius);
     vertices = move(sphere.vertices);
+    shader = move(sphere.shader);
 }
 
 BoundingSphere& BoundingSphere::operator=(const BoundingSphere& sphere) noexcept {
@@ -30,6 +32,7 @@ BoundingSphere& BoundingSphere::operator=(const BoundingSphere& sphere) noexcept
     transform = sphere.transform;
     children = sphere.children;
     radius = sphere.radius;
+    shader = sphere.shader;
     
     return *this;
 }
@@ -44,6 +47,7 @@ BoundingSphere& BoundingSphere::operator=(BoundingSphere&& sphere) noexcept {
     VBO = move(sphere.VBO);
     radius = move(sphere.radius);
     vertices = move(sphere.vertices);
+    shader = move(sphere.shader);
 
     return *this;
 }

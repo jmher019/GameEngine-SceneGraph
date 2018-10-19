@@ -7,7 +7,7 @@
 #include <glm\gtc\type_ptr.hpp>
 
 class Mesh : public SceneObject {
-private:
+protected:
     GLuint VBO = 0;
     GLuint VAO = 0;
     shared_ptr<Shader> shader = nullptr;
@@ -18,6 +18,8 @@ private:
     void deallocate(void) noexcept;
 
 public:
+    Mesh(const vector<Vertex>& vertices, const string& name = string(""), const Transform& transform = Transform());
+
     Mesh(vector<Vertex>&& vertices, const string& name = string(""), const Transform& transform = Transform());
 
     Mesh(const Mesh& mesh) = delete;

@@ -12,6 +12,7 @@ OrientedBoundingBox::OrientedBoundingBox(const OrientedBoundingBox& obb):
     BoundingVolume(obb.name, obb.transform) {
     vertices = obb.vertices;
     children = obb.children;
+    shader = obb.shader;
     initialize();
 }
 
@@ -23,6 +24,7 @@ OrientedBoundingBox::OrientedBoundingBox(OrientedBoundingBox&& obb) {
     VBO = move(obb.VBO);
     halfExtents = move(obb.halfExtents);
     vertices = move(obb.vertices);
+    shader = move(obb.shader);
 }
 
 OrientedBoundingBox& OrientedBoundingBox::operator=(const OrientedBoundingBox& obb) noexcept {
@@ -30,6 +32,7 @@ OrientedBoundingBox& OrientedBoundingBox::operator=(const OrientedBoundingBox& o
     transform = obb.transform;
     children = obb.children;
     halfExtents = obb.halfExtents;
+    shader = obb.shader;
 
     return *this;
 }
@@ -44,6 +47,7 @@ OrientedBoundingBox& OrientedBoundingBox::operator=(OrientedBoundingBox&& obb) n
     VBO = move(obb.VBO);
     halfExtents = move(obb.halfExtents);
     vertices = move(obb.vertices);
+    shader = move(obb.shader);
 
     return *this;
 }
@@ -117,7 +121,7 @@ vector<Triangle> OrientedBoundingBox::getTriangles(void) const noexcept {
     vector<Triangle> triangles;
 
     const vec3 halfExtents = getActualHalfExtents();
-    const vec3 center = vec3(getCenter());
+    const vec3 center = getCenter();
     const vec3 transformedX = halfExtents.x * getXAxis();
     const vec3 transformedY = halfExtents.y * getYAxis();
     const vec3 transformedZ = halfExtents.z * getZAxis();

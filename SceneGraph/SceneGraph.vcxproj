@@ -135,6 +135,7 @@
     <ClCompile Include="..\src\sources\BoundingCapsule.cpp" />
     <ClCompile Include="..\src\sources\BoundingSphere.cpp" />
     <ClCompile Include="..\src\sources\Camera.cpp" />
+    <ClCompile Include="..\src\sources\CubeMesh.cpp" />
     <ClCompile Include="..\src\sources\Line.cpp" />
     <ClCompile Include="..\src\sources\main.cpp" />
     <ClCompile Include="..\src\sources\Mesh.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="..\src\include\BoundingSphere.hpp" />
     <ClInclude Include="..\src\include\BoundingVolume.hpp" />
     <ClInclude Include="..\src\include\Camera.hpp" />
+    <ClInclude Include="..\src\include\CubeMesh.hpp" />
     <ClInclude Include="..\src\include\GeometryUtils.hpp" />
     <ClInclude Include="..\src\include\Line.hpp" />
     <ClInclude Include="..\src\include\Mesh.hpp" />
