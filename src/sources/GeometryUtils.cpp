@@ -358,7 +358,7 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
         distX = obbActualHalfExtents.x;
     }
     else if (distX < -obbActualHalfExtents.x) {
-        distX = obbActualHalfExtents.x;
+        distX = -obbActualHalfExtents.x;
     }
 
     result += distX * obbXAxis;
@@ -376,7 +376,7 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
         distY = obbActualHalfExtents.y;
     }
     else if (distY < -obbActualHalfExtents.y) {
-        distY = obbActualHalfExtents.y;
+        distY = -obbActualHalfExtents.y;
     }
 
     result += distY * obbYAxis;
@@ -394,7 +394,7 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
         distZ = obbActualHalfExtents.z;
     }
     else if (distZ < -obbActualHalfExtents.z) {
-        distZ = obbActualHalfExtents.z;
+        distZ = -obbActualHalfExtents.z;
     }
 
     result += distZ * obbZAxis;
