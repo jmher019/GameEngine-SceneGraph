@@ -68,12 +68,6 @@ public:
         deallocate();
     }
 
-    virtual bool intersectsVolume(BoundingVolume* boundingVolume) const noexcept = 0;
-
-    virtual bool enclosesVolume(BoundingVolume* boundingVolume) const noexcept = 0;
-
-    virtual bool isEnclosedByVolume(BoundingVolume* boundingVolume) const noexcept = 0;
-
     void draw(const mat4& ProjectionViewMatrix) const override {
         if (shader != nullptr) {
             const mat4 model = transform.getMatrix();

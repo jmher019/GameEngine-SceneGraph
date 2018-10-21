@@ -119,53 +119,6 @@ GLfloat BoundingSphere::getActualRadius(void) const noexcept {
     return max(max(scaledRadii.x, scaledRadii.y), scaledRadii.z);
 }
 
-bool BoundingSphere::intersectsVolume(BoundingVolume* boundingVolume) const noexcept {
-    // handle bounding sphere here
-    if (const BoundingSphere* bSphere = dynamic_cast<BoundingSphere*>(boundingVolume)) {
-        const GLfloat radius = getActualRadius();
-        const vec3 offset = bSphere->getCenter() - getCenter();
-        const float dist2 = dot(offset, offset);
-        const float radiusSum = radius + bSphere->getActualRadius();
-
-        return dist2 - radiusSum * radiusSum <= GeometryUtils::epsilon;
-    }
-
-    // handle all others here
-    BoundingVolume* self = (BoundingVolume*)this;
-    return boundingVolume->intersectsVolume(self);
-}
-
-bool BoundingSphere::enclosesVolume(BoundingVolume* boundingVolume) const noexcept {
-    // handle bounding sphere here
-    if (const BoundingSphere* bSphere = dynamic_cast<BoundingSphere*>(boundingVolume)) {
-        const GLfloat radius = getActualRadius();
-        const vec3 diff = getCenter() - bSphere->getCenter();
-        const float fullDist = length(diff) + bSphere->getActualRadius();
-
-        return fullDist - radius <= GeometryUtils::epsilon;
-    }
-
-    // handle all others here
-    BoundingVolume* self = (BoundingVolume*)this;
-    return boundingVolume->isEnclosedByVolume(self);
-}
-
-bool BoundingSphere::isEnclosedByVolume(BoundingVolume* boundingVolume) const noexcept {
-    // handle bounding sphere here
-    if (const BoundingSphere* bSphere = dynamic_cast<BoundingSphere*>(boundingVolume)) {
-        const GLfloat radius = getActualRadius();
-        const vec3 diff = getCenter() - bSphere->getCenter();
-        const float fullDist = length(diff) + radius;
-        const float& bRadius = bSphere->getActualRadius();
-
-        return fullDist - bRadius <= GeometryUtils::epsilon;
-    }
-
-    // handle all others here
-    BoundingVolume* self = (BoundingVolume*)this;
-    return boundingVolume->enclosesVolume(self);
-}
-
 void BoundingSphere::draw(const mat4& ProjectionViewMatrix) const {
     if (shader != nullptr && this->renderVolume) {
         const mat4 model = (Transform(transform.getTranslationAndRotation()).getMatrix());

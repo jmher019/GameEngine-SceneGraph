@@ -37,33 +37,25 @@ Plane& Plane::operator=(Plane&& plane) noexcept {
 }
 
 vec3 Plane::closestPtPointPlane(const vec3& p) const noexcept {
-    const float t = (dot(n, p) - d) / dot(n, n);
-    return p - t * n;
+    return GeometryUtils::getClosestPointBetweenPointAndPlane(p, n, d);
 }
 
 vec3 Plane::closestPtPointPlane(const vec3& p, const vec3& n, const GLfloat& d) noexcept {
-    const float t = (dot(n, p) - d) / dot(n, n);
-    return p - t * n;
+    return GeometryUtils::getClosestPointBetweenPointAndPlane(p, n, d);
 }
 
 bool Plane::isPointOutsideOfPlane(const vec3& p) const noexcept {
-    return fabs(dot(p, n) - d) > GeometryUtils::epsilon;
+    return GeometryUtils::isPointOutsideOfPlane(p, n, d);
 }
 
 bool Plane::isPointOutsideOfPlane(const vec3& p, const vec3& n, const GLfloat& d) noexcept {
-    return fabs(dot(p, n) - d) > GeometryUtils::epsilon;
+    return GeometryUtils::isPointOutsideOfPlane(p, n, d);
 }
 
 bool Plane::arePointsOnOppositeSides(const vec3& p1, const vec3& p2) const noexcept {
-    const float signp1 = dot(vec4(p1, 1.f), vec4(n, d));
-    const float signp2 = dot(vec4(p2, 1.f), vec4(n, d));
-
-    return signp1 * signp2 < 0.f;
+    return GeometryUtils::arePointsOnOppositeSidesOfPlane(p1, p2, n, d);
 }
 
 bool Plane::arePointsOnOppositeSides(const vec3& p1, const vec3& p2, const vec3& n, const GLfloat& d) noexcept {
-    const float signp1 = dot(vec4(p1, 1.f), vec4(n, d));
-    const float signp2 = dot(vec4(p2, 1.f), vec4(n, d));
-
-    return signp1 * signp2 < 0.f;
+    return GeometryUtils::arePointsOnOppositeSidesOfPlane(p1, p2, n, d);
 }
