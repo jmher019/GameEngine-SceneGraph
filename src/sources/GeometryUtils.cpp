@@ -353,7 +353,7 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     // along the axis of d from the box center
     GLfloat distX = dot(d, obbXAxis);
     planeNormal = obbXAxis * (distX < 0.f ? -1.f : 1.f);
-    GLfloat minDepth = glm::abs(distX) - obbActualHalfExtents.x;
+    GLfloat minDepth = obbActualHalfExtents.x - glm::abs(distX);
     if (distX > obbActualHalfExtents.x) {
         distX = obbActualHalfExtents.x;
     }
@@ -366,7 +366,7 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     // project d onto the transformed y-axis to get the distance
     // along the axis of d from the box center
     GLfloat distY = dot(d, obbYAxis);
-    GLfloat depth = glm::abs(distY) - obbActualHalfExtents.y;
+    GLfloat depth = obbActualHalfExtents.y - glm::abs(distY);
     if (depth < minDepth) {
         minDepth = depth;
         planeNormal = obbXAxis * (distY < 0.f ? -1.f : 1.f);
@@ -374,11 +374,9 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
 
     if (distY > obbActualHalfExtents.y) {
         distY = obbActualHalfExtents.y;
-        planeNormal += obbYAxis;
     }
     else if (distY < -obbActualHalfExtents.y) {
         distY = obbActualHalfExtents.y;
-        planeNormal -= obbYAxis;
     }
 
     result += distY * obbYAxis;
@@ -386,7 +384,7 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     // project d onto the transformed z-axis to get the distance
     // along the axis of d from the box center
     GLfloat distZ = dot(d, obbZAxis);
-    depth = glm::abs(distZ) - obbActualHalfExtents.z;
+    depth = obbActualHalfExtents.z - glm::abs(distZ);
     if (depth < minDepth) {
         minDepth = depth;
         planeNormal = obbXAxis * (distZ < 0.f ? -1.f : 1.f);
@@ -394,11 +392,9 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
 
     if (distZ > obbActualHalfExtents.z) {
         distZ = obbActualHalfExtents.z;
-        planeNormal += obbZAxis;
     }
     else if (distZ < -obbActualHalfExtents.z) {
         distZ = obbActualHalfExtents.z;
-        planeNormal -= obbZAxis;
     }
 
     result += distZ * obbZAxis;
