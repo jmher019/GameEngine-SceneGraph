@@ -133,7 +133,7 @@ Contact CollisionDetector::isCapsuleIntersectingSphere(
     if (dist2 - radiusSum * radiusSum <= GeometryUtils::epsilon) {
         const GLfloat dist = glm::sqrt(dist2);
         return Contact(
-            reverseContactTarget ? capsuleLinePoint + offset * 0.5f : sphereCenter - offset * 0.5f,
+            capsuleLinePoint + offset * 0.5f,
             reverseContactTarget ? offset / dist : -offset / dist,
             radiusSum - dist,
             ContactValidity::VALID
@@ -201,7 +201,7 @@ Contact CollisionDetector::isOBBIntersectingSphere(
     if (dist2 - bRadius * bRadius <= GeometryUtils::epsilon) {
         const GLfloat dist = glm::sqrt(dist2);
         return Contact(
-            reverseContactTarget ? closestPoint + (closestPoint - bCenter) * 0.5f : bCenter + (bCenter - closestPoint) * 0.5f,
+            closestPoint,
             reverseContactTarget ? normal : -normal,
             bRadius - dist,
             ContactValidity::VALID
@@ -238,7 +238,7 @@ Contact CollisionDetector::isOBBIntersectingCapsule(
     if (dist2 - bRadius * bRadius <= GeometryUtils::epsilon) {
         const GLfloat dist = glm::sqrt(dist2);
         return Contact(
-            reverseContactTarget ? c1 + (c1 - c2) * 0.5f : c2 + (c2 - c1) * 0.5f,
+            c1,
             reverseContactTarget ? triangles[closestTriangleIndex].getNormal() : -triangles[closestTriangleIndex].getNormal(),
             bRadius - dist,
             ContactValidity::VALID
@@ -520,7 +520,7 @@ Contact CollisionDetector::isOBBIntersectingOBB(
         const vec3 offset = closestPointEdge - bClosestPointEdge;
         const GLfloat dist = glm::length(offset);
         return Contact(
-            closestPointEdge,
+            bClosestPointEdge,
             offset / dist,
             dist,
             ContactValidity::VALID
@@ -528,8 +528,8 @@ Contact CollisionDetector::isOBBIntersectingOBB(
     }
     
     return Contact(
-        closestPointToCorner,
-        closestPointNormal,
+        closestCorner,
+        -closestPointNormal,
         glm::length(closestPointToCorner - closestCorner),
         ContactValidity::VALID
     );
