@@ -1,6 +1,6 @@
 #include <CollisionDetector.hpp>
 
-inline Contact CollisionDetector::isVolumeIntersectingVolume(
+Contact CollisionDetector::isVolumeIntersectingVolume(
     BoundingVolume* boundingVolume1,
     BoundingVolume* boundingVolume2
 ) noexcept {
@@ -22,7 +22,7 @@ inline Contact CollisionDetector::isVolumeIntersectingVolume(
     );
 }
 
-inline Contact CollisionDetector::isSphereIntersectingVolume(
+Contact CollisionDetector::isSphereIntersectingVolume(
     BoundingSphere* sphere,
     BoundingVolume* boundingVolume
 ) noexcept {
@@ -44,7 +44,7 @@ inline Contact CollisionDetector::isSphereIntersectingVolume(
     );
 }
 
-inline Contact CollisionDetector::isCapsuleIntersectingVolume(
+Contact CollisionDetector::isCapsuleIntersectingVolume(
     BoundingCapsule* capsule,
     BoundingVolume* boundingVolume
 ) noexcept {
@@ -66,7 +66,7 @@ inline Contact CollisionDetector::isCapsuleIntersectingVolume(
     );
 }
 
-inline Contact CollisionDetector::isOBBIntersectingVolume(
+Contact CollisionDetector::isOBBIntersectingVolume(
     OrientedBoundingBox* obb,
     BoundingVolume* boundingVolume
 ) noexcept {
@@ -88,7 +88,7 @@ inline Contact CollisionDetector::isOBBIntersectingVolume(
     );
 }
 
-inline Contact CollisionDetector::isSphereIntersectingSphere(
+Contact CollisionDetector::isSphereIntersectingSphere(
     BoundingSphere* sphere1,
     BoundingSphere* sphere2
 ) noexcept {
@@ -116,7 +116,7 @@ inline Contact CollisionDetector::isSphereIntersectingSphere(
     );
 }
 
-inline Contact CollisionDetector::isCapsuleIntersectingSphere(
+Contact CollisionDetector::isCapsuleIntersectingSphere(
     BoundingCapsule* capsule,
     BoundingSphere* sphere,
     GLboolean reverseContactTarget
@@ -148,7 +148,7 @@ inline Contact CollisionDetector::isCapsuleIntersectingSphere(
     );
 }
 
-inline Contact CollisionDetector::isCapsuleIntersectingCapsule(
+Contact CollisionDetector::isCapsuleIntersectingCapsule(
     BoundingCapsule* capsule1,
     BoundingCapsule* capsule2
 ) noexcept {
@@ -179,7 +179,7 @@ inline Contact CollisionDetector::isCapsuleIntersectingCapsule(
     );
 }
 
-inline Contact CollisionDetector::isOBBIntersectingSphere(
+Contact CollisionDetector::isOBBIntersectingSphere(
     OrientedBoundingBox* obb,
     BoundingSphere* sphere,
     GLboolean reverseContactTarget
@@ -216,7 +216,7 @@ inline Contact CollisionDetector::isOBBIntersectingSphere(
     );
 }
 
-inline Contact CollisionDetector::isOBBIntersectingCapsule(
+Contact CollisionDetector::isOBBIntersectingCapsule(
     OrientedBoundingBox* obb,
     BoundingCapsule* capsule,
     GLboolean reverseContactTarget
@@ -253,7 +253,7 @@ inline Contact CollisionDetector::isOBBIntersectingCapsule(
     );
 }
 
-inline Contact CollisionDetector::isOBBIntersectingOBB(
+Contact CollisionDetector::isOBBIntersectingOBB(
     OrientedBoundingBox* obb1,
     OrientedBoundingBox* obb2
 ) noexcept {
@@ -535,7 +535,7 @@ inline Contact CollisionDetector::isOBBIntersectingOBB(
     );
 }
 
-inline bool CollisionDetector::isVolumeEnclosingVolume(
+bool CollisionDetector::isVolumeEnclosingVolume(
     BoundingVolume* boundingVolume1,
     BoundingVolume* boundingVolume2
 ) noexcept {
@@ -552,7 +552,7 @@ inline bool CollisionDetector::isVolumeEnclosingVolume(
     return false;
 }
 
-inline bool CollisionDetector::isSphereEnclosingVolume(
+bool CollisionDetector::isSphereEnclosingVolume(
     BoundingSphere* sphere,
     BoundingVolume* boundingVolume
 ) noexcept {
@@ -569,7 +569,7 @@ inline bool CollisionDetector::isSphereEnclosingVolume(
     return false;
 }
 
-inline bool CollisionDetector::isCapsuleEnclosingVolume(
+bool CollisionDetector::isCapsuleEnclosingVolume(
     BoundingCapsule* capsule,
     BoundingVolume* boundingVolume
 ) noexcept {
@@ -586,7 +586,7 @@ inline bool CollisionDetector::isCapsuleEnclosingVolume(
     return false;
 }
 
-inline bool CollisionDetector::isOBBEnclosingVolume(
+bool CollisionDetector::isOBBEnclosingVolume(
     OrientedBoundingBox* obb,
     BoundingVolume* boundingVolume
 ) noexcept {
@@ -603,7 +603,7 @@ inline bool CollisionDetector::isOBBEnclosingVolume(
     return false;
 }
 
-inline bool CollisionDetector::isSphereEnclosingSphere(
+bool CollisionDetector::isSphereEnclosingSphere(
     BoundingSphere* sphere1,
     BoundingSphere* sphere2
 ) noexcept {
@@ -615,7 +615,7 @@ inline bool CollisionDetector::isSphereEnclosingSphere(
     return fullDist - bRadius <= GeometryUtils::epsilon;
 }
 
-inline bool CollisionDetector::isSphereEnclosingCapsule(
+bool CollisionDetector::isSphereEnclosingCapsule(
     BoundingSphere* sphere,
     BoundingCapsule* capsule
 ) noexcept {
@@ -632,7 +632,7 @@ inline bool CollisionDetector::isSphereEnclosingCapsule(
     return fullDist1 - bRadius <= GeometryUtils::epsilon && fullDist2 - bRadius <= GeometryUtils::epsilon;
 }
 
-inline bool CollisionDetector::isSphereEnclosingOBB(
+bool CollisionDetector::isSphereEnclosingOBB(
     BoundingSphere* sphere,
     OrientedBoundingBox* obb
 ) noexcept {
@@ -666,7 +666,7 @@ inline bool CollisionDetector::isSphereEnclosingOBB(
     return true;
 }
 
-inline bool CollisionDetector::isCapsuleEnclosingSphere(
+bool CollisionDetector::isCapsuleEnclosingSphere(
     BoundingCapsule* capsule,
     BoundingSphere* sphere
 ) noexcept {
@@ -680,7 +680,7 @@ inline bool CollisionDetector::isCapsuleEnclosingSphere(
     return fullDist - radius <= GeometryUtils::epsilon;
 }
 
-inline bool CollisionDetector::isCapsuleEnclosingCapsule(
+bool CollisionDetector::isCapsuleEnclosingCapsule(
     BoundingCapsule* capsule1,
     BoundingCapsule* capsule2
 ) noexcept {
@@ -698,7 +698,7 @@ inline bool CollisionDetector::isCapsuleEnclosingCapsule(
     return fullDist1 - radius <= GeometryUtils::epsilon && fullDist2 - radius <= GeometryUtils::epsilon;
 }
 
-inline bool CollisionDetector::isCapsuleEnclosingOBB(
+bool CollisionDetector::isCapsuleEnclosingOBB(
     BoundingCapsule* capsule,
     OrientedBoundingBox* obb
 ) noexcept {
@@ -732,7 +732,7 @@ inline bool CollisionDetector::isCapsuleEnclosingOBB(
     return true;
 }
 
-inline bool CollisionDetector::isOBBEnclosingSphere(
+bool CollisionDetector::isOBBEnclosingSphere(
     OrientedBoundingBox* obb,
     BoundingSphere* sphere
 ) noexcept {
@@ -788,7 +788,7 @@ inline bool CollisionDetector::isOBBEnclosingSphere(
     return true;
 }
 
-inline bool CollisionDetector::isOBBEnclosingCapsule(
+bool CollisionDetector::isOBBEnclosingCapsule(
     OrientedBoundingBox* obb,
     BoundingCapsule* capsule
 ) noexcept {
@@ -863,7 +863,7 @@ inline bool CollisionDetector::isOBBEnclosingCapsule(
     return true;
 }
 
-inline bool CollisionDetector::isOBBEnclosingOBB(
+bool CollisionDetector::isOBBEnclosingOBB(
     OrientedBoundingBox* obb1,
     OrientedBoundingBox* obb2
 ) noexcept {

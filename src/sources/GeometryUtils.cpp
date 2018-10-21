@@ -1,6 +1,6 @@
 #include <GeometryUtils.hpp>
 
-inline vec3 GeometryUtils::getClosestPointToTestPointAndSegment(
+vec3 GeometryUtils::getClosestPointToTestPointAndSegment(
     const vec3& testPoint,
     const vec3& start,
     const vec3& end
@@ -22,7 +22,7 @@ inline vec3 GeometryUtils::getClosestPointToTestPointAndSegment(
     return start + ab * t / denom;
 }
 
-inline GLfloat GeometryUtils::getSquaredDistToTestPointAndSegment(
+GLfloat GeometryUtils::getSquaredDistToTestPointAndSegment(
     const vec3& testPoint,
     const vec3& start,
     const vec3& end
@@ -46,7 +46,7 @@ inline GLfloat GeometryUtils::getSquaredDistToTestPointAndSegment(
     return dot(ap, ap) - e * e / f;
 }
 
-inline GLfloat GeometryUtils::getClosestPointsBetweenSegments(
+GLfloat GeometryUtils::getClosestPointsBetweenSegments(
     vec3& c1,
     vec3& c2,
     const vec3& start1,
@@ -113,7 +113,7 @@ inline GLfloat GeometryUtils::getClosestPointsBetweenSegments(
     return dot(c2 - c1, c2 - c1);
 }
 
-inline vec3 GeometryUtils::computeNormalFromPoints(
+vec3 GeometryUtils::computeNormalFromPoints(
     const vec3& point1,
     const vec3& point2,
     const vec3& point3
@@ -121,7 +121,7 @@ inline vec3 GeometryUtils::computeNormalFromPoints(
     return cross(point2 - point1, point3 - point2);
 }
 
-inline vec3 GeometryUtils::computeBarycentricCoord(
+vec3 GeometryUtils::computeBarycentricCoord(
     const vec3& testPoint,
     const vec3& point1,
     const vec3& point2,
@@ -142,7 +142,7 @@ inline vec3 GeometryUtils::computeBarycentricCoord(
     return vec3(1.0f - v - w, v, w);
 }
 
-inline bool GeometryUtils::isPointWithinTriangle(
+bool GeometryUtils::isPointWithinTriangle(
     const vec3& testPoint,
     const vec3& point1,
     const vec3& point2,
@@ -155,7 +155,7 @@ inline bool GeometryUtils::isPointWithinTriangle(
         (barycentricCoord[1] + barycentricCoord[2]) <= 1.0f;
 }
 
-inline vec3 GeometryUtils::getClosestPointBetweenPointAndTriangle(
+vec3 GeometryUtils::getClosestPointBetweenPointAndTriangle(
     const vec3& testPoint,
     const vec3& point1,
     const vec3& point2,
@@ -212,7 +212,7 @@ inline vec3 GeometryUtils::getClosestPointBetweenPointAndTriangle(
     return point1 + ab * v + ac * w; // = u*v1 + v*b + w*c, u = va * denom = 1.0f-v-w
 }
 
-inline bool GeometryUtils::isSegmentIntersectingTriangle(
+bool GeometryUtils::isSegmentIntersectingTriangle(
     vec3& c,
     const vec3& start,
     const vec3& end,
@@ -242,7 +242,7 @@ inline bool GeometryUtils::isSegmentIntersectingTriangle(
     return isPointWithinTriangle(c, point1, point2, point3);
 }
 
-inline GLfloat GeometryUtils::getClosestPointBetweenSegmentAndTriangle(
+GLfloat GeometryUtils::getClosestPointBetweenSegmentAndTriangle(
     vec3& c1,
     vec3& c2,
     const vec3& start,
@@ -303,7 +303,7 @@ inline GLfloat GeometryUtils::getClosestPointBetweenSegmentAndTriangle(
     return dist2;
 }
 
-inline vec3 GeometryUtils::getClosestPointBetweenPointAndPlane(
+vec3 GeometryUtils::getClosestPointBetweenPointAndPlane(
     const vec3& testPoint,
     const vec3& planeNormal,
     const GLfloat& d
@@ -312,7 +312,7 @@ inline vec3 GeometryUtils::getClosestPointBetweenPointAndPlane(
     return testPoint - t * planeNormal;
 }
 
-inline bool GeometryUtils::isPointOutsideOfPlane(
+bool GeometryUtils::isPointOutsideOfPlane(
     const vec3& testPoint,
     const vec3& planeNormal,
     const GLfloat& d
@@ -320,7 +320,7 @@ inline bool GeometryUtils::isPointOutsideOfPlane(
     return fabs(dot(testPoint, planeNormal) - d) > GeometryUtils::epsilon;
 }
 
-inline bool GeometryUtils::arePointsOnOppositeSidesOfPlane(
+bool GeometryUtils::arePointsOnOppositeSidesOfPlane(
     const vec3& point1,
     const vec3& point2,
     const vec3& planeNormal,
@@ -332,7 +332,7 @@ inline bool GeometryUtils::arePointsOnOppositeSidesOfPlane(
     return signp1 * signp2 < 0.f;
 }
 
-inline vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
+vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     const vec3& testPoint,
     const vec3& obbCenter,
     const vec3& obbXAxis,
