@@ -133,8 +133,8 @@ Contact CollisionDetector::isCapsuleIntersectingSphere(
     if (dist2 - radiusSum * radiusSum <= GeometryUtils::epsilon) {
         const GLfloat dist = glm::sqrt(dist2);
         return Contact(
-            reverseContactTarget ? sphereCenter - offset * 0.5f : capsuleLinePoint + offset * 0.5f,
-            reverseContactTarget ? -offset / dist : offset / dist,
+            reverseContactTarget ? capsuleLinePoint + offset * 0.5f : sphereCenter - offset * 0.5f,
+            reverseContactTarget ? offset / dist : -offset / dist,
             radiusSum - dist,
             ContactValidity::VALID
         );
@@ -201,8 +201,8 @@ Contact CollisionDetector::isOBBIntersectingSphere(
     if (dist2 - bRadius * bRadius <= GeometryUtils::epsilon) {
         const GLfloat dist = glm::sqrt(dist2);
         return Contact(
-            reverseContactTarget ? bCenter + (bCenter - closestPoint) * 0.5f : closestPoint + (closestPoint - bCenter) * 0.5f,
-            reverseContactTarget ? -normal : normal,
+            reverseContactTarget ? closestPoint + (closestPoint - bCenter) * 0.5f : bCenter + (bCenter - closestPoint) * 0.5f,
+            reverseContactTarget ? normal : -normal,
             bRadius - dist,
             ContactValidity::VALID
         );
@@ -238,8 +238,8 @@ Contact CollisionDetector::isOBBIntersectingCapsule(
     if (dist2 - bRadius * bRadius <= GeometryUtils::epsilon) {
         const GLfloat dist = glm::sqrt(dist2);
         return Contact(
-            reverseContactTarget ? c2 + (c2 - c1) * 0.5f : c1 + (c1 - c2) * 0.5f,
-            reverseContactTarget ? -triangles[closestTriangleIndex].getNormal() : triangles[closestTriangleIndex].getNormal(),
+            reverseContactTarget ? c1 + (c1 - c2) * 0.5f : c2 + (c2 - c1) * 0.5f,
+            reverseContactTarget ? triangles[closestTriangleIndex].getNormal() : -triangles[closestTriangleIndex].getNormal(),
             bRadius - dist,
             ContactValidity::VALID
         );

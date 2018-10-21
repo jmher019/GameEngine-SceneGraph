@@ -7,7 +7,7 @@
 
 class GeometryUtils {
 public:
-    static constexpr GLfloat epsilon = 1e-5f;
+    static constexpr GLfloat epsilon = 1e-4f;
 
     static vec3 getClosestPointToTestPointAndSegment(
         const vec3& testPoint,
