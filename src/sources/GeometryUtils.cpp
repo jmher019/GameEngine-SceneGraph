@@ -369,7 +369,7 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     GLfloat depth = obbActualHalfExtents.y - glm::abs(distY);
     if (depth < minDepth) {
         minDepth = depth;
-        planeNormal = obbXAxis * (distY < 0.f ? -1.f : 1.f);
+        planeNormal = obbYAxis * (distY < 0.f ? -1.f : 1.f);
     }
 
     if (distY > obbActualHalfExtents.y) {
@@ -387,7 +387,7 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     depth = obbActualHalfExtents.z - glm::abs(distZ);
     if (depth < minDepth) {
         minDepth = depth;
-        planeNormal = obbXAxis * (distZ < 0.f ? -1.f : 1.f);
+        planeNormal = obbZAxis * (distZ < 0.f ? -1.f : 1.f);
     }
 
     if (distZ > obbActualHalfExtents.z) {
