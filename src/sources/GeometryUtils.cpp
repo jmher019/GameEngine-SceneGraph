@@ -259,15 +259,15 @@ GLfloat GeometryUtils::getClosestPointBetweenSegmentAndTriangle(
     vector<pair<vec3, vec3>> pairs;
     // closest point between l and v1 -> v2 segment
     pairs.push_back(make_pair(vec3(), vec3()));
-    getClosestPointsBetweenSegments(pairs.back().second, pairs.back().first, start, end, point1, point2);
+    getClosestPointsBetweenSegments(pairs.back().first, pairs.back().second, start, end, point1, point2);
 
     // closest point between l and v2 -> v3 segment
     pairs.push_back(make_pair(vec3(), vec3()));
-    getClosestPointsBetweenSegments(pairs.back().second, pairs.back().first, start, end, point2, point3);
+    getClosestPointsBetweenSegments(pairs.back().first, pairs.back().second, start, end, point2, point3);
 
     // closest point between l and v3 -> v1 segment
     pairs.push_back(make_pair(vec3(), vec3()));
-    getClosestPointsBetweenSegments(pairs.back().second, pairs.back().first, start, end, point3, point1);
+    getClosestPointsBetweenSegments(pairs.back().first, pairs.back().second, start, end, point3, point1);
 
     // closest point from the first vertex in l to the plane containing the triangle
     const vec3 n = computeNormalFromPoints(point1, point2, point3);

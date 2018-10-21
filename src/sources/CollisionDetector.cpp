@@ -222,15 +222,18 @@ Contact CollisionDetector::isOBBIntersectingCapsule(
     GLboolean reverseContactTarget
 ) noexcept {
     vector<Triangle> triangles = move(obb->getTriangles());
-    vec3 c1, c2;
+    vec3 closestPointSegment, closestPointTriangle;
     const Line bLine = move(capsule->getActualLine());
-    GLfloat dist2 = triangles[0].getClosestPtSegmentTriangle(c1, c2, bLine);
+    GLfloat dist2 = triangles[0].getClosestPtSegmentTriangle(closestPointSegment, closestPointTriangle, bLine);
     size_t closestTriangleIndex = 0;
     for (size_t i = 1; i < triangles.size(); i++) {
+        vec3 c1, c2;
         GLfloat currDist2 = triangles[i].getClosestPtSegmentTriangle(c1, c2, bLine);
         if (currDist2 < dist2) {
             dist2 = currDist2;
             closestTriangleIndex = i;
+            closestPointSegment = c1;
+            closestPointTriangle = c2;
         }
     }
 
@@ -238,7 +241,7 @@ Contact CollisionDetector::isOBBIntersectingCapsule(
     if (dist2 - bRadius * bRadius <= GeometryUtils::epsilon) {
         const GLfloat dist = glm::sqrt(dist2);
         return Contact(
-            c1,
+            closestPointTriangle,
             reverseContactTarget ? triangles[closestTriangleIndex].getNormal() : -triangles[closestTriangleIndex].getNormal(),
             bRadius - dist,
             ContactValidity::VALID
