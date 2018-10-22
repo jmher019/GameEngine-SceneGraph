@@ -56,7 +56,7 @@ const vec3& Contact::getContactNormal(void) const noexcept {
     return contactNormal;
 }
 
-void Contact::setContactNormal(const vec3& contactPoint) noexcept {
+void Contact::setContactNormal(const vec3& contactNormal) noexcept {
     this->contactNormal = contactNormal;
 }
 
