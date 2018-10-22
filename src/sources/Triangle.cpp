@@ -74,6 +74,14 @@ vec3 Triangle::getBarycentricCoord(const vec3& p, const vec3& v1, const vec3& v2
     return GeometryUtils::computeBarycentricCoord(p, v1, v2, v3);
 }
 
+vec3 Triangle::getCenter(void) const noexcept {
+    return GeometryUtils::getTriangleCenter(v1, v2, v3);
+}
+
+vec3 Triangle::getCenter(const vec3& v1, const vec3& v2, const vec3& v3) noexcept {
+    return GeometryUtils::getTriangleCenter(v1, v2, v3);
+}
+
 bool Triangle::isWithinTriangle(const vec3& p) const noexcept {
     return GeometryUtils::isPointWithinTriangle(p, v1, v2, v3);
 }

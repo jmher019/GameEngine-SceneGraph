@@ -43,6 +43,12 @@ public:
         const vec3& point3
     ) noexcept;
 
+    static vec3 getTriangleCenter(
+        const vec3& point1,
+        const vec3& point2,
+        const vec3& point3
+    ) noexcept;
+
     static bool isPointWithinTriangle(
         const vec3& testPoint,
         const vec3& point1,

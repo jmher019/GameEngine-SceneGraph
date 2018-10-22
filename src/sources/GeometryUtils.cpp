@@ -142,6 +142,14 @@ vec3 GeometryUtils::computeBarycentricCoord(
     return vec3(1.0f - v - w, v, w);
 }
 
+vec3 GeometryUtils::getTriangleCenter(
+    const vec3& point1,
+    const vec3& point2,
+    const vec3& point3
+) noexcept {
+    return (point1 + point2 + point3) / 3.f;
+}
+
 bool GeometryUtils::isPointWithinTriangle(
     const vec3& testPoint,
     const vec3& point1,
@@ -288,12 +296,18 @@ GLfloat GeometryUtils::getClosestPointBetweenSegmentAndTriangle(
     pair<vec3, vec3>& result = pairs[0];
     vec3 diff = result.second - result.first;
     float dist2 = dot(diff, diff);
+    vec3 segmentCenter = 0.5f * (end - start) + start;
+    vec3 diffTrianglePointAndSegmentCenter = result.second - segmentCenter;
+    float distToSegmentCenter2 = dot(diffTrianglePointAndSegmentCenter, diffTrianglePointAndSegmentCenter);
 
     for (size_t i = 1; i < pairs.size(); i++) {
         diff = pairs[i].second - pairs[i].first;
         float currDist2 = dot(diff, diff);
-        if (dist2 > currDist2) {
+        diffTrianglePointAndSegmentCenter = pairs[i].second - segmentCenter;
+        float currDistToSegmentCenter2 = dot(diffTrianglePointAndSegmentCenter, diffTrianglePointAndSegmentCenter);
+        if (dist2 > currDist2 || distToSegmentCenter2 > currDistToSegmentCenter2) {
             dist2 = currDist2;
+            distToSegmentCenter2 = currDistToSegmentCenter2;
             result = pairs[i];
         }
     }

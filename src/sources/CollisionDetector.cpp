@@ -224,13 +224,19 @@ Contact CollisionDetector::isOBBIntersectingCapsule(
     vector<Triangle> triangles = move(obb->getTriangles());
     vec3 closestPointSegment, closestPointTriangle;
     const Line bLine = move(capsule->getActualLine());
+    const vec3 bCenter = move(capsule->getCenter());
     GLfloat dist2 = triangles[0].getClosestPtSegmentTriangle(closestPointSegment, closestPointTriangle, bLine);
+    vec3 capsuleCenterToTriangleCenter = triangles[0].getCenter() - bCenter;
+    GLfloat centersDist2 = dot(capsuleCenterToTriangleCenter, capsuleCenterToTriangleCenter);
     size_t closestTriangleIndex = 0;
     for (size_t i = 1; i < triangles.size(); i++) {
         vec3 c1, c2;
         GLfloat currDist2 = triangles[i].getClosestPtSegmentTriangle(c1, c2, bLine);
-        if (currDist2 < dist2) {
+        capsuleCenterToTriangleCenter = triangles[i].getCenter() - bCenter;
+        GLfloat currCentersDist2 = dot(capsuleCenterToTriangleCenter, capsuleCenterToTriangleCenter);
+        if (currDist2 < dist2 || currCentersDist2 < centersDist2) {
             dist2 = currDist2;
+            centersDist2 = currCentersDist2;
             closestTriangleIndex = i;
             closestPointSegment = c1;
             closestPointTriangle = c2;
