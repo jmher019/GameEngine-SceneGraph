@@ -113,7 +113,7 @@ void Rigidbody::handleCollision(Rigidbody* rigidbody) noexcept {
             const vec3 translationVector = normal * penetration;
 
             translate(translationVector.x, translationVector.y, translationVector.z);
-            setVelocity(dot(normal, velocity) * normal + velocity);
+            setVelocity(velocity - dot(normal, velocity) * normal);
         }
     }
 }
