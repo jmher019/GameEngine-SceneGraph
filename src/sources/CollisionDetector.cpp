@@ -547,7 +547,7 @@ Contact CollisionDetector::isOBBIntersectingOBB(
     return Contact(
         closestCorner,
         -closestPointNormal,
-        glm::abs(penetration),
+        penetration,
         ContactValidity::VALID
     );
 }

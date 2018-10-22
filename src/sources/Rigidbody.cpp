@@ -107,7 +107,7 @@ const vec3& Rigidbody::getVelocity(void) const noexcept {
 void Rigidbody::handleCollision(Rigidbody* rigidbody) noexcept {
     Contact contact = move(CollisionDetector::isVolumeIntersectingVolume(boundingVolume.get(), rigidbody->getBoundingVolume().get()));
     if (contact.getContactValidity() == ContactValidity::VALID) {
-        if (!isStatic) {
+        if (!isStatic && contact.getPenetration() > 0.f) {
             const vec3& normal = contact.getContactNormal();
             const GLfloat& penetration = contact.getPenetration();
             const vec3 translationVector = normal * penetration;

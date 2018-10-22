@@ -382,7 +382,7 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     // along the axis of d from the box center
     GLfloat distY = dot(d, obbYAxis);
     GLfloat depth = obbActualHalfExtents.y - glm::abs(distY);
-    if (depth < axisPenetration) {
+    if (depth > 0.f && depth < axisPenetration) {
         axisPenetration = depth;
         planeNormal = obbYAxis * (distY < 0.f ? -1.f : 1.f);
     }
@@ -400,7 +400,7 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     // along the axis of d from the box center
     GLfloat distZ = dot(d, obbZAxis);
     depth = obbActualHalfExtents.z - glm::abs(distZ);
-    if (depth < axisPenetration) {
+    if (depth > 0.f && depth < axisPenetration) {
         axisPenetration = depth;
         planeNormal = obbZAxis * (distZ < 0.f ? -1.f : 1.f);
     }
