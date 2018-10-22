@@ -555,14 +555,15 @@ Contact CollisionDetector::isOBBIntersectingOBB(
             return invalidContact;
         }
 
-        const vec3 offset = closestPointEdge - bClosestPointEdge;
+        return contactEdge2;
+        /*const vec3 offset = closestPointEdge - bClosestPointEdge;
         const GLfloat dist = glm::length(offset);
         return Contact(
             bClosestPointEdge,
             offset / dist,
             dist,
             ContactValidity::VALID
-        );
+        );*/
     }
     
     return contactVertex;
