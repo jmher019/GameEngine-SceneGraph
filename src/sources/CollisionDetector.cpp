@@ -501,18 +501,18 @@ Contact CollisionDetector::isOBBIntersectingOBB(
 
     vec3 closestPointEdge, bClosestPointEdge;
     edges[0].getClosestPtSegmentSegment(closestPointEdge, bClosestPointEdge, bEdges[0]);
-    vec3 segmentPointToCenter = bClosestPointEdge - center;
-    GLfloat segmentPointToCenterDist2 = dot(segmentPointToCenter, segmentPointToCenter);
+    vec3 closestPointsDiff = bClosestPointEdge - closestPointEdge;
+    GLfloat closestPointsDiffDist2 = dot(closestPointsDiff, closestPointsDiff);
     for (size_t j = 1; j < edges.size(); j++) {
         vec3 c1, c2;
         edges[j].getClosestPtSegmentSegment(c1, c2, bEdges[0]);
         vec3 offset = c2 - center;
         GLfloat currentDist2 = dot(offset, offset);
-        if (currentDist2 < segmentPointToCenterDist2) {
+        if (currentDist2 < closestPointsDiffDist2) {
             closestPointEdge = c1;
             bClosestPointEdge = c2;
-            segmentPointToCenter = offset;
-            segmentPointToCenterDist2 = currentDist2;
+            closestPointsDiff = offset;
+            closestPointsDiffDist2 = currentDist2;
         }
     }
 
@@ -522,17 +522,17 @@ Contact CollisionDetector::isOBBIntersectingOBB(
             edges[j].getClosestPtSegmentSegment(c1, c2, bEdges[i]);
             vec3 offset = c2 - center;
             GLfloat currentDist2 = dot(offset, offset);
-            if (currentDist2 < segmentPointToCenterDist2) {
+            if (currentDist2 < closestPointsDiffDist2) {
                 closestPointEdge = c1;
                 bClosestPointEdge = c2;
-                segmentPointToCenter = offset;
-                segmentPointToCenterDist2 = currentDist2;
+                closestPointsDiff = offset;
+                closestPointsDiffDist2 = currentDist2;
             }
         }
     }
 
     // The winner of the 2 methods is the one that is closest to the center
-    if (contactVertex.getContactValidity() == ContactValidity::INVALID || segmentPointToCenterDist2 < pointToCenterOffsetDist2) {
+    if (contactVertex.getContactValidity() == ContactValidity::INVALID || closestPointsDiffDist2 < pointToCenterOffsetDist2) {
         Contact contactEdge1 = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
             bClosestPointEdge,
             center,
@@ -555,15 +555,14 @@ Contact CollisionDetector::isOBBIntersectingOBB(
             return invalidContact;
         }
 
-        return contactEdge2;
-        /*const vec3 offset = closestPointEdge - bClosestPointEdge;
+        const vec3 offset = closestPointEdge - bClosestPointEdge;
         const GLfloat dist = glm::length(offset);
         return Contact(
             bClosestPointEdge,
             offset / dist,
             dist,
             ContactValidity::VALID
-        );*/
+        );
     }
     
     return contactVertex;
