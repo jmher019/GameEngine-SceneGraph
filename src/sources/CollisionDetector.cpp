@@ -133,7 +133,7 @@ Contact CollisionDetector::isCapsuleIntersectingSphere(
     if (dist2 - radiusSum * radiusSum <= GeometryUtils::epsilon) {
         const GLfloat dist = glm::sqrt(dist2);
         return Contact(
-            capsuleLinePoint + offset * 0.5f,
+            capsuleLinePoint - offset * 0.5f,
             reverseContactTarget ? -offset / dist : offset / dist,
             radiusSum - dist,
             ContactValidity::VALID
