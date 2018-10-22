@@ -393,49 +393,6 @@ Contact CollisionDetector::isOBBIntersectingOBB(
 
     // Let's compute the contact point
     // Let's do point to face contact
-    const vec3 bXVector = bHalfExtents.x * bAxis[0];
-    const vec3 bYVector = bHalfExtents.y * bAxis[1];
-    const vec3 bZVector = bHalfExtents.z * bAxis[2];
-    vector<vec3> bCorners = vector<vec3>(8, vec3());
-    bCorners[0] = bCenter - bXVector - bYVector - bZVector;
-    bCorners[1] = bCenter - bXVector - bYVector + bZVector;
-    bCorners[2] = bCenter - bXVector + bYVector - bZVector;
-    bCorners[3] = bCenter - bXVector + bYVector + bZVector;
-    bCorners[4] = bCenter + bXVector - bYVector - bZVector;
-    bCorners[5] = bCenter + bXVector - bYVector + bZVector;
-    bCorners[6] = bCenter + bXVector + bYVector - bZVector;
-    bCorners[7] = bCenter + bXVector + bYVector + bZVector;
-
-    Contact contactVertex = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
-        bCorners[0],
-        center,
-        axis[0],
-        axis[1],
-        axis[2],
-        halfExtents
-    ));
-    vec3 pointToCenterOffset = contactVertex.getContactPoint() - center;
-    GLfloat pointToCenterOffsetDist2 = dot(pointToCenterOffset, pointToCenterOffset);
-    for (size_t i = 1; i < bCorners.size(); i++) {
-        const Contact newContactVertex = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
-            bCorners[i],
-            center,
-            axis[0],
-            axis[1],
-            axis[2],
-            halfExtents
-        ));
-        const vec3 offset = newContactVertex.getContactPoint() - center;
-        const GLfloat dist2 = dot(offset, offset);
-
-        if (dist2 < pointToCenterOffsetDist2 || contactVertex.getContactValidity() == ContactValidity::INVALID) {
-            contactVertex = newContactVertex;
-            pointToCenterOffset = offset;
-            pointToCenterOffsetDist2 = dist2;
-        }
-    }
-
-    // Let's do edge to edge contact
     const vec3 xVector = halfExtents.x * axis[0];
     const vec3 yVector = halfExtents.y * axis[1];
     const vec3 zVector = halfExtents.z * axis[2];
@@ -448,6 +405,49 @@ Contact CollisionDetector::isOBBIntersectingOBB(
     corners[5] = center + xVector - yVector + zVector;
     corners[6] = center + xVector + yVector - zVector;
     corners[7] = center + xVector + yVector + zVector;
+
+    Contact contactVertex = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
+        corners[0],
+        bCenter,
+        bAxis[0],
+        bAxis[1],
+        bAxis[2],
+        bHalfExtents
+    ));
+    vec3 pointToCenterOffset = contactVertex.getContactPoint() - bCenter;
+    GLfloat pointToCenterOffsetDist2 = dot(pointToCenterOffset, pointToCenterOffset);
+    for (size_t i = 1; i < corners.size(); i++) {
+        const Contact newContactVertex = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
+            corners[i],
+            bCenter,
+            bAxis[0],
+            bAxis[1],
+            bAxis[2],
+            bHalfExtents
+        ));
+        const vec3 offset = newContactVertex.getContactPoint() - bCenter;
+        const GLfloat dist2 = dot(offset, offset);
+
+        if (dist2 < pointToCenterOffsetDist2 || contactVertex.getContactValidity() == ContactValidity::INVALID) {
+            contactVertex = newContactVertex;
+            pointToCenterOffset = offset;
+            pointToCenterOffsetDist2 = dist2;
+        }
+    }
+
+    // Let's do edge to edge contact
+    const vec3 bXVector = bHalfExtents.x * bAxis[0];
+    const vec3 bYVector = bHalfExtents.y * bAxis[1];
+    const vec3 bZVector = bHalfExtents.z * bAxis[2];
+    vector<vec3> bCorners = vector<vec3>(8, vec3());
+    bCorners[0] = bCenter - bXVector - bYVector - bZVector;
+    bCorners[1] = bCenter - bXVector - bYVector + bZVector;
+    bCorners[2] = bCenter - bXVector + bYVector - bZVector;
+    bCorners[3] = bCenter - bXVector + bYVector + bZVector;
+    bCorners[4] = bCenter + bXVector - bYVector - bZVector;
+    bCorners[5] = bCenter + bXVector - bYVector + bZVector;
+    bCorners[6] = bCenter + bXVector + bYVector - bZVector;
+    bCorners[7] = bCenter + bXVector + bYVector + bZVector;
 
     vector<Line> edges = vector<Line>(12, Line(vec3(), vec3()));
     edges[0] = Line(corners[0], corners[1]);
