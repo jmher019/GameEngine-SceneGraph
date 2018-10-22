@@ -353,8 +353,7 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     const vec3& obbYAxis,
     const vec3& obbZAxis,
     const vec3& obbActualHalfExtents,
-    vec3& planeNormal,
-    GLfloat& axisPenetration
+    vec3& planeNormal
 ) noexcept {
     planeNormal.x = 0.f;
     planeNormal.y = 0.f;
@@ -368,7 +367,7 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     // along the axis of d from the box center
     GLfloat distX = dot(d, obbXAxis);
     planeNormal = obbXAxis * (distX < 0.f ? -1.f : 1.f);
-    axisPenetration = obbActualHalfExtents.x - glm::abs(distX);
+    GLfloat minDepth = obbActualHalfExtents.x - glm::abs(distX);
     if (distX > obbActualHalfExtents.x) {
         distX = obbActualHalfExtents.x;
     }
@@ -382,8 +381,8 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     // along the axis of d from the box center
     GLfloat distY = dot(d, obbYAxis);
     GLfloat depth = obbActualHalfExtents.y - glm::abs(distY);
-    if (depth > 0.f && depth < axisPenetration) {
-        axisPenetration = depth;
+    if (depth < minDepth) {
+        minDepth = depth;
         planeNormal = obbYAxis * (distY < 0.f ? -1.f : 1.f);
     }
 
@@ -400,8 +399,8 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     // along the axis of d from the box center
     GLfloat distZ = dot(d, obbZAxis);
     depth = obbActualHalfExtents.z - glm::abs(distZ);
-    if (depth > 0.f && depth < axisPenetration) {
-        axisPenetration = depth;
+    if (depth < minDepth) {
+        minDepth = depth;
         planeNormal = obbZAxis * (distZ < 0.f ? -1.f : 1.f);
     }
 
@@ -414,4 +413,94 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
 
     result += distZ * obbZAxis;
     return result;
+}
+
+Contact GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
+    const vec3& testPoint,
+    const vec3& obbCenter,
+    const vec3& obbXAxis,
+    const vec3& obbYAxis,
+    const vec3& obbZAxis,
+    const vec3& obbActualHalfExtents
+) noexcept {
+    Contact invalidContact(
+        vec3(),
+        vec3(),
+        0.f,
+        ContactValidity::INVALID
+    );
+
+    vec3 planeNormal(0.f, 0.f, 0.f);
+
+    const vec3 d = testPoint - obbCenter;
+    // Start result at center of box; kame steps from there
+    vec3 result = obbCenter;
+
+    // project d onto the transformed x-axis to get the distance
+    // along the axis of d from the box center
+    GLfloat distX = dot(d, obbXAxis);
+    planeNormal = obbXAxis * (distX < 0.f ? -1.f : 1.f);
+    GLfloat minDepth = obbActualHalfExtents.x - glm::abs(distX);
+    if (minDepth < 0.f) {
+        return invalidContact;
+    }
+
+    if (distX > obbActualHalfExtents.x) {
+        distX = obbActualHalfExtents.x;
+    }
+    else if (distX < -obbActualHalfExtents.x) {
+        distX = -obbActualHalfExtents.x;
+    }
+
+    result += distX * obbXAxis;
+
+    // project d onto the transformed y-axis to get the distance
+    // along the axis of d from the box center
+    GLfloat distY = dot(d, obbYAxis);
+    GLfloat depth = obbActualHalfExtents.y - glm::abs(distY);
+    if (depth < 0.f) {
+        return invalidContact;
+    }
+
+    if (depth < minDepth) {
+        minDepth = depth;
+        planeNormal = obbYAxis * (distY < 0.f ? -1.f : 1.f);
+    }
+
+    if (distY > obbActualHalfExtents.y) {
+        distY = obbActualHalfExtents.y;
+    }
+    else if (distY < -obbActualHalfExtents.y) {
+        distY = -obbActualHalfExtents.y;
+    }
+
+    result += distY * obbYAxis;
+
+    // project d onto the transformed z-axis to get the distance
+    // along the axis of d from the box center
+    GLfloat distZ = dot(d, obbZAxis);
+    depth = obbActualHalfExtents.z - glm::abs(distZ);
+    if (depth < 0.f) {
+        return invalidContact;
+    }
+
+    if (depth < minDepth) {
+        minDepth = depth;
+        planeNormal = obbZAxis * (distZ < 0.f ? -1.f : 1.f);
+    }
+
+    if (distZ > obbActualHalfExtents.z) {
+        distZ = obbActualHalfExtents.z;
+    }
+    else if (distZ < -obbActualHalfExtents.z) {
+        distZ = -obbActualHalfExtents.z;
+    }
+
+    result += distZ * obbZAxis;
+    return Contact(
+        result,
+        planeNormal,
+        minDepth,
+        ContactValidity::VALID
+    );
 }

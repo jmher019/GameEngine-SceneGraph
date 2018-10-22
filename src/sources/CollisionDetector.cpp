@@ -186,7 +186,6 @@ Contact CollisionDetector::isOBBIntersectingSphere(
 ) noexcept {
     const vec3 bCenter = move(sphere->getCenter());
     vec3 normal;
-    GLfloat penetration;
     const vec3 closestPoint = move(GeometryUtils::getClosestPointBetweenPointAndOBB(
         bCenter,
         obb->getCenter(),
@@ -194,15 +193,13 @@ Contact CollisionDetector::isOBBIntersectingSphere(
         obb->getYAxis(),
         obb->getZAxis(),
         obb->getActualHalfExtents(),
-        normal,
-        penetration
+        normal
     ));
     const vec3 diff = closestPoint - bCenter;
     const GLfloat dist2 = dot(diff, diff);
     const GLfloat bRadius = move(sphere->getActualRadius());
     if (dist2 - bRadius * bRadius <= GeometryUtils::epsilon) {
         const GLfloat dist = glm::sqrt(dist2);
-        // don't use penetration value because a sphere does not have a radius of 0
         return Contact(
             closestPoint,
             reverseContactTarget ? normal : -normal,
@@ -409,44 +406,32 @@ Contact CollisionDetector::isOBBIntersectingOBB(
     bCorners[6] = bCenter + bXVector + bYVector - bZVector;
     bCorners[7] = bCenter + bXVector + bYVector + bZVector;
 
-    vec3 closestPointNormal;
-    GLfloat penetration;
-    vec3 closestPointToCorner = GeometryUtils::getClosestPointBetweenPointAndOBB(
+    Contact contactVertex = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
         bCorners[0],
         center,
         axis[0],
         axis[1],
         axis[2],
-        halfExtents,
-        closestPointNormal,
-        penetration
-    );
-    vec3 pointToCenterOffset = closestPointToCorner - center;
+        halfExtents
+    ));
+    vec3 pointToCenterOffset = contactVertex.getContactPoint() - center;
     GLfloat pointToCenterOffsetDist2 = dot(pointToCenterOffset, pointToCenterOffset);
-    vec3 closestCorner = bCorners[0];
     for (size_t i = 1; i < bCorners.size(); i++) {
-        vec3 pointNormal;
-        GLfloat newPenetration;
-        const vec3 closestPoint = GeometryUtils::getClosestPointBetweenPointAndOBB(
+        const Contact newContactVertex = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
             bCorners[i],
             center,
             axis[0],
             axis[1],
             axis[2],
-            halfExtents,
-            pointNormal,
-            newPenetration
-        );
-        const vec3 offset = closestPoint - center;
+            halfExtents
+        ));
+        const vec3 offset = newContactVertex.getContactPoint() - center;
         const GLfloat dist2 = dot(offset, offset);
 
-        if (dist2 < pointToCenterOffsetDist2) {
-            closestPointNormal = pointNormal;
-            closestPointToCorner = closestPoint;
+        if (dist2 < pointToCenterOffsetDist2 || contactVertex.getContactValidity() == ContactValidity::INVALID) {
+            contactVertex = newContactVertex;
             pointToCenterOffset = offset;
             pointToCenterOffsetDist2 = dist2;
-            closestCorner = bCorners[i];
-            penetration = newPenetration;
         }
     }
 
@@ -493,19 +478,15 @@ Contact CollisionDetector::isOBBIntersectingOBB(
     bEdges[11] = Line(bCorners[6], bCorners[2]);
 
     vec3 closestPointEdge, bClosestPointEdge;
-    Line bEdge = bEdges[0];
-    Line edge = edges[0];
-    edge.getClosestPtSegmentSegment(closestPointEdge, bClosestPointEdge, bEdge);
+    edges[0].getClosestPtSegmentSegment(closestPointEdge, bClosestPointEdge, bEdges[0]);
     vec3 segmentPointToCenter = bClosestPointEdge - center;
     GLfloat segmentPointToCenterDist2 = dot(segmentPointToCenter, segmentPointToCenter);
     for (size_t j = 1; j < edges.size(); j++) {
-        Line& currentEdge = edges[j];
         vec3 c1, c2;
-        currentEdge.getClosestPtSegmentSegment(c1, c2, bEdge);
+        edges[j].getClosestPtSegmentSegment(c1, c2, bEdges[0]);
         vec3 offset = c2 - center;
         GLfloat currentDist2 = dot(offset, offset);
         if (currentDist2 < segmentPointToCenterDist2) {
-            edge = edges[j];
             closestPointEdge = c1;
             bClosestPointEdge = c2;
             segmentPointToCenter = offset;
@@ -514,16 +495,12 @@ Contact CollisionDetector::isOBBIntersectingOBB(
     }
 
     for (size_t i = 1; i < bEdges.size(); i++) {
-        Line& currentBEdge = bEdges[i];
         for (size_t j = 0; j < edges.size(); j++) {
-            Line& currentEdge = edges[j];
             vec3 c1, c2;
-            currentEdge.getClosestPtSegmentSegment(c1, c2, bEdge);
+            edges[j].getClosestPtSegmentSegment(c1, c2, bEdges[i]);
             vec3 offset = c2 - center;
             GLfloat currentDist2 = dot(offset, offset);
             if (currentDist2 < segmentPointToCenterDist2) {
-                bEdge = bEdges[i];
-                edge = edges[j];
                 closestPointEdge = c1;
                 bClosestPointEdge = c2;
                 segmentPointToCenter = offset;
@@ -533,7 +510,20 @@ Contact CollisionDetector::isOBBIntersectingOBB(
     }
 
     // The winner of the 2 methods is the one that is closest to the center
-    if (segmentPointToCenterDist2 < pointToCenterOffsetDist2) {
+    if (contactVertex.getContactValidity() == ContactValidity::INVALID || segmentPointToCenterDist2 < pointToCenterOffsetDist2) {
+        Contact contactEdge = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
+            bClosestPointEdge,
+            center,
+            axis[0],
+            axis[1],
+            axis[2],
+            halfExtents
+        ));
+
+        if (contactEdge.getContactValidity() == ContactValidity::INVALID) {
+            return invalidContact;
+        }
+
         const vec3 offset = closestPointEdge - bClosestPointEdge;
         const GLfloat dist = glm::length(offset);
         return Contact(
@@ -544,12 +534,7 @@ Contact CollisionDetector::isOBBIntersectingOBB(
         );
     }
     
-    return Contact(
-        closestCorner,
-        -closestPointNormal,
-        penetration,
-        ContactValidity::VALID
-    );
+    return contactVertex;
 }
 
 bool CollisionDetector::isVolumeEnclosingVolume(

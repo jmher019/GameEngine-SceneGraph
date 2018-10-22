@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <Vertex.hpp>
+#include <Contact.hpp>
 
 class GeometryUtils {
 public:
@@ -108,8 +109,16 @@ public:
         const vec3& obbYAxis,
         const vec3& obbZAxis,
         const vec3& obbActualHalfExtents,
-        vec3& planeNormal,
-        GLfloat& axisPenetration
+        vec3& planeNormal
+    ) noexcept;
+
+    static Contact calculateContactBetweenOBBVertexAndOBB(
+        const vec3& testPoint,
+        const vec3& obbCenter,
+        const vec3& obbXAxis,
+        const vec3& obbYAxis,
+        const vec3& obbZAxis,
+        const vec3& obbActualHalfExtents
     ) noexcept;
 };
 
