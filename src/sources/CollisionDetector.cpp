@@ -186,6 +186,7 @@ Contact CollisionDetector::isOBBIntersectingSphere(
 ) noexcept {
     const vec3 bCenter = move(sphere->getCenter());
     vec3 normal;
+    GLfloat penetration;
     const vec3 closestPoint = move(GeometryUtils::getClosestPointBetweenPointAndOBB(
         bCenter,
         obb->getCenter(),
@@ -193,13 +194,15 @@ Contact CollisionDetector::isOBBIntersectingSphere(
         obb->getYAxis(),
         obb->getZAxis(),
         obb->getActualHalfExtents(),
-        normal
+        normal,
+        penetration
     ));
     const vec3 diff = closestPoint - bCenter;
     const GLfloat dist2 = dot(diff, diff);
     const GLfloat bRadius = move(sphere->getActualRadius());
     if (dist2 - bRadius * bRadius <= GeometryUtils::epsilon) {
         const GLfloat dist = glm::sqrt(dist2);
+        // don't use penetration value because a sphere does not have a radius of 0
         return Contact(
             closestPoint,
             reverseContactTarget ? normal : -normal,
@@ -407,6 +410,7 @@ Contact CollisionDetector::isOBBIntersectingOBB(
     bCorners[7] = bCenter + bXVector + bYVector + bZVector;
 
     vec3 closestPointNormal;
+    GLfloat penetration;
     vec3 closestPointToCorner = GeometryUtils::getClosestPointBetweenPointAndOBB(
         bCorners[0],
         center,
@@ -414,13 +418,15 @@ Contact CollisionDetector::isOBBIntersectingOBB(
         axis[1],
         axis[2],
         halfExtents,
-        closestPointNormal
+        closestPointNormal,
+        penetration
     );
     vec3 pointToCenterOffset = closestPointToCorner - center;
     GLfloat pointToCenterOffsetDist2 = dot(pointToCenterOffset, pointToCenterOffset);
     vec3 closestCorner = bCorners[0];
     for (size_t i = 1; i < bCorners.size(); i++) {
         vec3 pointNormal;
+        GLfloat newPenetration;
         const vec3 closestPoint = GeometryUtils::getClosestPointBetweenPointAndOBB(
             bCorners[i],
             center,
@@ -428,7 +434,8 @@ Contact CollisionDetector::isOBBIntersectingOBB(
             axis[1],
             axis[2],
             halfExtents,
-            pointNormal
+            pointNormal,
+            newPenetration
         );
         const vec3 offset = closestPoint - center;
         const GLfloat dist2 = dot(offset, offset);
@@ -439,6 +446,7 @@ Contact CollisionDetector::isOBBIntersectingOBB(
             pointToCenterOffset = offset;
             pointToCenterOffsetDist2 = dist2;
             closestCorner = bCorners[i];
+            penetration = newPenetration;
         }
     }
 
@@ -539,7 +547,7 @@ Contact CollisionDetector::isOBBIntersectingOBB(
     return Contact(
         closestCorner,
         -closestPointNormal,
-        glm::length(closestPointToCorner - closestCorner),
+        glm::abs(penetration),
         ContactValidity::VALID
     );
 }

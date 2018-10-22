@@ -353,7 +353,8 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     const vec3& obbYAxis,
     const vec3& obbZAxis,
     const vec3& obbActualHalfExtents,
-    vec3& planeNormal
+    vec3& planeNormal,
+    GLfloat& axisPenetration
 ) noexcept {
     planeNormal.x = 0.f;
     planeNormal.y = 0.f;
@@ -367,7 +368,7 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     // along the axis of d from the box center
     GLfloat distX = dot(d, obbXAxis);
     planeNormal = obbXAxis * (distX < 0.f ? -1.f : 1.f);
-    GLfloat minDepth = obbActualHalfExtents.x - glm::abs(distX);
+    axisPenetration = obbActualHalfExtents.x - glm::abs(distX);
     if (distX > obbActualHalfExtents.x) {
         distX = obbActualHalfExtents.x;
     }
@@ -381,8 +382,8 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     // along the axis of d from the box center
     GLfloat distY = dot(d, obbYAxis);
     GLfloat depth = obbActualHalfExtents.y - glm::abs(distY);
-    if (depth < minDepth) {
-        minDepth = depth;
+    if (depth < axisPenetration) {
+        axisPenetration = depth;
         planeNormal = obbYAxis * (distY < 0.f ? -1.f : 1.f);
     }
 
@@ -399,8 +400,8 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     // along the axis of d from the box center
     GLfloat distZ = dot(d, obbZAxis);
     depth = obbActualHalfExtents.z - glm::abs(distZ);
-    if (depth < minDepth) {
-        minDepth = depth;
+    if (depth < axisPenetration) {
+        axisPenetration = depth;
         planeNormal = obbZAxis * (distZ < 0.f ? -1.f : 1.f);
     }
 
