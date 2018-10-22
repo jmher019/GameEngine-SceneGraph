@@ -108,7 +108,8 @@ public:
         const vec3& obbYAxis,
         const vec3& obbZAxis,
         const vec3& obbActualHalfExtents,
-        vec3& planeNormal
+        vec3& planeNormal,
+        GLfloat& axisPenetration
     ) noexcept;
 };
 

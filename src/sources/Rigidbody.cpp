@@ -87,3 +87,33 @@ void Rigidbody::setBoundingVolume(const shared_ptr<BoundingVolume>& boundingVolu
 shared_ptr<BoundingVolume>& Rigidbody::getBoundingVolume(void) noexcept {
     return boundingVolume;
 }
+
+void Rigidbody::setIsStatic(const GLboolean& isStatic) noexcept {
+    this->isStatic = isStatic;
+}
+
+const GLboolean& Rigidbody::getIsStatic(void) const noexcept {
+    return isStatic;
+}
+
+void Rigidbody::setVelocity(const vec3& velocity) noexcept {
+    this->velocity = velocity;
+}
+
+const vec3& Rigidbody::getVelocity(void) const noexcept {
+    return velocity;
+}
+
+void Rigidbody::handleCollision(Rigidbody* rigidbody) noexcept {
+    Contact contact = move(CollisionDetector::isVolumeIntersectingVolume(boundingVolume.get(), rigidbody->getBoundingVolume().get()));
+    if (contact.getContactValidity() == ContactValidity::VALID) {
+        if (!isStatic) {
+            const vec3& normal = contact.getContactNormal();
+            const GLfloat& penetration = contact.getPenetration();
+            const vec3 translationVector = normal * penetration;
+
+            translate(translationVector.x, translationVector.y, translationVector.z);
+            setVelocity(dot(normal, velocity) * normal + velocity);
+        }
+    }
+}

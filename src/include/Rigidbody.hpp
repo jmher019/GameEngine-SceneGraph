@@ -2,7 +2,7 @@
 #define RIGIDBODY_HPP
 
 #include <MeshWrapper.hpp>
-#include <BoundingVolume.hpp>
+#include <CollisionDetector.hpp>
 
 #include <stdexcept>
 
@@ -10,6 +10,8 @@ class Rigidbody : public SceneObject {
 private:
     shared_ptr<MeshWrapper> meshWrapper;
     shared_ptr<BoundingVolume> boundingVolume;
+    vec3 velocity = vec3(0.f, 0.f, 0.f);
+    GLboolean isStatic = false;
 
 public:
     Rigidbody(
@@ -34,6 +36,16 @@ public:
     void setBoundingVolume(const shared_ptr<BoundingVolume>& boundingVolume);
 
     shared_ptr<BoundingVolume>& getBoundingVolume(void) noexcept;
+
+    void setIsStatic(const GLboolean& isStatic) noexcept;
+
+    const GLboolean& getIsStatic(void) const noexcept;
+
+    const vec3& getVelocity(void) const noexcept;
+
+    void setVelocity(const vec3& velocity) noexcept;
+        
+    virtual void handleCollision(Rigidbody* rigidbody) noexcept;
 };
 
 #endif // !RIGIDBODY_HPP
