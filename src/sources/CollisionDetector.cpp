@@ -427,8 +427,7 @@ Contact CollisionDetector::isOBBIntersectingOBB(
         bAxis[2],
         bHalfExtents
     ));
-    vec3 pointToCenterOffset = contactVertex.getContactPoint() - bCenter;
-    GLfloat pointToCenterOffsetDist2 = dot(pointToCenterOffset, pointToCenterOffset);
+    GLfloat penetrationVertex = contactVertex.getPenetration();
     for (size_t i = 1; i < corners.size(); i++) {
         const Contact newContactVertex = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
             corners[i],
@@ -438,13 +437,11 @@ Contact CollisionDetector::isOBBIntersectingOBB(
             bAxis[2],
             bHalfExtents
         ));
-        const vec3 offset = newContactVertex.getContactPoint() - bCenter;
-        const GLfloat dist2 = dot(offset, offset);
+        const GLfloat newPenetrationVertex = newContactVertex.getPenetration();
 
-        if (dist2 < pointToCenterOffsetDist2 || contactVertex.getContactValidity() == ContactValidity::INVALID) {
+        if (penetrationVertex < newPenetrationVertex || contactVertex.getContactValidity() == ContactValidity::INVALID) {
             contactVertex = newContactVertex;
-            pointToCenterOffset = offset;
-            pointToCenterOffsetDist2 = dist2;
+            penetrationVertex = newPenetrationVertex;
         }
     }
 
@@ -458,14 +455,12 @@ Contact CollisionDetector::isOBBIntersectingOBB(
                 axis[2],
                 halfExtents
             ));
-            const vec3 offset = newContactVertex.getContactPoint() - center;
-            const GLfloat dist2 = dot(offset, offset);
+            const GLfloat newPenetrationVertex = newContactVertex.getPenetration();
 
-            if (dist2 < pointToCenterOffsetDist2 || contactVertex.getContactValidity() == ContactValidity::INVALID) {
+            if (penetrationVertex < newPenetrationVertex || contactVertex.getContactValidity() == ContactValidity::INVALID) {
                 contactVertex = newContactVertex;
                 contactVertex.setContactNormal(-contactVertex.getContactNormal());
-                pointToCenterOffset = offset;
-                pointToCenterOffsetDist2 = dist2;
+                penetrationVertex = newPenetrationVertex;
             }
         }
     }
