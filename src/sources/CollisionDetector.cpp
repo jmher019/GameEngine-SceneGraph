@@ -532,32 +532,31 @@ Contact CollisionDetector::isOBBIntersectingOBB(
     }
 
     // The winner of the 2 methods is the one that is closest to the center
-    if (contactVertex.getContactValidity() == ContactValidity::INVALID || closestPointsDiffDist2 < pointToCenterOffsetDist2) {
-        Contact contactEdge1 = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
-            bClosestPointEdge,
-            center,
-            axis[0],
-            axis[1],
-            axis[2],
-            halfExtents
-        ));
+    Contact contactEdge = invalidContact;
+    
+    Contact contactEdge1 = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
+        bClosestPointEdge,
+        center,
+        axis[0],
+        axis[1],
+        axis[2],
+        halfExtents
+    ));
 
-        Contact contactEdge2 = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
-            closestPointEdge,
-            bCenter,
-            bAxis[0],
-            bAxis[1],
-            bAxis[2],
-            bHalfExtents
-        ));
+    Contact contactEdge2 = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
+        closestPointEdge,
+        bCenter,
+        bAxis[0],
+        bAxis[1],
+        bAxis[2],
+        bHalfExtents
+    ));
 
-        if (contactEdge1.getContactValidity() == ContactValidity::INVALID || contactEdge2.getContactValidity() == ContactValidity::INVALID) {
-            return invalidContact;
-        }
-
+    if (contactEdge1.getContactValidity() != ContactValidity::INVALID && contactEdge2.getContactValidity() != ContactValidity::INVALID) {
         const vec3 offset = closestPointEdge - bClosestPointEdge;
         const GLfloat dist = glm::length(offset);
-        return Contact(
+        
+        contactEdge = Contact(
             bClosestPointEdge,
             offset / dist,
             dist,
@@ -565,7 +564,7 @@ Contact CollisionDetector::isOBBIntersectingOBB(
         );
     }
     
-    return contactVertex;
+    return contactEdge.getContactValidity() == ContactValidity::INVALID || contactVertex.getPenetration() > contactEdge.getPenetration() ? contactVertex : contactEdge;
 }
 
 bool CollisionDetector::isVolumeEnclosingVolume(
