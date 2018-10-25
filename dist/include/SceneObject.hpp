@@ -29,6 +29,8 @@ public:
 
     virtual ~SceneObject(void);
 
+    virtual void update(const float& deltaSeconds);
+
     virtual void draw(const mat4& ProjectionViewMatrix) const;
 
     virtual void translate(const float& tX, const float& tY, const float& tZ) noexcept;

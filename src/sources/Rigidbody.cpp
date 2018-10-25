@@ -62,6 +62,11 @@ Rigidbody& Rigidbody::operator=(Rigidbody&& rigidbody) noexcept {
     return *this;
 }
 
+void Rigidbody::update(const float& deltaSeconds) {
+    const vec3 translation = velocity * deltaSeconds;
+    translate(translation.x, translation.y, translation.z);
+}
+
 void Rigidbody::setMeshWrapper(const shared_ptr<MeshWrapper>& meshWrapper) {
     if (meshWrapper == nullptr) {
         throw invalid_argument("meshWrapper must not be a nullptr");
