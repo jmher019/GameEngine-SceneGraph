@@ -115,7 +115,7 @@ const vec3& Rigidbody::getAcceleration(void) const noexcept {
 }
 
 void Rigidbody::setAcceleration(const vec3& acceleration) noexcept {
-    this->acceleration;
+    this->acceleration = acceleration;
 }
 
 void Rigidbody::applyForce(const vec3& force) noexcept {
