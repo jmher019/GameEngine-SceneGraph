@@ -63,6 +63,7 @@ Rigidbody& Rigidbody::operator=(Rigidbody&& rigidbody) noexcept {
 }
 
 void Rigidbody::update(const float& deltaSeconds) {
+    setVelocity(velocity + acceleration * deltaSeconds);
     const vec3 translation = velocity * deltaSeconds;
     translate(translation.x, translation.y, translation.z);
 }
@@ -107,6 +108,26 @@ void Rigidbody::setVelocity(const vec3& velocity) noexcept {
 
 const vec3& Rigidbody::getVelocity(void) const noexcept {
     return velocity;
+}
+
+const vec3& Rigidbody::getAcceleration(void) const noexcept {
+    return acceleration;
+}
+
+void Rigidbody::setAcceleration(const vec3& acceleration) noexcept {
+    this->acceleration;
+}
+
+void Rigidbody::applyForce(const vec3& force) noexcept {
+    setAcceleration(force / mass);
+}
+
+const GLfloat& Rigidbody::getMass(void) const noexcept {
+    return mass;
+}
+
+void Rigidbody::setMass(const GLfloat& mass) noexcept {
+    this->mass = mass;
 }
 
 void Rigidbody::handleCollision(Rigidbody* rigidbody) noexcept {

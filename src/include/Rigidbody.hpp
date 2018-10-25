@@ -11,6 +11,8 @@ private:
     shared_ptr<MeshWrapper> meshWrapper;
     shared_ptr<BoundingVolume> boundingVolume;
     vec3 velocity = vec3(0.f, 0.f, 0.f);
+    vec3 acceleration = vec3(0.f, 0.f, 0.f);
+    GLfloat mass = 1.f;
     GLboolean isStatic = false;
 
 public:
@@ -46,6 +48,16 @@ public:
     const vec3& getVelocity(void) const noexcept;
 
     void setVelocity(const vec3& velocity) noexcept;
+
+    const vec3& getAcceleration(void) const noexcept;
+
+    void setAcceleration(const vec3& acceleration) noexcept;
+
+    void applyForce(const vec3& force) noexcept;
+
+    const GLfloat& getMass(void) const noexcept;
+
+    void setMass(const GLfloat& mass) noexcept;
         
     virtual void handleCollision(Rigidbody* rigidbody) noexcept;
 };
