@@ -503,7 +503,7 @@ Contact CollisionDetector::isOBBIntersectingOBB(
     }
 
     // The winner of the 2 methods is the one with the highest penetration
-    return contactEdge.getContactValidity() == ContactValidity::INVALID || contactVertex.getPenetration() > contactEdge.getPenetration() ? contactVertex : contactEdge;
+    return contactEdge.getContactValidity() == ContactValidity::INVALID || contactVertex.getPenetration() >= contactEdge.getPenetration() ? contactVertex : contactEdge;
 }
 
 bool CollisionDetector::isVolumeEnclosingVolume(
