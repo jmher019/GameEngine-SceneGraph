@@ -421,7 +421,7 @@ Contact CollisionDetector::isOBBIntersectingOBB(
 
     Contact contactVertex = invalidContact;
     for (size_t i = 0; i < corners.size(); i++) {
-        const Contact newContactVertex = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
+        const Contact newContactVertex1 = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
             corners[i],
             bCenter,
             bAxis[0],
@@ -430,13 +430,11 @@ Contact CollisionDetector::isOBBIntersectingOBB(
             bHalfExtents
         ));
 
-        if (contactVertex.getPenetration() < newContactVertex.getPenetration() || contactVertex.getContactValidity() == ContactValidity::INVALID) {
-            contactVertex = newContactVertex;
+        if (contactVertex.getPenetration() < newContactVertex1.getPenetration() || contactVertex.getContactValidity() == ContactValidity::INVALID) {
+            contactVertex = newContactVertex1;
         }
-    }
 
-    for (size_t i = 0; i < bCorners.size(); i++) {
-        const Contact newContactVertex = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
+        const Contact newContactVertex2 = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
             bCorners[i],
             center,
             axis[0],
@@ -445,8 +443,8 @@ Contact CollisionDetector::isOBBIntersectingOBB(
             halfExtents
         ));
 
-        if (contactVertex.getPenetration() < newContactVertex.getPenetration() || contactVertex.getContactValidity() == ContactValidity::INVALID) {
-            contactVertex = newContactVertex;
+        if (contactVertex.getPenetration() < newContactVertex2.getPenetration() || contactVertex.getContactValidity() == ContactValidity::INVALID) {
+            contactVertex = newContactVertex2;
             contactVertex.setContactNormal(-contactVertex.getContactNormal());
         }
     }
