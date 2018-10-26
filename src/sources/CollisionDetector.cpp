@@ -427,7 +427,6 @@ Contact CollisionDetector::isOBBIntersectingOBB(
         bAxis[2],
         bHalfExtents
     ));
-    GLfloat penetrationVertex = contactVertex.getPenetration();
     for (size_t i = 1; i < corners.size(); i++) {
         const Contact newContactVertex = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
             corners[i],
@@ -437,11 +436,9 @@ Contact CollisionDetector::isOBBIntersectingOBB(
             bAxis[2],
             bHalfExtents
         ));
-        const GLfloat newPenetrationVertex = newContactVertex.getPenetration();
 
-        if (penetrationVertex < newPenetrationVertex || contactVertex.getContactValidity() == ContactValidity::INVALID) {
+        if (contactVertex.getPenetration() < newContactVertex.getPenetration() || contactVertex.getContactValidity() == ContactValidity::INVALID) {
             contactVertex = newContactVertex;
-            penetrationVertex = newPenetrationVertex;
         }
     }
 
@@ -455,12 +452,10 @@ Contact CollisionDetector::isOBBIntersectingOBB(
                 axis[2],
                 halfExtents
             ));
-            const GLfloat newPenetrationVertex = newContactVertex.getPenetration();
 
-            if (penetrationVertex < newPenetrationVertex || contactVertex.getContactValidity() == ContactValidity::INVALID) {
+            if (contactVertex.getPenetration() < newContactVertex.getPenetration() || contactVertex.getContactValidity() == ContactValidity::INVALID) {
                 contactVertex = newContactVertex;
                 contactVertex.setContactNormal(-contactVertex.getContactNormal());
-                penetrationVertex = newPenetrationVertex;
             }
         }
     }
@@ -494,71 +489,31 @@ Contact CollisionDetector::isOBBIntersectingOBB(
     bEdges[10] = Line(bCorners[6], bCorners[4]);
     bEdges[11] = Line(bCorners[6], bCorners[2]);
 
-    vec3 closestPointEdge, bClosestPointEdge;
-    edges[0].getClosestPtSegmentSegment(closestPointEdge, bClosestPointEdge, bEdges[0]);
-    vec3 closestPointsDiff = bClosestPointEdge - closestPointEdge;
-    GLfloat closestPointsDiffDist2 = dot(closestPointsDiff, closestPointsDiff);
-    for (size_t j = 1; j < edges.size(); j++) {
-        vec3 c1, c2;
-        edges[j].getClosestPtSegmentSegment(c1, c2, bEdges[0]);
-        vec3 offset = c2 - center;
-        GLfloat currentDist2 = dot(offset, offset);
-        if (currentDist2 < closestPointsDiffDist2) {
-            closestPointEdge = c1;
-            bClosestPointEdge = c2;
-            closestPointsDiff = offset;
-            closestPointsDiffDist2 = currentDist2;
-        }
-    }
-
-    for (size_t i = 1; i < bEdges.size(); i++) {
+    Contact contactEdge = invalidContact;
+    for (size_t i = 0; i < bEdges.size(); i++) {
         for (size_t j = 0; j < edges.size(); j++) {
             vec3 c1, c2;
             edges[j].getClosestPtSegmentSegment(c1, c2, bEdges[i]);
-            vec3 offset = c2 - center;
-            GLfloat currentDist2 = dot(offset, offset);
-            if (currentDist2 < closestPointsDiffDist2) {
-                closestPointEdge = c1;
-                bClosestPointEdge = c2;
-                closestPointsDiff = offset;
-                closestPointsDiffDist2 = currentDist2;
+            vec3 offset1 = c1 - center;
+            vec3 offset2 = c2 - center;
+
+            if (dot(offset1, offset1) > dot(offset2, offset2)) {
+                Contact newContactEdge = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
+                    c2,
+                    center,
+                    axis[0],
+                    axis[1],
+                    axis[2],
+                    halfExtents
+                ));
+                if (contactEdge.getContactValidity() == ContactValidity::INVALID || contactEdge.getPenetration() < newContactEdge.getPenetration()) {
+                    contactEdge = newContactEdge;
+                }
             }
         }
     }
 
-    // The winner of the 2 methods is the one that is closest to the center
-    Contact contactEdge = invalidContact;
-    
-    Contact contactEdge1 = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
-        bClosestPointEdge,
-        center,
-        axis[0],
-        axis[1],
-        axis[2],
-        halfExtents
-    ));
-
-    Contact contactEdge2 = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
-        closestPointEdge,
-        bCenter,
-        bAxis[0],
-        bAxis[1],
-        bAxis[2],
-        bHalfExtents
-    ));
-
-    if (contactEdge1.getContactValidity() != ContactValidity::INVALID && contactEdge2.getContactValidity() != ContactValidity::INVALID) {
-        const vec3 offset = closestPointEdge - bClosestPointEdge;
-        const GLfloat dist = glm::length(offset);
-        
-        contactEdge = Contact(
-            bClosestPointEdge,
-            offset / dist,
-            dist,
-            ContactValidity::VALID
-        );
-    }
-    
+    // The winner of the 2 methods is the one with the highest penetration
     return contactEdge.getContactValidity() == ContactValidity::INVALID || contactVertex.getPenetration() > contactEdge.getPenetration() ? contactVertex : contactEdge;
 }
 
