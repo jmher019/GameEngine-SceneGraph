@@ -419,15 +419,8 @@ Contact CollisionDetector::isOBBIntersectingOBB(
     bCorners[6] = bCenter + bXVector + bYVector - bZVector;
     bCorners[7] = bCenter + bXVector + bYVector + bZVector;
 
-    Contact contactVertex = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
-        corners[0],
-        bCenter,
-        bAxis[0],
-        bAxis[1],
-        bAxis[2],
-        bHalfExtents
-    ));
-    for (size_t i = 1; i < corners.size(); i++) {
+    Contact contactVertex = invalidContact;
+    for (size_t i = 0; i < corners.size(); i++) {
         const Contact newContactVertex = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
             corners[i],
             bCenter,
@@ -442,21 +435,19 @@ Contact CollisionDetector::isOBBIntersectingOBB(
         }
     }
 
-    if (contactVertex.getContactValidity() == ContactValidity::INVALID) {
-        for (size_t i = 0; i < bCorners.size(); i++) {
-            const Contact newContactVertex = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
-                bCorners[i],
-                center,
-                axis[0],
-                axis[1],
-                axis[2],
-                halfExtents
-            ));
+    for (size_t i = 0; i < bCorners.size(); i++) {
+        const Contact newContactVertex = move(GeometryUtils::calculateContactBetweenOBBVertexAndOBB(
+            bCorners[i],
+            center,
+            axis[0],
+            axis[1],
+            axis[2],
+            halfExtents
+        ));
 
-            if (contactVertex.getPenetration() < newContactVertex.getPenetration() || contactVertex.getContactValidity() == ContactValidity::INVALID) {
-                contactVertex = newContactVertex;
-                contactVertex.setContactNormal(-contactVertex.getContactNormal());
-            }
+        if (contactVertex.getPenetration() < newContactVertex.getPenetration() || contactVertex.getContactValidity() == ContactValidity::INVALID) {
+            contactVertex = newContactVertex;
+            contactVertex.setContactNormal(-contactVertex.getContactNormal());
         }
     }
 
