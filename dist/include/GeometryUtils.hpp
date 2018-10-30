@@ -108,8 +108,7 @@ public:
         const vec3& obbXAxis,
         const vec3& obbYAxis,
         const vec3& obbZAxis,
-        const vec3& obbActualHalfExtents,
-        vec3& planeNormal
+        const vec3& obbActualHalfExtents
     ) noexcept;
 
     static Contact calculateContactBetweenOBBVertexAndOBB(

@@ -352,13 +352,8 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     const vec3& obbXAxis,
     const vec3& obbYAxis,
     const vec3& obbZAxis,
-    const vec3& obbActualHalfExtents,
-    vec3& planeNormal
+    const vec3& obbActualHalfExtents
 ) noexcept {
-    planeNormal.x = 0.f;
-    planeNormal.y = 0.f;
-    planeNormal.z = 0.f;
-
     const vec3 d = testPoint - obbCenter;
     // Start result at center of box; kame steps from there
     vec3 result = obbCenter;
@@ -366,8 +361,6 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     // project d onto the transformed x-axis to get the distance
     // along the axis of d from the box center
     GLfloat distX = dot(d, obbXAxis);
-    planeNormal = obbXAxis * (distX < 0.f ? -1.f : 1.f);
-    GLfloat minDepth = obbActualHalfExtents.x - glm::abs(distX);
     if (distX > obbActualHalfExtents.x) {
         distX = obbActualHalfExtents.x;
     }
@@ -380,12 +373,6 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     // project d onto the transformed y-axis to get the distance
     // along the axis of d from the box center
     GLfloat distY = dot(d, obbYAxis);
-    GLfloat depth = obbActualHalfExtents.y - glm::abs(distY);
-    if (depth < minDepth) {
-        minDepth = depth;
-        planeNormal = obbYAxis * (distY < 0.f ? -1.f : 1.f);
-    }
-
     if (distY > obbActualHalfExtents.y) {
         distY = obbActualHalfExtents.y;
     }
@@ -398,12 +385,6 @@ vec3 GeometryUtils::getClosestPointBetweenPointAndOBB(
     // project d onto the transformed z-axis to get the distance
     // along the axis of d from the box center
     GLfloat distZ = dot(d, obbZAxis);
-    depth = obbActualHalfExtents.z - glm::abs(distZ);
-    if (depth < minDepth) {
-        minDepth = depth;
-        planeNormal = obbZAxis * (distZ < 0.f ? -1.f : 1.f);
-    }
-
     if (distZ > obbActualHalfExtents.z) {
         distZ = obbActualHalfExtents.z;
     }

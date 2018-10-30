@@ -131,8 +131,9 @@ void Rigidbody::setMass(const GLfloat& mass) noexcept {
 }
 
 void Rigidbody::handleCollision(Rigidbody* rigidbody) noexcept {
-    Contact contact = move(CollisionDetector::isVolumeIntersectingVolume(boundingVolume.get(), rigidbody->getBoundingVolume().get()));
-    if (contact.getContactValidity() == ContactValidity::VALID) {
+    if (CollisionDetector::isVolumeIntersectingVolume(boundingVolume.get(), rigidbody->getBoundingVolume().get())) {
+        Contact contact = move(CollisionDetector::findContactBetweenVolumeAndVolume(boundingVolume.get(), rigidbody->getBoundingVolume().get()));
+    
         if (!isStatic && contact.getPenetration() > GeometryUtils::epsilon) {
             const vec3& normal = contact.getContactNormal();
             const GLfloat& penetration = contact.getPenetration();
