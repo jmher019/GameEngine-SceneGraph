@@ -1151,7 +1151,7 @@ bool CollisionDetector::areMovingSphereAndSphereIntersecting(
     GLboolean collisionDetected = CollisionDetector::isSphereIntersectingSphere(&testingSphere, sphere2);
 
     if (collisionDetected) {
-        GLfloat maxErrorDistance = 1.f;
+        GLfloat maxErrorDistance = 0.1f;
         GLfloat timeSegment = delTime * 0.5f;
         distanceSegment = speed * timeSegment;
         GLfloat startTime = t0;
@@ -1203,7 +1203,7 @@ bool CollisionDetector::areMovingCapsuleAndSphereIntersecting(
     GLboolean collisionDetected = CollisionDetector::isCapsuleIntersectingSphere(capsule, &testingSphere);
 
     if (collisionDetected) {
-        GLfloat maxErrorDistance = 1.f;
+        GLfloat maxErrorDistance = 0.1f;
         GLfloat timeSegment = delTime * 0.5f;
         distanceSegment = speed * timeSegment;
         GLfloat startTime = t0;
@@ -1268,7 +1268,7 @@ bool CollisionDetector::areMovingOBBAndSphereIntersecting(
     GLboolean collisionDetected = CollisionDetector::isOBBIntersectingSphere(obb, &testingSphere);
 
     if (collisionDetected) {
-        GLfloat maxErrorDistance = 1.f;
+        GLfloat maxErrorDistance = 0.1f;
         GLfloat timeSegment = delTime * 0.5f;
         distanceSegment = speed * timeSegment;
         GLfloat startTime = t0;
@@ -1387,7 +1387,7 @@ bool CollisionDetector::areMovingOBBAndOBBIntersecting(
     GLboolean collisionDetected = CollisionDetector::isOBBIntersectingOBB(obb2, &testingOBB);
 
     if (collisionDetected) {
-        GLfloat maxErrorDistance = 1.f;
+        GLfloat maxErrorDistance = 0.1f;
         GLfloat timeSegment = delTime * 0.5f;
         distanceSegment = speed * timeSegment;
         GLfloat startTime = t0;
