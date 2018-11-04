@@ -126,7 +126,7 @@ void Rigidbody::setMass(const GLfloat& mass) noexcept {
 
 void Rigidbody::handleCollision(Rigidbody* rigidbody, const GLfloat& deltaSeconds) noexcept {
     GLfloat t = 0;
-    if (dot(velocity, velocity) < GeometryUtils::epsilon) {
+    if (dot(velocity, velocity) >= GeometryUtils::epsilon) {
         GLboolean isIntersectingFromVelocity = CollisionDetector::areMovingVolumesIntersecting(
             boundingVolume.get(),
             velocity,
@@ -139,8 +139,8 @@ void Rigidbody::handleCollision(Rigidbody* rigidbody, const GLfloat& deltaSecond
         t = isIntersectingFromVelocity ? t : deltaSeconds;
     }
 
-    setVelocity(velocity + acceleration * deltaSeconds);
-    const vec3 translation = velocity * deltaSeconds;
+    const vec3 translation = velocity * t + acceleration * t * t;
+    setVelocity(velocity + acceleration * t);
     translate(translation.x, translation.y, translation.z);
 
     if (CollisionDetector::isVolumeIntersectingVolume(boundingVolume.get(), rigidbody->getBoundingVolume().get())) {
