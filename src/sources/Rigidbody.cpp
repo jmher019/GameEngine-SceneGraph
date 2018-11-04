@@ -137,6 +137,21 @@ void Rigidbody::handleCollision(Rigidbody* rigidbody, const GLfloat& deltaSecond
             t
         );
         t = isIntersectingFromVelocity ? t : deltaSeconds;
+
+        if (isIntersectingFromVelocity && t == 0.f) {
+            Contact contact = move(CollisionDetector::findContactBetweenVolumeAndVolume(boundingVolume.get(), rigidbody->getBoundingVolume().get()));
+
+            if (!isStatic && contact.getPenetration() >= GeometryUtils::epsilon) {
+                const vec3& normal = contact.getContactNormal();
+                const GLfloat& penetration = contact.getPenetration();
+                const vec3 translationVector = normal * penetration;
+
+                translate(translationVector.x, translationVector.y, translationVector.z);
+                setVelocity(velocity - dot(normal, velocity) * normal);
+            }
+
+            t = deltaSeconds;
+        }
     }
 
     const vec3 translation = velocity * t + acceleration * t * t;
