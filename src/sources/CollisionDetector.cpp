@@ -1339,7 +1339,7 @@ bool CollisionDetector::areMovingOBBAndOBBIntersecting(
     const vec3 yAxis1 = obb1->getYAxis();
     const vec3 zAxis1 = obb1->getZAxis();
     GLboolean isXAxisParallelToVelocity = 1. - dot(xAxis1, velocityUnitVector) <= GeometryUtils::epsilon;
-    const vec3 testYAxis = isXAxisParallelToVelocity ? cross(yAxis1, velocityUnitVector) : cross(xAxis1, velocityUnitVector);
+    const vec3 testYAxis = isXAxisParallelToVelocity ? cross(zAxis1, velocityUnitVector) : cross(xAxis1, velocityUnitVector);
     const vec3 testZAxis = cross(testYAxis, velocityUnitVector);
 
 
@@ -1381,8 +1381,16 @@ bool CollisionDetector::areMovingOBBAndOBBIntersecting(
     const GLfloat delTime = t1 - t0;
     GLfloat distanceSegment = delTime * speed;
     const vec3 testingOBBCenter = obb1->getCenter() + velocityUnitVector * distanceSegment * 0.5f;
-    OrientedBoundingBox testingOBB(vec3(distanceSegment * 0.5f + xHalfExtent, yHalfExtent, zHalfExtent));
-    testingOBB.translate(testingOBBCenter.x, testingOBBCenter.y, testingOBBCenter.z);
+    OrientedBoundingBox testingOBB(
+        vec3(distanceSegment * 0.5f + xHalfExtent, yHalfExtent, zHalfExtent),
+        string(""),
+        Transform(
+            fdualquat(
+                rotate(fquat(1.f, 0.f, 0.f, 0.f), glm::acos(dot(velocityUnitVector, xAxis1)), testYAxis),
+                testingOBBCenter
+            )
+        )
+    );
 
     GLboolean collisionDetected = CollisionDetector::isOBBIntersectingOBB(obb2, &testingOBB);
 
