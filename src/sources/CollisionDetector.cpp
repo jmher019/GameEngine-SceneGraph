@@ -1322,6 +1322,12 @@ bool CollisionDetector::areMovingOBBAndOBBIntersecting(
     const GLfloat& t1,
     GLfloat& t
 ) noexcept {
+    // Check if the volumes are already intersecting
+    if (CollisionDetector::isOBBIntersectingOBB(obb1, obb2)) {
+        t = 0.f;
+        return true;
+    }
+
     const vec3 velocityRelativeToOBB2 = velocity1 - velocity2;
     const GLfloat speed = length(velocityRelativeToOBB2);
     const vec3 velocityUnitVector = velocityRelativeToOBB2 / speed;
