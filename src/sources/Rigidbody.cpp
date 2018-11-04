@@ -62,12 +62,6 @@ Rigidbody& Rigidbody::operator=(Rigidbody&& rigidbody) noexcept {
     return *this;
 }
 
-void Rigidbody::update(const float& deltaSeconds) {
-    setVelocity(velocity + acceleration * deltaSeconds);
-    const vec3 translation = velocity * deltaSeconds;
-    translate(translation.x, translation.y, translation.z);
-}
-
 void Rigidbody::setMeshWrapper(const shared_ptr<MeshWrapper>& meshWrapper) {
     if (meshWrapper == nullptr) {
         throw invalid_argument("meshWrapper must not be a nullptr");
@@ -130,11 +124,29 @@ void Rigidbody::setMass(const GLfloat& mass) noexcept {
     this->mass = mass;
 }
 
-void Rigidbody::handleCollision(Rigidbody* rigidbody) noexcept {
+void Rigidbody::handleCollision(Rigidbody* rigidbody, const GLfloat& deltaSeconds) noexcept {
+    GLfloat t = 0;
+    if (dot(velocity, velocity) < GeometryUtils::epsilon ||
+        !CollisionDetector::areMovingVolumesIntersecting(
+            boundingVolume.get(),
+            velocity,
+            rigidbody->getBoundingVolume().get(),
+            rigidbody->getVelocity(),
+            0.f,
+            deltaSeconds,
+            t
+        )) {
+        t = deltaSeconds;
+    }
+
+    setVelocity(velocity + acceleration * deltaSeconds);
+    const vec3 translation = velocity * deltaSeconds;
+    translate(translation.x, translation.y, translation.z);
+
     if (CollisionDetector::isVolumeIntersectingVolume(boundingVolume.get(), rigidbody->getBoundingVolume().get())) {
         Contact contact = move(CollisionDetector::findContactBetweenVolumeAndVolume(boundingVolume.get(), rigidbody->getBoundingVolume().get()));
     
-        if (!isStatic && contact.getPenetration() > GeometryUtils::epsilon) {
+        if (!isStatic && contact.getPenetration() >= GeometryUtils::epsilon) {
             const vec3& normal = contact.getContactNormal();
             const GLfloat& penetration = contact.getPenetration();
             const vec3 translationVector = normal * penetration;

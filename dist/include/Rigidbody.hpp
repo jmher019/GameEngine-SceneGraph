@@ -31,8 +31,6 @@ public:
 
     Rigidbody& operator=(Rigidbody&& rigidbody) noexcept;
 
-    void update(const float& deltaSeconds) override;
-
     void setMeshWrapper(const shared_ptr<MeshWrapper>& meshWrapper);
 
     shared_ptr<MeshWrapper>& getMeshWrapper(void) noexcept;
@@ -59,7 +57,7 @@ public:
 
     void setMass(const GLfloat& mass) noexcept;
         
-    virtual void handleCollision(Rigidbody* rigidbody) noexcept;
+    virtual void handleCollision(Rigidbody* rigidbody, const GLfloat& deltaSeconds) noexcept;
 };
 
 #endif // !RIGIDBODY_HPP

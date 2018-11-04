@@ -185,6 +185,106 @@ public:
         OrientedBoundingBox* obb1,
         OrientedBoundingBox* obb2
     ) noexcept;
+
+    static bool areMovingVolumesIntersecting(
+        BoundingVolume* boundingVolume1,
+        const vec3& velocity1,
+        BoundingVolume* boundingVolume2,
+        const vec3& velocity2,
+        const GLfloat& t0,
+        const GLfloat& t1,
+        GLfloat& t
+    ) noexcept;
+
+    static bool areMovingSphereAndVolumeIntersecting(
+        BoundingSphere* sphere,
+        const vec3& velocity1,
+        BoundingVolume* boundingVolume,
+        const vec3& velocity2,
+        const GLfloat& t0,
+        const GLfloat& t1,
+        GLfloat& t
+    ) noexcept;
+
+    static bool areMovingCapsuleAndVolumeIntersecting(
+        BoundingCapsule* capsule,
+        const vec3& velocity1,
+        BoundingVolume* boundingVolume,
+        const vec3& velocity2,
+        const GLfloat& t0,
+        const GLfloat& t1,
+        GLfloat& t
+    ) noexcept;
+
+    static bool areMovingOBBAndVolumeIntersecting(
+        OrientedBoundingBox* obb,
+        const vec3& velocity1,
+        BoundingVolume* boundingVolume,
+        const vec3& velocity2,
+        const GLfloat& t0,
+        const GLfloat& t1,
+        GLfloat& t
+    ) noexcept;
+
+    static bool areMovingSphereAndSphereIntersecting(
+        BoundingSphere* sphere1,
+        const vec3& velocity1,
+        BoundingSphere* sphere2,
+        const vec3& velocity2,
+        const GLfloat& t0,
+        const GLfloat& t1,
+        GLfloat& t
+    ) noexcept;
+
+    static bool areMovingCapsuleAndSphereIntersecting(
+        BoundingCapsule* capsule,
+        const vec3& velocity1,
+        BoundingSphere* sphere,
+        const vec3& velocity2,
+        const GLfloat& t0,
+        const GLfloat& t1,
+        GLfloat& t
+    ) noexcept;
+
+    static bool areMovingCapsuleAndCapsuleIntersecting(
+        BoundingCapsule* capsule1,
+        const vec3& velocity1,
+        BoundingCapsule* capsule2,
+        const vec3& velocity2,
+        const GLfloat& t0,
+        const GLfloat& t1,
+        GLfloat& t
+    ) noexcept;
+
+    static bool areMovingOBBAndSphereIntersecting(
+        OrientedBoundingBox* obb,
+        const vec3& velocity1,
+        BoundingSphere* sphere,
+        const vec3& velocity2,
+        const GLfloat& t0,
+        const GLfloat& t1,
+        GLfloat& t
+    ) noexcept;
+
+    static bool areMovingOBBAndCapsuleIntersecting(
+        OrientedBoundingBox* obb,
+        const vec3& velocity1,
+        BoundingCapsule* capsule,
+        const vec3& velocity2,
+        const GLfloat& t0,
+        const GLfloat& t1,
+        GLfloat& t
+    ) noexcept;
+
+    static bool areMovingOBBAndOBBIntersecting(
+        OrientedBoundingBox* obb1,
+        const vec3& velocity1,
+        OrientedBoundingBox* obb2,
+        const vec3& velocity2,
+        const GLfloat& t0,
+        const GLfloat& t1,
+        GLfloat& t
+    ) noexcept;
 };
 
 #endif // !COLLISION_DETECTOR_HPP

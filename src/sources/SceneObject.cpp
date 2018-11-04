@@ -35,12 +35,6 @@ SceneObject& SceneObject::operator=(SceneObject&& other) noexcept {
     return *this;
 }
 
-void SceneObject::update(const float& deltaSeconds) {
-    for (auto& child : children) {
-        child->update(deltaSeconds);
-    }
-}
-
 void SceneObject::draw(const mat4& ProjectionViewMatrix) const {
     for (auto& child : children) {
         child->draw(ProjectionViewMatrix);

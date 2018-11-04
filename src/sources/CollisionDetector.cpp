@@ -1042,3 +1042,373 @@ Contact CollisionDetector::findContactBetweenOBBAndOBB(
     // The winner of the 2 methods is the one with the highest penetration
     return contactEdge.getContactValidity() == ContactValidity::INVALID || contactVertex.getPenetration() >= contactEdge.getPenetration() ? contactVertex : contactEdge;
 }
+
+bool CollisionDetector::areMovingVolumesIntersecting(
+    BoundingVolume* boundingVolume1,
+    const vec3& velocity1,
+    BoundingVolume* boundingVolume2,
+    const vec3& velocity2,
+    const GLfloat& t0,
+    const GLfloat& t1,
+    GLfloat& t
+) noexcept {
+    if (BoundingSphere* bSphere = dynamic_cast<BoundingSphere*>(boundingVolume1)) {
+        return CollisionDetector::areMovingSphereAndVolumeIntersecting(bSphere, velocity1, boundingVolume2, velocity2, t0, t1, t);
+    }
+    else if (BoundingCapsule* bCapsule = dynamic_cast<BoundingCapsule*>(boundingVolume1)) {
+        return CollisionDetector::areMovingCapsuleAndVolumeIntersecting(bCapsule, velocity1, boundingVolume2, velocity2, t0, t1, t);
+    }
+    else if (OrientedBoundingBox* bObb = dynamic_cast<OrientedBoundingBox*>(boundingVolume1)) {
+        return CollisionDetector::areMovingOBBAndVolumeIntersecting(bObb, velocity1, boundingVolume2, velocity2, t0, t1, t);
+    }
+
+    return false;
+}
+
+bool CollisionDetector::areMovingSphereAndVolumeIntersecting(
+    BoundingSphere* sphere,
+    const vec3& velocity1,
+    BoundingVolume* boundingVolume,
+    const vec3& velocity2,
+    const GLfloat& t0,
+    const GLfloat& t1,
+    GLfloat& t
+) noexcept {
+    if (BoundingSphere* bSphere = dynamic_cast<BoundingSphere*>(boundingVolume)) {
+        return CollisionDetector::areMovingSphereAndSphereIntersecting(sphere, velocity1, bSphere, velocity2, t0, t1, t);
+    }
+    else if (BoundingCapsule* bCapsule = dynamic_cast<BoundingCapsule*>(boundingVolume)) {
+        return CollisionDetector::areMovingCapsuleAndSphereIntersecting(bCapsule, velocity2, sphere, velocity1, t0, t1, t);
+    }
+    else if (OrientedBoundingBox* bObb = dynamic_cast<OrientedBoundingBox*>(boundingVolume)) {
+        return CollisionDetector::areMovingOBBAndSphereIntersecting(bObb, velocity2, sphere, velocity1, t0, t1, t);
+    }
+
+    return false;
+}
+
+bool CollisionDetector::areMovingCapsuleAndVolumeIntersecting(
+    BoundingCapsule* capsule,
+    const vec3& velocity1,
+    BoundingVolume* boundingVolume,
+    const vec3& velocity2,
+    const GLfloat& t0,
+    const GLfloat& t1,
+    GLfloat& t
+) noexcept {
+    if (BoundingSphere* bSphere = dynamic_cast<BoundingSphere*>(boundingVolume)) {
+        return CollisionDetector::areMovingCapsuleAndSphereIntersecting(capsule, velocity1, bSphere, velocity2, t0, t1, t);
+    }
+    else if (BoundingCapsule* bCapsule = dynamic_cast<BoundingCapsule*>(boundingVolume)) {
+        return CollisionDetector::areMovingCapsuleAndCapsuleIntersecting(capsule, velocity1, bCapsule, velocity2, t0, t1, t);
+    }
+    else if (OrientedBoundingBox* bObb = dynamic_cast<OrientedBoundingBox*>(boundingVolume)) {
+        return CollisionDetector::areMovingOBBAndCapsuleIntersecting(bObb, velocity2, capsule, velocity1, t0, t1, t);
+    }
+
+    return false;
+}
+
+bool CollisionDetector::areMovingOBBAndVolumeIntersecting(
+    OrientedBoundingBox* obb,
+    const vec3& velocity1,
+    BoundingVolume* boundingVolume,
+    const vec3& velocity2,
+    const GLfloat& t0,
+    const GLfloat& t1,
+    GLfloat& t
+) noexcept {
+    if (BoundingSphere* bSphere = dynamic_cast<BoundingSphere*>(boundingVolume)) {
+        return CollisionDetector::areMovingOBBAndSphereIntersecting(obb, velocity1, bSphere, velocity2, t0, t1, t);
+    }
+    else if (BoundingCapsule* bCapsule = dynamic_cast<BoundingCapsule*>(boundingVolume)) {
+        return CollisionDetector::areMovingOBBAndCapsuleIntersecting(obb, velocity1, bCapsule, velocity2, t0, t1, t);
+    }
+    else if (OrientedBoundingBox* bObb = dynamic_cast<OrientedBoundingBox*>(boundingVolume)) {
+        return CollisionDetector::areMovingOBBAndOBBIntersecting(obb, velocity1, bObb, velocity2, t0, t1, t);
+    }
+
+    return false;
+}
+
+bool CollisionDetector::areMovingSphereAndSphereIntersecting(
+    BoundingSphere* sphere1,
+    const vec3& velocity1,
+    BoundingSphere* sphere2,
+    const vec3& velocity2,
+    const GLfloat& t0,
+    const GLfloat& t1,
+    GLfloat& t
+) noexcept {
+    const vec3 velocityRelativeToSphere2 = velocity1 - velocity2;
+    const GLfloat speed = length(velocityRelativeToSphere2);
+    const vec3 velocityUnitVector = velocityRelativeToSphere2 / speed;
+    const GLfloat delTime = t1 - t0;
+    GLfloat distanceSegment = delTime * speed;
+    BoundingSphere testingSphere(distanceSegment * 0.5f + sphere1->getActualRadius());
+    vec3 testingSphereCenter = sphere1->getCenter() + delTime * 0.5f;
+    testingSphere.translate(testingSphereCenter.x, testingSphereCenter.y, testingSphereCenter.z);
+    GLboolean collisionDetected = CollisionDetector::isSphereIntersectingSphere(&testingSphere, sphere2);
+
+    if (collisionDetected) {
+        GLfloat maxErrorDistance = 0.1f;
+        GLfloat timeSegment = delTime * 0.5f;
+        distanceSegment = speed * timeSegment;
+        GLfloat startTime = t0;
+        GLfloat endTime = t1;
+        t = 0.f;
+        while (distanceSegment > maxErrorDistance) {
+            vec3 offset = -velocityUnitVector * distanceSegment * 0.5f;
+            testingSphere.setRadius(distanceSegment * 0.5f + sphere1->getActualRadius());
+            testingSphere.translate(offset.x, offset.y, offset.z);
+
+            if (CollisionDetector::isSphereIntersectingSphere(&testingSphere, sphere2)) {
+                endTime = startTime + timeSegment;
+                t = startTime + timeSegment * 0.5f;
+            }
+            else {
+                offset = velocityUnitVector * distanceSegment;
+                testingSphere.translate(offset.x, offset.y, offset.z);
+                
+                endTime = startTime + timeSegment * 2;
+                startTime = startTime + timeSegment;
+                t = startTime + timeSegment * 0.5f;
+            }
+
+            timeSegment *= 0.5f;
+            distanceSegment = speed * timeSegment;
+        }
+    }
+
+    return collisionDetected;
+}
+
+bool CollisionDetector::areMovingCapsuleAndSphereIntersecting(
+    BoundingCapsule* capsule,
+    const vec3& velocity1,
+    BoundingSphere* sphere,
+    const vec3& velocity2,
+    const GLfloat& t0,
+    const GLfloat& t1,
+    GLfloat& t
+) noexcept {
+    const vec3 velocityRelativeToSphere = velocity2 - velocity1;
+    const GLfloat speed = length(velocityRelativeToSphere);
+    const vec3 velocityUnitVector = velocityRelativeToSphere / speed;
+    const GLfloat delTime = t1 - t0;
+    GLfloat distanceSegment = delTime * speed;
+    BoundingSphere testingSphere(distanceSegment * 0.5f + sphere->getActualRadius());
+    vec3 testingSphereCenter = sphere->getCenter() + delTime * 0.5f;
+    testingSphere.translate(testingSphereCenter.x, testingSphereCenter.y, testingSphereCenter.z);
+    GLboolean collisionDetected = CollisionDetector::isCapsuleIntersectingSphere(capsule, &testingSphere);
+
+    if (collisionDetected) {
+        GLfloat maxErrorDistance = 0.1f;
+        GLfloat timeSegment = delTime * 0.5f;
+        distanceSegment = speed * timeSegment;
+        GLfloat startTime = t0;
+        GLfloat endTime = t1;
+        t = 0.f;
+        while (distanceSegment > maxErrorDistance) {
+            vec3 offset = -velocityUnitVector * distanceSegment * 0.5f;
+            testingSphere.setRadius(distanceSegment * 0.5f + sphere->getActualRadius());
+            testingSphere.translate(offset.x, offset.y, offset.z);
+
+            if (CollisionDetector::isCapsuleIntersectingSphere(capsule, &testingSphere)) {
+                endTime = startTime + timeSegment;
+                t = startTime + timeSegment * 0.5f;
+            }
+            else {
+                offset = velocityUnitVector * distanceSegment;
+                testingSphere.translate(offset.x, offset.y, offset.z);
+
+                endTime = startTime + timeSegment * 2;
+                startTime = startTime + timeSegment;
+                t = startTime + timeSegment * 0.5f;
+            }
+
+            timeSegment *= 0.5f;
+            distanceSegment = speed * timeSegment;
+        }
+    }
+
+    return collisionDetected;
+}
+
+bool CollisionDetector::areMovingCapsuleAndCapsuleIntersecting(
+    BoundingCapsule* capsule1,
+    const vec3& velocity1,
+    BoundingCapsule* capsule2,
+    const vec3& velocity2,
+    const GLfloat& t0,
+    const GLfloat& t1,
+    GLfloat& t
+) noexcept {
+    // TODO: implement
+    return false;
+}
+
+bool CollisionDetector::areMovingOBBAndSphereIntersecting(
+    OrientedBoundingBox* obb,
+    const vec3& velocity1,
+    BoundingSphere* sphere,
+    const vec3& velocity2,
+    const GLfloat& t0,
+    const GLfloat& t1,
+    GLfloat& t
+) noexcept {
+    const vec3 velocityRelativeToSphere = velocity2 - velocity1;
+    const GLfloat speed = length(velocityRelativeToSphere);
+    const vec3 velocityUnitVector = velocityRelativeToSphere / speed;
+    const GLfloat delTime = t1 - t0;
+    GLfloat distanceSegment = delTime * speed;
+    BoundingSphere testingSphere(distanceSegment * 0.5f + sphere->getActualRadius());
+    vec3 testingSphereCenter = sphere->getCenter() + delTime * 0.5f;
+    testingSphere.translate(testingSphereCenter.x, testingSphereCenter.y, testingSphereCenter.z);
+    GLboolean collisionDetected = CollisionDetector::isOBBIntersectingSphere(obb, &testingSphere);
+
+    if (collisionDetected) {
+        GLfloat maxErrorDistance = 0.1f;
+        GLfloat timeSegment = delTime * 0.5f;
+        distanceSegment = speed * timeSegment;
+        GLfloat startTime = t0;
+        GLfloat endTime = t1;
+        t = 0.f;
+        while (distanceSegment > maxErrorDistance) {
+            vec3 offset = -velocityUnitVector * distanceSegment * 0.5f;
+            testingSphere.setRadius(distanceSegment * 0.5f + sphere->getActualRadius());
+            testingSphere.translate(offset.x, offset.y, offset.z);
+
+            if (CollisionDetector::isOBBIntersectingSphere(obb, &testingSphere)) {
+                endTime = startTime + timeSegment;
+                t = startTime + timeSegment * 0.5f;
+            }
+            else {
+                offset = velocityUnitVector * distanceSegment;
+                testingSphere.translate(offset.x, offset.y, offset.z);
+
+                endTime = startTime + timeSegment * 2;
+                startTime = startTime + timeSegment;
+                t = startTime + timeSegment * 0.5f;
+            }
+
+            timeSegment *= 0.5f;
+            distanceSegment = speed * timeSegment;
+        }
+    }
+
+    return collisionDetected;
+}
+
+bool CollisionDetector::areMovingOBBAndCapsuleIntersecting(
+    OrientedBoundingBox* obb,
+    const vec3& velocity1,
+    BoundingCapsule* capsule,
+    const vec3& velocity2,
+    const GLfloat& t0,
+    const GLfloat& t1,
+    GLfloat& t
+) noexcept {
+    // TODO: implement
+    return false;
+}
+
+bool CollisionDetector::areMovingOBBAndOBBIntersecting(
+    OrientedBoundingBox* obb1,
+    const vec3& velocity1,
+    OrientedBoundingBox* obb2,
+    const vec3& velocity2,
+    const GLfloat& t0,
+    const GLfloat& t1,
+    GLfloat& t
+) noexcept {
+    const vec3 velocityRelativeToOBB2 = velocity1 - velocity2;
+    const GLfloat speed = length(velocityRelativeToOBB2);
+    const vec3 velocityUnitVector = velocityRelativeToOBB2 / speed;
+
+    // the velocity unit vector will act as our x unit vector for the test obb
+    // this will be the axis in which we will shrink the test obb
+    // The half extents for the y and z axis will stay constant throughout the test
+    const vec3 xAxis1 = obb1->getXAxis();
+    const vec3 yAxis1 = obb1->getYAxis();
+    const vec3 zAxis1 = obb1->getZAxis();
+    GLboolean isXAxisParallelToVelocity = 1. - dot(xAxis1, velocityUnitVector) <= GeometryUtils::epsilon;
+    const vec3 testYAxis = isXAxisParallelToVelocity ? cross(yAxis1, velocityUnitVector) : cross(xAxis1, velocityUnitVector);
+    const vec3 testZAxis = cross(testYAxis, velocityUnitVector);
+
+
+    // calculate the y and z half extents
+    const vec3 halfExtents1 = obb1->getActualHalfExtents();
+    const vec3 transformedX1 = xAxis1 * halfExtents1.x;
+    const vec3 transformedY1 = yAxis1 * halfExtents1.y;
+    const vec3 transformedZ1 = zAxis1 * halfExtents1.z;
+    vector<vec3> corners = {
+        -transformedX1 - transformedY1 - transformedZ1,
+        -transformedX1 - transformedY1 + transformedZ1,
+        -transformedX1 + transformedY1 - transformedZ1,
+        -transformedX1 + transformedY1 + transformedZ1,
+        transformedX1 - transformedY1 - transformedZ1,
+        transformedX1 - transformedY1 + transformedZ1,
+        transformedX1 + transformedY1 - transformedZ1,
+        transformedX1 + transformedY1 + transformedZ1
+    };
+
+    GLfloat xHalfExtent = glm::abs(dot(corners[0], velocityUnitVector));
+    GLfloat yHalfExtent = glm::abs(dot(corners[0], testYAxis));
+    GLfloat zHalfExtent = glm::abs(dot(corners[0], testZAxis));
+    for (size_t i = 1; i < corners.size(); i++) {
+        const GLfloat currentXHalfExtent = glm::abs(dot(corners[i], velocityUnitVector));
+        const GLfloat currentYHalfExtent = glm::abs(dot(corners[i], testYAxis));
+        const GLfloat currentZHalfExtent = glm::abs(dot(corners[i], testZAxis));
+        
+        if (currentXHalfExtent > xHalfExtent) {
+            xHalfExtent = currentXHalfExtent;
+        }
+        if (currentYHalfExtent > yHalfExtent) {
+            yHalfExtent = currentYHalfExtent;
+        }
+        if (currentZHalfExtent > zHalfExtent) {
+            zHalfExtent = currentZHalfExtent;
+        }
+    }
+
+    const GLfloat delTime = t1 - t0;
+    GLfloat distanceSegment = delTime * speed;
+    const vec3 testingOBBCenter = obb1->getCenter() + velocityUnitVector * distanceSegment * 0.5f;
+    OrientedBoundingBox testingOBB(vec3(distanceSegment * 0.5f + xHalfExtent, yHalfExtent, zHalfExtent));
+    testingOBB.translate(testingOBBCenter.x, testingOBBCenter.y, testingOBBCenter.z);
+
+    GLboolean collisionDetected = CollisionDetector::isOBBIntersectingOBB(obb2, &testingOBB);
+
+    if (collisionDetected) {
+        GLfloat maxErrorDistance = 0.1f;
+        GLfloat timeSegment = delTime * 0.5f;
+        distanceSegment = speed * timeSegment;
+        GLfloat startTime = t0;
+        GLfloat endTime = t1;
+        t = 0.f;
+        while (distanceSegment > maxErrorDistance) {
+            vec3 offset = -velocityUnitVector * distanceSegment * 0.5f;
+            testingOBB.setHalfExtents(vec3(distanceSegment * 0.5f + xHalfExtent, yHalfExtent, zHalfExtent));
+            testingOBB.translate(offset.x, offset.y, offset.z);
+
+            if (CollisionDetector::isOBBIntersectingOBB(obb2, &testingOBB)) {
+                endTime = startTime + timeSegment;
+                t = startTime + timeSegment * 0.5f;
+            }
+            else {
+                offset = velocityUnitVector * distanceSegment;
+                testingOBB.translate(offset.x, offset.y, offset.z);
+
+                endTime = startTime + timeSegment * 2;
+                startTime = startTime + timeSegment;
+                t = startTime + timeSegment * 0.5f;
+            }
+
+            timeSegment *= 0.5f;
+            distanceSegment = speed * timeSegment;
+        }
+    }
+
+    return collisionDetected;
+}
