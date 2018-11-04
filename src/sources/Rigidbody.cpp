@@ -126,9 +126,8 @@ void Rigidbody::setMass(const GLfloat& mass) noexcept {
 
 void Rigidbody::handleCollision(Rigidbody* rigidbody, const GLfloat& deltaSeconds) noexcept {
     GLfloat t = 0;
-    GLboolean isIntersectingFromVelocity = false;
     if (dot(velocity, velocity) < GeometryUtils::epsilon) {
-        isIntersectingFromVelocity = CollisionDetector::areMovingVolumesIntersecting(
+        GLboolean isIntersectingFromVelocity = CollisionDetector::areMovingVolumesIntersecting(
             boundingVolume.get(),
             velocity,
             rigidbody->getBoundingVolume().get(),
@@ -144,7 +143,7 @@ void Rigidbody::handleCollision(Rigidbody* rigidbody, const GLfloat& deltaSecond
     const vec3 translation = velocity * deltaSeconds;
     translate(translation.x, translation.y, translation.z);
 
-    if (isIntersectingFromVelocity && CollisionDetector::isVolumeIntersectingVolume(boundingVolume.get(), rigidbody->getBoundingVolume().get())) {
+    if (CollisionDetector::isVolumeIntersectingVolume(boundingVolume.get(), rigidbody->getBoundingVolume().get())) {
         Contact contact = move(CollisionDetector::findContactBetweenVolumeAndVolume(boundingVolume.get(), rigidbody->getBoundingVolume().get()));
     
         if (!isStatic && contact.getPenetration() >= GeometryUtils::epsilon) {
