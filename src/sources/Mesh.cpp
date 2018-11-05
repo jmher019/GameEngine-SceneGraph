@@ -79,6 +79,8 @@ void Mesh::draw(const mat4& ProjectionViewMatrix) const {
         shader->setMat4("model", value_ptr(model));
         shader->setMat4("transposeInvertedModel", value_ptr(transpose(inverse(model))));
 
+        LightFactory::loadLightsIntoShader(shader);
+
         glBindVertexArray(getVAO());
         glDrawArrays(GL_TRIANGLES, 0, (GLsizei)getVertices().size());
         glBindVertexArray(0);
@@ -93,6 +95,8 @@ void Mesh::draw(const mat4& ProjectionViewMatrix, const mat4& model) const {
         shader->setMat4("PVM", value_ptr(ProjectionViewMatrix * model));
         shader->setMat4("model", value_ptr(model));
         shader->setMat4("transposeInvertedModel", value_ptr(transpose(inverse(model))));
+
+        LightFactory::loadLightsIntoShader(shader);
 
         glBindVertexArray(getVAO());
         glDrawArrays(GL_TRIANGLES, 0, (GLsizei)getVertices().size());
