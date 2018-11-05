@@ -1,5 +1,9 @@
 #include <LightFactory.hpp>
 
+vector<shared_ptr<PointLight>> LightFactory::pointLights;
+vector<shared_ptr<DirectionalLight>> LightFactory::directionalLights;
+vector<shared_ptr<SpotLight>> LightFactory::spotLights;
+
 shared_ptr<PointLight> LightFactory::addPointLight(
     const vec3& ambient,
     const vec3& diffuse,
