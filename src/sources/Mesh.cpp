@@ -76,6 +76,7 @@ void Mesh::draw(const mat4& ProjectionViewMatrix) const {
 
         shader->use();
         shader->setMat4("PVM", value_ptr(ProjectionViewMatrix * model));
+        shader->setMat4("model", value_ptr(model));
         shader->setMat4("transposeInvertedModel", value_ptr(transpose(inverse(model))));
 
         glBindVertexArray(getVAO());
@@ -90,6 +91,7 @@ void Mesh::draw(const mat4& ProjectionViewMatrix, const mat4& model) const {
     if (shader != nullptr) {
         shader->use();
         shader->setMat4("PVM", value_ptr(ProjectionViewMatrix * model));
+        shader->setMat4("model", value_ptr(model));
         shader->setMat4("transposeInvertedModel", value_ptr(transpose(inverse(model))));
 
         glBindVertexArray(getVAO());
