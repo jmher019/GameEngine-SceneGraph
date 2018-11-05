@@ -14,7 +14,7 @@ private:
     static vector<shared_ptr<SpotLight>> spotLights;
 
 public:
-    shared_ptr<PointLight> addPointLight(
+    static shared_ptr<PointLight> addPointLight(
         const vec3& ambient,
         const vec3& diffuse,
         const vec3& specular,
@@ -24,14 +24,14 @@ public:
         const GLfloat& quadratic
     ) noexcept;
 
-    shared_ptr<DirectionalLight> addDirectionalLight(
+    static shared_ptr<DirectionalLight> addDirectionalLight(
         const vec3& ambient,
         const vec3& diffuse,
         const vec3& specular,
         const vec3& direction
     ) noexcept;
 
-    shared_ptr<SpotLight> addSpotLight(
+    static shared_ptr<SpotLight> addSpotLight(
         const vec3& ambient,
         const vec3& diffuse,
         const vec3& specular,

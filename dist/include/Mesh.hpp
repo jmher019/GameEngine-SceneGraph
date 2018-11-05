@@ -1,10 +1,7 @@
 #ifndef MESH_HPP
 #define MESH_HPP
 
-#include <SceneObject.hpp>
-#include <Shader.hpp>
-
-#include <glm/gtc/type_ptr.hpp>
+#include <LightFactory.hpp>
 
 class Mesh : public SceneObject {
 protected:
