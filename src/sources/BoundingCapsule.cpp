@@ -248,7 +248,7 @@ void BoundingCapsule::draw(const mat4& ProjectionViewMatrix) const {
 
         shader->use();
         shader->setMat4("PVM", value_ptr(ProjectionViewMatrix * model));
-        shader->setMat4("model", value_ptr(model));
+        shader->setMat4("transposeInvertedModel", value_ptr(transpose(inverse(model))));
         shader->setFloat("radius", radius);
         shader->setFloat("capsuleLineLength", capsuleLineLength);
 

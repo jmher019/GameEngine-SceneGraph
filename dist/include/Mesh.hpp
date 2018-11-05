@@ -4,7 +4,7 @@
 #include <SceneObject.hpp>
 #include <Shader.hpp>
 
-#include <glm\gtc\type_ptr.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class Mesh : public SceneObject {
 protected:

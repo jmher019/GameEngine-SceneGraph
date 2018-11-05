@@ -30,7 +30,9 @@ public:
     
     const GLuint getUniformBlockIdx(const std::string& uniformBlockName) const;
 
-    void setFloat(const std::string&  name, const GLfloat value) const;
+    void setUInt(const std::string& name, const GLuint value) const;
+
+    void setFloat(const std::string& name, const GLfloat value) const;
 
     void setVec3(const std::string& name, const GLfloat* vec) const;
 

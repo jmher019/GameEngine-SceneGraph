@@ -1,5 +1,11 @@
 #include <Mesh.hpp>
 
+Mesh::Mesh(const vector<Vertex>& vertices, const string& name, const Transform& transform):
+    SceneObject(name, transform),
+    vertices(vertices) {
+    initialize();
+}
+
 Mesh::Mesh(vector<Vertex>&& vertices, const string& name, const Transform& transform) :
     SceneObject(name, transform),
     vertices(std::forward<vector<Vertex>>(vertices)) {
@@ -70,7 +76,7 @@ void Mesh::draw(const mat4& ProjectionViewMatrix) const {
 
         shader->use();
         shader->setMat4("PVM", value_ptr(ProjectionViewMatrix * model));
-        shader->setMat4("model", value_ptr(model));
+        shader->setMat4("transposeInvertedModel", value_ptr(transpose(inverse(model))));
 
         glBindVertexArray(getVAO());
         glDrawArrays(GL_TRIANGLES, 0, (GLsizei)getVertices().size());
@@ -84,7 +90,7 @@ void Mesh::draw(const mat4& ProjectionViewMatrix, const mat4& model) const {
     if (shader != nullptr) {
         shader->use();
         shader->setMat4("PVM", value_ptr(ProjectionViewMatrix * model));
-        shader->setMat4("model", value_ptr(model));
+        shader->setMat4("transposeInvertedModel", value_ptr(transpose(inverse(model))));
 
         glBindVertexArray(getVAO());
         glDrawArrays(GL_TRIANGLES, 0, (GLsizei)getVertices().size());

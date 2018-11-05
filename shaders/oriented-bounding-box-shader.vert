@@ -7,7 +7,7 @@ layout (location = 3) in vec2 texCoord; // texture position
 out vec4 outColor; // specify a color output to the fragment shader;
 
 uniform mat4 PVM;
-uniform mat4 model;
+uniform mat4 transposeInvertedModel;
 uniform vec3 halfExtents;
 
 void main() {
