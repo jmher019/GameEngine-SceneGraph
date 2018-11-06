@@ -2,6 +2,7 @@
 #define MESH_HPP
 
 #include <LightFactory.hpp>
+#include <CameraFactory.hpp>
 
 class Mesh : public SceneObject {
 protected:

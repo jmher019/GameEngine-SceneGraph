@@ -135,6 +135,7 @@
     <ClCompile Include="..\src\sources\BoundingCapsule.cpp" />
     <ClCompile Include="..\src\sources\BoundingSphere.cpp" />
     <ClCompile Include="..\src\sources\Camera.cpp" />
+    <ClCompile Include="..\src\sources\CameraFactory.cpp" />
     <ClCompile Include="..\src\sources\CollisionDetector.cpp" />
     <ClCompile Include="..\src\sources\Contact.cpp" />
     <ClCompile Include="..\src\sources\CubeMesh.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="..\src\include\BoundingSphere.hpp" />
     <ClInclude Include="..\src\include\BoundingVolume.hpp" />
     <ClInclude Include="..\src\include\Camera.hpp" />
+    <ClInclude Include="..\src\include\CameraFactory.hpp" />
     <ClInclude Include="..\src\include\CollisionDetector.hpp" />
     <ClInclude Include="..\src\include\Contact.hpp" />
     <ClInclude Include="..\src\include\CubeMesh.hpp" />
