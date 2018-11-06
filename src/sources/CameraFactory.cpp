@@ -21,6 +21,7 @@ const shared_ptr<Camera>& CameraFactory::getPlayerCamera(void) noexcept {
 
 void CameraFactory::loadPlayerCameraIntoShader(const shared_ptr<Shader>& shader) noexcept {
     if (playerCamera != nullptr) {
-        shader->setVec3("viewPos", value_ptr(playerCamera->getEyePosition()));
+        mat4 model = playerCamera->getTransform().getMatrix();
+        shader->setVec3("viewPos", value_ptr(vec3(model * vec4(playerCamera->getEyePosition(), 1.f))));
     }
 }
