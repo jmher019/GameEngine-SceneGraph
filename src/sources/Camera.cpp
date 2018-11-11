@@ -57,7 +57,7 @@ void Camera::updateCameraMatrix(void) noexcept {
     cameraMatrix = lookAt(
         vec3(matrix * vec4(eyePosition, 1.f)),
         vec3(matrix * vec4(lookAtPosition, 1.f)),
-        vec3(matrix * vec4(upVector, 0.f))
+        upVector
     );
 }
 
