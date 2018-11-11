@@ -14,7 +14,6 @@ class SceneObject {
 protected:
     Transform transform = Transform();
     vector<shared_ptr<SceneObject>> children;
-    SceneObject* parent;
     string name = string("");
 
 public:
@@ -47,8 +46,6 @@ public:
     void setName(const string& name) noexcept;
 
     const vector<shared_ptr<SceneObject>>& getChildren(void) const noexcept;
-
-    SceneObject * const & getParent(void) noexcept;
 
     void appendChild(const shared_ptr<SceneObject>& child) noexcept;
 
