@@ -115,24 +115,24 @@ const vector<shared_ptr<SceneObject>>& SceneObject::getChildren(void) const noex
     return children;
 }
 
-shared_ptr<SceneObject>& SceneObject::getParent(void) noexcept {
+SceneObject *const & SceneObject::getParent(void) noexcept {
     return parent;
 }
 
 void SceneObject::appendChild(const shared_ptr<SceneObject>& child) noexcept {
-    if (this == child->getParent().get()) {
+    if (this == child->getParent()) {
         return;
     }
     else if (child->getParent() != nullptr) {
         child->getParent()->removeChild(child);
     }
 
-    child->parent = shared_ptr<SceneObject>(this);
+    child->parent = this;
     children.push_back(child);
 }
 
 bool SceneObject::replaceChild(const shared_ptr<SceneObject>& existingChild, const shared_ptr<SceneObject>& newChild) noexcept {
-    if (this == newChild->getParent().get()) {
+    if (this == newChild->getParent()) {
         return false;
     }
     
