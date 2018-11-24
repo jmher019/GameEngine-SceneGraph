@@ -4,7 +4,7 @@
 #include <SceneObject.hpp>
 
 class SceneGraph {
-private:
+protected:
     shared_ptr<SceneObject> root = nullptr;
 
     shared_ptr<SceneObject> getSceneObject(const string& name, const shared_ptr<SceneObject>& sceneObject) const noexcept;
