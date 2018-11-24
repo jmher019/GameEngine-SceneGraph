@@ -12,7 +12,7 @@ private:
 public:
     SceneGraph(const shared_ptr<SceneObject>& root = make_shared<SceneObject>(string("World")));
 
-    void draw(const mat4& ProjectionViewMatrix) const noexcept;
+    virtual void draw(const mat4& ProjectionViewMatrix) const noexcept;
 
     shared_ptr<SceneObject> getSceneObject(const string& name) const noexcept;
 
