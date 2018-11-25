@@ -132,9 +132,3 @@ void Shader::setVec4(const std::string& name, const GLfloat* vec) const {
 void Shader::setMat4(const std::string& name, const GLfloat* mat) const {
     glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, false, mat);
 }
-
-ostream& operator<< (ostream& out, const Shader& shader) {
-    out << "Shader id: " << shader.getId() << endl;
-
-    return out;
-}

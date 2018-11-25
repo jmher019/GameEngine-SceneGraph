@@ -2,6 +2,7 @@
 #define BOUNDING_VOLUME_HPP
 
 #include <SceneObject.hpp>
+#include <SceneUtils.hpp>
 #include <Shader.hpp>
 
 #include <glm\gtc\type_ptr.hpp>
@@ -14,7 +15,7 @@ protected:
     vector<Vertex> vertices;
     GLboolean renderVolume = false;
     
-    BoundingVolume(const string& name = string(""), const Transform& transform = Transform()):
+    BoundingVolume(const string& name = SceneUtils::createId(), const Transform& transform = Transform()):
         SceneObject(name, transform) {        
     };
 

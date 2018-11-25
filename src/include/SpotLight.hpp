@@ -11,7 +11,7 @@ private:
     GLfloat cutOff;
 
 public:
-    SpotLight(const string& name = string(""), const Transform& transform = Transform());
+    SpotLight(const string& name = SceneUtils::createId(), const Transform& transform = Transform());
 
     SpotLight(const SpotLight& spotLight);
 

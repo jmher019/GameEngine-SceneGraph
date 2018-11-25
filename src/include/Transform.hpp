@@ -17,48 +17,58 @@
 using namespace std;
 using namespace glm;
 
-class Transform {
-private:
-    fdualquat translationAndRotation = fdualquat(fquat(1.f, 0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f));
-    vec3 scale = vec3(1.f, 1.f, 1.f);
+namespace puggo {
+    class Transform {
+    private:
+        fdualquat translationAndRotation = fdualquat(fquat(1.f, 0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f));
+        vec3 scale = vec3(1.f, 1.f, 1.f);
 
-public:
-    Transform(
-        const fdualquat& translationAndRotation = fdualquat(fquat(1.f, 0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f)),
-        const vec3& scale = vec3(1.f, 1.f, 1.f)
-    );
-    
-    Transform(const Transform& transform);
-    
-    Transform(Transform&& transform);
+    public:
+        Transform(
+            const fdualquat& translationAndRotation = fdualquat(fquat(1.f, 0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f)),
+            const vec3& scale = vec3(1.f, 1.f, 1.f)
+        );
 
-    Transform operator*(const Transform& other) const noexcept;
+        Transform(const Transform& transform);
 
-    Transform& operator=(const Transform& other) noexcept;
+        Transform(Transform&& transform);
 
-    Transform& operator=(Transform&& other) noexcept;
-    
-    mat4 getMatrix(void) const noexcept;
+        Transform operator*(const Transform& other) const noexcept;
 
-    mat4 getInverseMatrix(void) const noexcept;
+        Transform& operator=(const Transform& other) noexcept;
 
-    Transform getInverse(void) const noexcept;
+        Transform& operator=(Transform&& other) noexcept;
 
-    vec3 getXUnitVector(void) const noexcept;
-    
-    vec3 getYUnitVector(void) const noexcept;
+        mat4 getMatrix(void) const noexcept;
 
-    vec3 getZUnitVector(void) const noexcept;
+        mat4 getInverseMatrix(void) const noexcept;
 
-    const fdualquat& getTranslationAndRotation(void) const noexcept;
+        Transform getInverse(void) const noexcept;
 
-    const vec3& getScale(void) const noexcept;
-};
+        vec3 getXUnitVector(void) const noexcept;
 
-ostream& operator<< (ostream& out, const Transform& transform) noexcept;
+        vec3 getYUnitVector(void) const noexcept;
 
-ostream& operator<< (ostream& out, const mat4& mat) noexcept;
+        vec3 getZUnitVector(void) const noexcept;
 
-Transform inverse(const Transform& transform) noexcept;
+        const fdualquat& getTranslationAndRotation(void) const noexcept;
+
+        const vec3& getScale(void) const noexcept;
+    };
+
+    inline Transform inverse(const Transform& transform) noexcept;
+
+    inline Transform translate(const Transform& transform, const vec3& t) noexcept;
+    inline Transform translate(const Transform& transform, const float& tX, const float& tY, const float& tZ) noexcept;
+
+    inline Transform rotate(const Transform& transform, const vec3& degrees) noexcept;
+    inline Transform rotate(const Transform& transform, const float& degreesX, const float& degreesY, const float& degreesZ) noexcept;
+
+    inline Transform orbit(const Transform& transform, const vec3& degrees) noexcept;
+    inline Transform orbit(const Transform& transform, const float& degreesX, const float& degreesY, const float& degreesZ) noexcept;
+
+    inline Transform scale(const Transform& transform, const vec3& s) noexcept;
+    inline Transform scale(const Transform& transform, const float& sX, const float& sY, const float& sZ) noexcept;
+}
 
 #endif // !TRANSFORM_HPP

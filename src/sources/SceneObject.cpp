@@ -18,9 +18,7 @@ SceneObject::SceneObject(SceneObject&& sceneObject):
 }
 
 SceneObject::~SceneObject(void) {
-    while (children.size() > 0) {
-        removeChild(children[0]);
-    }
+    children.clear();
 }
 
 SceneObject& SceneObject::operator=(const SceneObject& other) noexcept {
@@ -43,64 +41,12 @@ void SceneObject::draw(const mat4& ProjectionViewMatrix) const {
     }
 }
 
-void SceneObject::translate(const float& tX, const float& tY, const float& tZ) noexcept {
-    Transform newTransform(
-        fdualquat(fquat(1.f, 0.f, 0.f, 0.f), vec3(tX, tY, tZ))
-    );
-
-    transform = newTransform * transform;
-
-    for (auto& child : children) {
-        child->translate(tX, tY, tZ);
-    }
-}
-
-void SceneObject::rotate(const float& degreesX, const float& degreesY, const float& degreesZ) noexcept {
-    vec3 translation = vec3(transform.getMatrix()[3]);
-    Transform newTransform(
-        fdualquat(fquat(1.f, 0.f, 0.f, 0.f), translation) *
-        fdualquat(glm::rotate(fquat(1.f, 0.f, 0.f, 0.f), radians(degreesX), vec3(1.f, 0.f, 0.f))) *
-        fdualquat(glm::rotate(fquat(1.f, 0.f, 0.f, 0.f), radians(degreesY), vec3(0.f, 1.f, 0.f))) *
-        fdualquat(glm::rotate(fquat(1.f, 0.f, 0.f, 0.f), radians(degreesZ), vec3(0.f, 0.f, 1.f))) *
-        fdualquat(fquat(1.f, 0.f, 0.f, 0.f), -translation)
-    );
-
-    transform = newTransform * transform;
-
-    for (auto& child : children) {
-        child->rotate(degreesX, degreesY, degreesZ);
-    }
-}
-
-void SceneObject::orbit(const float& degreesX, const float& degreesY, const float& degreesZ) noexcept {
-    Transform newTransform(
-        fdualquat(glm::rotate(fquat(1.f, 0.f, 0.f, 0.f), radians(degreesX), vec3(1.f, 0.f, 0.f))) *
-        fdualquat(glm::rotate(fquat(1.f, 0.f, 0.f, 0.f), radians(degreesY), vec3(0.f, 1.f, 0.f))) *
-        fdualquat(glm::rotate(fquat(1.f, 0.f, 0.f, 0.f), radians(degreesZ), vec3(0.f, 0.f, 1.f)))
-    );
-
-    transform = newTransform * transform;
-
-    for (auto& child : children) {
-        child->orbit(degreesX, degreesY, degreesZ);
-    }
-}
-
-void SceneObject::resize(const float& sX, const float& sY, const float& sZ) noexcept {
-    Transform newTransform(
-        fdualquat(fquat(1.f, 0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f)),
-        vec3(sX, sY, sZ)
-    );
-
-    transform = newTransform * transform;
-
-    for (auto& child : children) {
-        child->resize(sX, sY, sZ);
-    }
-}
-
 const Transform& SceneObject::getTransform(void) const noexcept {
     return transform;
+}
+
+void SceneObject::setTransform(const Transform& transform) noexcept {
+    this->transform = transform;
 }
 
 const string& SceneObject::getName(void) const noexcept {
@@ -111,47 +57,6 @@ void SceneObject::setName(const string& name) noexcept {
     this->name = name;
 }
 
-const vector<shared_ptr<SceneObject>>& SceneObject::getChildren(void) const noexcept {
+vector<shared_ptr<SceneObject>>& SceneObject::getChildren(void) noexcept {
     return children;
-}
-
-void SceneObject::appendChild(const shared_ptr<SceneObject>& child) noexcept {
-    children.push_back(child);
-}
-
-bool SceneObject::replaceChild(const shared_ptr<SceneObject>& existingChild, const shared_ptr<SceneObject>& newChild) noexcept {
-    for (size_t i = 0; i < children.size(); i++) {
-        if (children[i] == existingChild) {
-            children[i] = newChild;
-            return true;
-        }
-    }
-
-    return false;
-}
-
-bool SceneObject::removeChild(const shared_ptr<SceneObject>& child) noexcept {
-    auto it = children.begin();
-    for (; it != children.end(); it++) {
-        if ((*it) == child) {
-            children.erase(it);
-            return true;
-        }
-    }
-
-    return false;
-}
-
-ostream& operator<< (ostream& out, const SceneObject& sceneObject) {
-    out << "Scene Object name: " << sceneObject.getName() << endl;
-    out << "Scene Object transform:\n" << sceneObject.getTransform() << endl;
-    
-    if (!sceneObject.getChildren().empty()) {
-        out << "Scene Object children:\n" << endl;
-        for (auto& child : sceneObject.getChildren()) {
-            out << *child << endl;
-        }
-    }
-
-    return out;
 }

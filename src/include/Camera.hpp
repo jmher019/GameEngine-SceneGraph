@@ -2,22 +2,20 @@
 #define CAMERA_HPP
 
 #include <SceneObject.hpp>
+#include <SceneUtils.hpp>
 
 class Camera : public SceneObject {
 private:
     vec3 eyePosition = vec3(0.f, 0.f, 5.f);
     vec3 lookAtPosition = vec3(0.f, 0.f, 0.f);
     vec3 upVector = vec3(0.f, 1.f, 0.f);
-    mat4 cameraMatrix = lookAt(eyePosition, lookAtPosition, upVector);
-
-    void updateCameraMatrix(void) noexcept;
 
 public:
     Camera(
         const vec3& eyePosition = vec3(0.f, 0.f, 5.f),
         const vec3& lookAtPosition = vec3(0.f, 0.f, 0.f),
         const vec3& upVector = vec3(0.f, 1.f, 0.f),
-        const string& name = string(""),
+        const string& name = SceneUtils::createId(),
         const Transform& transform = Transform()
     );
 
@@ -28,14 +26,6 @@ public:
     Camera& operator=(const Camera& camera) noexcept;
 
     Camera& operator=(Camera&& camera) noexcept;
-
-    void translate(const float& tX, const float& tY, const float& tZ) noexcept override;
-
-    void rotate(const float& degreesX, const float& degreesY, const float& degreesZ) noexcept override;
-
-    void orbit(const float& degreesX, const float& degreesY, const float& degreesZ) noexcept override;
-
-    void resize(const float& sX, const float& sY, const float& sZ) noexcept override;
 
     const vec3& getEyePosition(void) const noexcept;
 

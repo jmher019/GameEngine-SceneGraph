@@ -36,24 +36,3 @@ Vertex& Vertex::operator=(Vertex&& other) noexcept {
     texCoord = std::move(other.texCoord);
     return *this;
 }
-
-ostream& operator << (ostream& out, const vec2& vector) {
-    out << std::fixed << std::setprecision(4) << endl;
-    out << vector[0] << "\t\t" << vector[1] << endl;
-    return out;
-}
-
-ostream& operator << (ostream& out, const vec3& vector) {
-    out << std::fixed << std::setprecision(4) << endl;
-    out << vector[0] << "\t\t" << vector[1] << "\t\t" << vector[2] << endl;
-    return out;
-}
-
-ostream& operator<< (ostream& out, const Vertex& vertex) {
-    out << "Vertex position: " << vertex.position << endl;
-    out << "Vertex normal: " << vertex.normal << endl;
-    out << "Vertex color: " << vertex.color << endl;
-    out << "Vertex texCoord: " << vertex.texCoord << endl;
-
-    return out;
-}

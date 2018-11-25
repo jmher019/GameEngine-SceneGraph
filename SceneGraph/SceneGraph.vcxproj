@@ -152,6 +152,7 @@
     <ClCompile Include="..\src\sources\Rigidbody.cpp" />
     <ClCompile Include="..\src\sources\SceneGraph.cpp" />
     <ClCompile Include="..\src\sources\SceneObject.cpp" />
+    <ClCompile Include="..\src\sources\SceneUtils.cpp" />
     <ClCompile Include="..\src\sources\Shader.cpp" />
     <ClCompile Include="..\src\sources\SpotLight.cpp" />
     <ClCompile Include="..\src\sources\Transform.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="..\src\include\Rigidbody.hpp" />
     <ClInclude Include="..\src\include\SceneGraph.hpp" />
     <ClInclude Include="..\src\include\SceneObject.hpp" />
+    <ClInclude Include="..\src\include\SceneUtils.hpp" />
     <ClInclude Include="..\src\include\Shader.hpp" />
     <ClInclude Include="..\src\include\SpotLight.hpp" />
     <ClInclude Include="..\src\include\Transform.hpp" />

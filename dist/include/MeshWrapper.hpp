@@ -8,7 +8,7 @@ private:
     shared_ptr<Mesh> mesh;
 
 public:
-    MeshWrapper(const shared_ptr<Mesh>& mesh, const string& name = string(""), const Transform& transform = Transform());
+    MeshWrapper(const shared_ptr<Mesh>& mesh, const string& name = SceneUtils::createId(), const Transform& transform = Transform());
 
     MeshWrapper(const MeshWrapper& meshWrapper);
 

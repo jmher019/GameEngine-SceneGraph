@@ -20,11 +20,11 @@ Rigidbody::Rigidbody(
 
     // remove all children of boundingVolume
     while (!boundingVolume->getChildren().empty()) {
-        boundingVolume->removeChild(boundingVolume->getChildren()[0]);
+        SceneUtils::removeChild(*boundingVolume.get(), boundingVolume->getChildren()[0]);
     }
 
-    boundingVolume->appendChild(meshWrapper);
-    appendChild(boundingVolume);
+    SceneUtils::appendChild(*boundingVolume.get(), meshWrapper);
+    SceneUtils::appendChild(*this, boundingVolume);
 }
 
 Rigidbody::Rigidbody(const Rigidbody& rigidbody):
@@ -34,8 +34,8 @@ Rigidbody::Rigidbody(const Rigidbody& rigidbody):
     children = rigidbody.children;
 }
 
-Rigidbody::Rigidbody(Rigidbody&& rigidbody) {
-    name = move(rigidbody.name);
+Rigidbody::Rigidbody(Rigidbody&& rigidbody):
+    SceneObject(SceneUtils::createId()) {
     transform = move(rigidbody.transform);
     meshWrapper = move(rigidbody.meshWrapper);
     boundingVolume = move(rigidbody.boundingVolume);
@@ -67,7 +67,13 @@ void Rigidbody::setMeshWrapper(const shared_ptr<MeshWrapper>& meshWrapper) {
         throw invalid_argument("meshWrapper must not be a nullptr");
     }
 
-    boundingVolume->replaceChild(this->meshWrapper, meshWrapper);
+    const long index = SceneUtils::findChildIndex(*boundingVolume.get(), this->meshWrapper);
+    if (index != -1) {
+        SceneUtils::replaceChild(*boundingVolume.get(), static_cast<size_t>(index), meshWrapper);
+    }
+    else {
+        SceneUtils::appendChild(*boundingVolume.get(), meshWrapper);
+    }
     this->meshWrapper = meshWrapper;
 }
 
@@ -80,7 +86,13 @@ void Rigidbody::setBoundingVolume(const shared_ptr<BoundingVolume>& boundingVolu
         throw invalid_argument("boundingVolume must not be a nullptr");
     }
 
-    replaceChild(this->boundingVolume, boundingVolume);
+    const long index = SceneUtils::findChildIndex(*this, this->boundingVolume);
+    if (index != -1) {
+        SceneUtils::replaceChild(*this, static_cast<size_t>(index), boundingVolume);
+    }
+    else {
+        SceneUtils::appendChild(*this, boundingVolume);
+    }
     this->boundingVolume = boundingVolume;
 }
 
@@ -146,7 +158,7 @@ void Rigidbody::handleCollision(Rigidbody* rigidbody, const GLfloat& deltaSecond
                 const GLfloat& penetration = contact.getPenetration();
                 const vec3 translationVector = normal * penetration;
 
-                translate(translationVector.x, translationVector.y, translationVector.z);
+                SceneUtils::translate(*this, translationVector.x, translationVector.y, translationVector.z);
                 setVelocity(velocity - dot(normal, velocity) * normal);
             }
 
@@ -156,7 +168,7 @@ void Rigidbody::handleCollision(Rigidbody* rigidbody, const GLfloat& deltaSecond
 
     const vec3 translation = velocity * t + acceleration * t * t;
     setVelocity(velocity + acceleration * t);
-    translate(translation.x, translation.y, translation.z);
+    SceneUtils::translate(*this, translation.x, translation.y, translation.z);
 
     if (CollisionDetector::isVolumeIntersectingVolume(boundingVolume.get(), rigidbody->getBoundingVolume().get())) {
         Contact contact = move(CollisionDetector::findContactBetweenVolumeAndVolume(boundingVolume.get(), rigidbody->getBoundingVolume().get()));
@@ -166,7 +178,7 @@ void Rigidbody::handleCollision(Rigidbody* rigidbody, const GLfloat& deltaSecond
             const GLfloat& penetration = contact.getPenetration();
             const vec3 translationVector = normal * penetration;
 
-            translate(translationVector.x, translationVector.y, translationVector.z);
+            SceneUtils::translate(*this, translationVector.x, translationVector.y, translationVector.z);
             setVelocity(velocity - dot(normal, velocity) * normal);
         }
     }

@@ -3,6 +3,7 @@
 
 #include <Shader.hpp>
 #include <SceneObject.hpp>
+#include <SceneUtils.hpp>
 
 class Light : public SceneObject {
 protected:
@@ -10,7 +11,7 @@ protected:
     vec3 diffuse;
     vec3 specular;
 
-    Light(const string& name = string(""), const Transform& transform = Transform()):
+    Light(const string& name = SceneUtils::createId(), const Transform& transform = Transform()):
         SceneObject(name, transform) {
     };
 

@@ -1,5 +1,7 @@
 #include <Transform.hpp>
 
+using namespace puggo;
+
 Transform::Transform(const fdualquat& translationAndRotation, const vec3& scale):
     translationAndRotation(translationAndRotation),
     scale(scale) {
@@ -64,22 +66,58 @@ const vec3& Transform::getScale(void) const noexcept {
     return scale;
 }
 
-ostream& operator<< (ostream& out, const Transform& transform) noexcept {
-    out << transform.getMatrix() << endl;
-    return out;
-}
-
-ostream& operator<< (ostream& out, const mat4& mat) noexcept {
-    out << std::fixed << std::setprecision(4) << endl;
-    out << mat[0][0] << "\t\t" << mat[1][0] << "\t\t" << mat[2][0] << "\t\t" << mat[3][0] << endl;
-    out << mat[0][1] << "\t\t" << mat[1][1] << "\t\t" << mat[2][1] << "\t\t" << mat[3][1] << endl;
-    out << mat[0][2] << "\t\t" << mat[1][2] << "\t\t" << mat[2][2] << "\t\t" << mat[3][2] << endl;
-    out << mat[0][3] << "\t\t" << mat[1][3] << "\t\t" << mat[2][3] << "\t\t" << mat[3][3] << endl;
-
-    return out;
-}
-
-Transform inverse(const Transform& transform) noexcept {
+Transform puggo::inverse(const Transform& transform) noexcept {
     const vec3& scale = transform.getScale();
     return Transform(inverse(transform.getTranslationAndRotation()), vec3(1.f / scale.x, 1.f / scale.y, 1.f / scale.z));
+}
+
+Transform puggo::translate(const Transform& transform, const vec3& t) noexcept {
+    return Transform(
+        fdualquat(fquat(1.f, 0.f, 0.f, 0.f), t) * transform.getTranslationAndRotation(),
+        transform.getScale()
+    );
+}
+
+Transform puggo::translate(const Transform& transform, const float& tX, const float& tY, const float& tZ) noexcept {
+    return translate(transform, vec3(tX, tY, tZ));
+}
+
+Transform puggo::rotate(const Transform& transform, const vec3& degrees) noexcept {
+    const fdualquat dualQuat = transform.getTranslationAndRotation();
+    const fquat rotX = glm::rotate(fquat(1.f, 0.f, 0.f, 0.f), radians(degrees.x), vec3(1.f, 0.f, 0.f));
+    const fquat rotY = glm::rotate(fquat(1.f, 0.f, 0.f, 0.f), radians(degrees.y), vec3(0.f, 1.f, 0.f));
+    const fquat rotZ = glm::rotate(fquat(1.f, 0.f, 0.f, 0.f), radians(degrees.z), vec3(0.f, 0.f, 1.f));
+    return Transform(
+        fdualquat(rotZ * rotY * rotX * dualQuat.real, dualQuat.dual),
+        transform.getScale()
+    );
+}
+
+Transform puggo::rotate(const Transform& transform, const float& degreesX, const float& degreesY, const float& degreesZ) noexcept {
+    return rotate(transform, vec3(degreesX, degreesY, degreesZ));
+}
+
+Transform puggo::orbit(const Transform& transform, const vec3& degrees) noexcept {
+    const fdualquat rotX = fdualquat(glm::rotate(fquat(1.f, 0.f, 0.f, 0.f), radians(degrees.x), vec3(1.f, 0.f, 0.f)), vec3(0.f, 0.f, 0.f));
+    const fdualquat rotY = fdualquat(glm::rotate(fquat(1.f, 0.f, 0.f, 0.f), radians(degrees.y), vec3(0.f, 1.f, 0.f)), vec3(0.f, 0.f, 0.f));
+    const fdualquat rotZ = fdualquat(glm::rotate(fquat(1.f, 0.f, 0.f, 0.f), radians(degrees.z), vec3(0.f, 0.f, 1.f)), vec3(0.f, 0.f, 0.f));
+    return Transform(
+        rotZ * rotY * rotX * transform.getTranslationAndRotation(),
+        transform.getScale()
+    );
+}
+
+Transform puggo::orbit(const Transform& transform, const float& degreesX, const float& degreesY, const float& degreesZ) noexcept {
+    return orbit(transform, vec3(degreesX, degreesY, degreesZ));
+}
+
+Transform puggo::scale(const Transform& transform, const vec3& s) noexcept {
+    return Transform(
+        transform.getTranslationAndRotation(),
+        s * transform.getScale()
+    );
+}
+
+Transform puggo::scale(const Transform& transform, const float& sX, const float& sY, const float& sZ) noexcept {
+    return scale(transform, vec3(sX, sY, sZ));
 }

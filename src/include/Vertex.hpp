@@ -33,10 +33,4 @@ public:
     vec2 texCoord;
 };
 
-ostream& operator<< (ostream& out, const vec2& vector);
-
-ostream& operator<< (ostream& out, const vec3& vector);
-
-ostream& operator<< (ostream& out, const Vertex& vertex);
-
 #endif // !VERTEX_HPP

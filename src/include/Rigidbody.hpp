@@ -19,7 +19,7 @@ public:
     Rigidbody(
         const shared_ptr<MeshWrapper> meshWrapper,
         const shared_ptr<BoundingVolume> boundingVolume,
-        const string& name = string(""),
+        const string& name = SceneUtils::createId(),
         const Transform& transform = Transform()
     );
 

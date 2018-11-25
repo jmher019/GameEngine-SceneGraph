@@ -5,7 +5,7 @@
 
 class CubeMesh : public Mesh {
 public:
-    CubeMesh(const string& name = string(""), const Transform& transform = Transform());
+    CubeMesh(const string& name = SceneUtils::createId(), const Transform& transform = Transform());
 
     CubeMesh(const CubeMesh& cubeMesh);
 

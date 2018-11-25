@@ -1147,7 +1147,7 @@ bool CollisionDetector::areMovingSphereAndSphereIntersecting(
     GLfloat distanceSegment = delTime * speed;
     BoundingSphere testingSphere(distanceSegment * 0.5f + sphere1->getActualRadius());
     vec3 testingSphereCenter = sphere1->getCenter() + delTime * 0.5f;
-    testingSphere.translate(testingSphereCenter.x, testingSphereCenter.y, testingSphereCenter.z);
+    SceneUtils::translate(testingSphere, testingSphereCenter);
     GLboolean collisionDetected = CollisionDetector::isSphereIntersectingSphere(&testingSphere, sphere2);
 
     if (collisionDetected) {
@@ -1160,7 +1160,7 @@ bool CollisionDetector::areMovingSphereAndSphereIntersecting(
         while (distanceSegment > maxErrorDistance) {
             vec3 offset = -velocityUnitVector * distanceSegment * 0.5f;
             testingSphere.setRadius(distanceSegment * 0.5f + sphere1->getActualRadius());
-            testingSphere.translate(offset.x, offset.y, offset.z);
+            SceneUtils::translate(testingSphere, offset);
 
             if (CollisionDetector::isSphereIntersectingSphere(&testingSphere, sphere2)) {
                 endTime = startTime + timeSegment;
@@ -1168,7 +1168,7 @@ bool CollisionDetector::areMovingSphereAndSphereIntersecting(
             }
             else {
                 offset = velocityUnitVector * distanceSegment;
-                testingSphere.translate(offset.x, offset.y, offset.z);
+                SceneUtils::translate(testingSphere, offset);
                 
                 endTime = startTime + timeSegment * 2;
                 startTime = startTime + timeSegment;
@@ -1199,7 +1199,7 @@ bool CollisionDetector::areMovingCapsuleAndSphereIntersecting(
     GLfloat distanceSegment = delTime * speed;
     BoundingSphere testingSphere(distanceSegment * 0.5f + sphere->getActualRadius());
     vec3 testingSphereCenter = sphere->getCenter() + delTime * 0.5f;
-    testingSphere.translate(testingSphereCenter.x, testingSphereCenter.y, testingSphereCenter.z);
+    SceneUtils::translate(testingSphere, testingSphereCenter);
     GLboolean collisionDetected = CollisionDetector::isCapsuleIntersectingSphere(capsule, &testingSphere);
 
     if (collisionDetected) {
@@ -1212,7 +1212,7 @@ bool CollisionDetector::areMovingCapsuleAndSphereIntersecting(
         while (distanceSegment > maxErrorDistance) {
             vec3 offset = -velocityUnitVector * distanceSegment * 0.5f;
             testingSphere.setRadius(distanceSegment * 0.5f + sphere->getActualRadius());
-            testingSphere.translate(offset.x, offset.y, offset.z);
+            SceneUtils::translate(testingSphere, offset);
 
             if (CollisionDetector::isCapsuleIntersectingSphere(capsule, &testingSphere)) {
                 endTime = startTime + timeSegment;
@@ -1220,7 +1220,7 @@ bool CollisionDetector::areMovingCapsuleAndSphereIntersecting(
             }
             else {
                 offset = velocityUnitVector * distanceSegment;
-                testingSphere.translate(offset.x, offset.y, offset.z);
+                SceneUtils::translate(testingSphere, offset);
 
                 endTime = startTime + timeSegment * 2;
                 startTime = startTime + timeSegment;
@@ -1264,7 +1264,7 @@ bool CollisionDetector::areMovingOBBAndSphereIntersecting(
     GLfloat distanceSegment = delTime * speed;
     BoundingSphere testingSphere(distanceSegment * 0.5f + sphere->getActualRadius());
     vec3 testingSphereCenter = sphere->getCenter() + delTime * 0.5f;
-    testingSphere.translate(testingSphereCenter.x, testingSphereCenter.y, testingSphereCenter.z);
+    SceneUtils::translate(testingSphere, testingSphereCenter);
     GLboolean collisionDetected = CollisionDetector::isOBBIntersectingSphere(obb, &testingSphere);
 
     if (collisionDetected) {
@@ -1277,7 +1277,7 @@ bool CollisionDetector::areMovingOBBAndSphereIntersecting(
         while (distanceSegment > maxErrorDistance) {
             vec3 offset = -velocityUnitVector * distanceSegment * 0.5f;
             testingSphere.setRadius(distanceSegment * 0.5f + sphere->getActualRadius());
-            testingSphere.translate(offset.x, offset.y, offset.z);
+            SceneUtils::translate(testingSphere, offset);
 
             if (CollisionDetector::isOBBIntersectingSphere(obb, &testingSphere)) {
                 endTime = startTime + timeSegment;
@@ -1285,7 +1285,7 @@ bool CollisionDetector::areMovingOBBAndSphereIntersecting(
             }
             else {
                 offset = velocityUnitVector * distanceSegment;
-                testingSphere.translate(offset.x, offset.y, offset.z);
+                SceneUtils::translate(testingSphere, offset);
 
                 endTime = startTime + timeSegment * 2;
                 startTime = startTime + timeSegment;
@@ -1404,7 +1404,7 @@ bool CollisionDetector::areMovingOBBAndOBBIntersecting(
         while (distanceSegment > maxErrorDistance) {
             vec3 offset = -velocityUnitVector * distanceSegment * 0.5f;
             testingOBB.setHalfExtents(vec3(distanceSegment * 0.5f + xHalfExtent, yHalfExtent, zHalfExtent));
-            testingOBB.translate(offset.x, offset.y, offset.z);
+            SceneUtils::translate(testingOBB, offset);
 
             if (CollisionDetector::isOBBIntersectingOBB(obb2, &testingOBB)) {
                 endTime = startTime + timeSegment;
@@ -1412,7 +1412,7 @@ bool CollisionDetector::areMovingOBBAndOBBIntersecting(
             }
             else {
                 offset = velocityUnitVector * distanceSegment;
-                testingOBB.translate(offset.x, offset.y, offset.z);
+                SceneUtils::translate(testingOBB, offset);
 
                 endTime = startTime + timeSegment * 2;
                 startTime = startTime + timeSegment;

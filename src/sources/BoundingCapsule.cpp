@@ -120,7 +120,7 @@ Line BoundingCapsule::getActualLine(void) const noexcept {
 
 GLfloat BoundingCapsule::getActualRadius(void) const noexcept {
     const vec3 scaledRadii = glm::abs(transform.getScale()) * vec3(radius, radius, radius);
-    return max(max(scaledRadii.x, scaledRadii.y), scaledRadii.z);
+    return glm::max(glm::max(scaledRadii.x, scaledRadii.y), scaledRadii.z);
 }
 
 GLfloat BoundingCapsule::getActualCapsuleLineLength(void) const noexcept {

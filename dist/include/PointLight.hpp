@@ -12,7 +12,7 @@ private:
     GLfloat quadratic;
 
 public:
-    PointLight(const string& name = string(""), const Transform& transform = Transform());
+    PointLight(const string& name = SceneUtils::createId(), const Transform& transform = Transform());
 
     PointLight(const PointLight& pointLight);
 

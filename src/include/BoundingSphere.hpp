@@ -14,7 +14,7 @@ protected:
     vector<Vertex> getVerticesForGrid(void) const noexcept override;
 
 public:
-    BoundingSphere(const GLfloat& radius, const string& name = string(""), const Transform& transform = Transform());
+    BoundingSphere(const GLfloat& radius, const string& name = SceneUtils::createId(), const Transform& transform = Transform());
 
     BoundingSphere(const BoundingSphere& sphere);
 

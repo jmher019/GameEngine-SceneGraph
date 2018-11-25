@@ -125,19 +125,3 @@ const shared_ptr<Shader>& Mesh::getShader(void) const noexcept {
 void Mesh::setShader(const shared_ptr<Shader>& shader) noexcept {
     this->shader = shader;
 }
-
-ostream& operator<< (ostream& out, const Mesh& mesh) {
-    out << "Mesh name: " << mesh.getName() << endl;
-    out << "Mesh transform:\n" << mesh.getTransform() << endl;
-    out << "Mesh VBO: " << mesh.getVBO() << endl;
-    out << "Mesh VAO: " << mesh.getVAO() << endl;
-
-    if (!mesh.getChildren().empty()) {
-        out << "Mesh children:\n" << endl;
-        for (auto& child : mesh.getChildren()) {
-            out << *child << endl;
-        }
-    }
-
-    return out;
-}

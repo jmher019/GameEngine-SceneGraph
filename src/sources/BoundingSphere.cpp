@@ -116,7 +116,7 @@ void BoundingSphere::setRadius(const GLfloat& radius) noexcept {
 
 GLfloat BoundingSphere::getActualRadius(void) const noexcept {
     const vec3 scaledRadii = glm::abs(transform.getScale()) * vec3(radius, radius, radius);
-    return max(max(scaledRadii.x, scaledRadii.y), scaledRadii.z);
+    return glm::max(glm::max(scaledRadii.x, scaledRadii.y), scaledRadii.z);
 }
 
 void BoundingSphere::draw(const mat4& ProjectionViewMatrix) const {

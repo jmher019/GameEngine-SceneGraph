@@ -11,8 +11,8 @@ MeshWrapper::MeshWrapper(const MeshWrapper& meshWrapper):
     children = meshWrapper.children;
 }
 
-MeshWrapper::MeshWrapper(MeshWrapper&& meshWrapper) {
-    name = move(meshWrapper.name);
+MeshWrapper::MeshWrapper(MeshWrapper&& meshWrapper):
+    SceneObject(SceneUtils::createId()) {
     children = move(meshWrapper.children);
     transform = move(meshWrapper.transform);
     mesh = move(meshWrapper.mesh);

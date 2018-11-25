@@ -31,15 +31,3 @@ shared_ptr<SceneObject> SceneGraph::getSceneObject(const string& name, const sha
 const shared_ptr<SceneObject>& SceneGraph::getRoot(void) const noexcept {
     return root;
 }
-
-ostream& operator<< (ostream& out, const SceneGraph& sceneGraph) {
-    out << "Scene Graph:\nRoot node:\n";
-
-    if (sceneGraph.getRoot() != nullptr) {
-        out << *sceneGraph.getRoot() << endl;
-    } else {
-        out << "None" << endl;
-    }
-
-    return out;
-}

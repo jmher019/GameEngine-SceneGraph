@@ -41,6 +41,4 @@ public:
     void setMat4(const std::string& name, const GLfloat* mat) const;
 };
 
-ostream& operator<< (ostream& out, const Shader& shader);
-
 #endif // !SHADER_HPP

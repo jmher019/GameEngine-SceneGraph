@@ -3,6 +3,7 @@
 
 #include <LightFactory.hpp>
 #include <CameraFactory.hpp>
+#include <SceneUtils.hpp>
 
 class Mesh : public SceneObject {
 protected:
@@ -16,9 +17,9 @@ protected:
     void deallocate(void) noexcept;
 
 public:
-    Mesh(const vector<Vertex>& vertices, const string& name = string(""), const Transform& transform = Transform());
+    Mesh(const vector<Vertex>& vertices, const string& name = SceneUtils::createId(), const Transform& transform = Transform());
 
-    Mesh(vector<Vertex>&& vertices, const string& name = string(""), const Transform& transform = Transform());
+    Mesh(vector<Vertex>&& vertices, const string& name = SceneUtils::createId(), const Transform& transform = Transform());
 
     Mesh(const Mesh& mesh) = delete;
     
@@ -44,7 +45,5 @@ public:
 
     void setShader(const shared_ptr<Shader>& shader) noexcept;
 };
-
-ostream& operator<< (ostream& out, const Mesh& mesh);
 
 #endif // !MESH_HPP

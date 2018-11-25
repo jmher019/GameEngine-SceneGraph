@@ -12,7 +12,7 @@ protected:
     vector<Vertex> getVerticesForGrid(void) const noexcept override;
 
 public:
-    OrientedBoundingBox(const vec3& halfExtents, const string& name = string(""), const Transform& transform = Transform());
+    OrientedBoundingBox(const vec3& halfExtents, const string& name = SceneUtils::createId(), const Transform& transform = Transform());
 
     OrientedBoundingBox(const OrientedBoundingBox& obb);
 

@@ -25,7 +25,7 @@ protected:
     void deallocate(void) noexcept override;
 
 public:
-    BoundingCapsule(const GLfloat& capsuleLineLength, const GLfloat& radius, const string& name = string(""), const Transform& transform = Transform());
+    BoundingCapsule(const GLfloat& capsuleLineLength, const GLfloat& radius, const string& name = SceneUtils::createId(), const Transform& transform = Transform());
 
     BoundingCapsule(const BoundingCapsule& capsule);
 

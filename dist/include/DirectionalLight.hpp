@@ -9,7 +9,7 @@ private:
     vec3 direction;
 
 public:
-    DirectionalLight(const string& name = string(""), const Transform& transform = Transform());
+    DirectionalLight(const string& name = SceneUtils::createId(), const Transform& transform = Transform());
 
     DirectionalLight(const DirectionalLight& directionalLight);
 
