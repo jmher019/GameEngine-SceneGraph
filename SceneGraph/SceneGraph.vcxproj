@@ -76,7 +76,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\lib\glad\include;$(ProjectDir)..\lib\glm-0.9.9.0\glm;$(ProjectDir)..\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\lib\glad\include;$(ProjectDir)..\lib\glm-0.9.9.0\glm;$(ProjectDir)..\src\include;$(ProjectDir)..\lib\event-system\dist\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
       <Command>copy $(ProjectDir)..\Debug\* $(ProjectDir)..\dist\lib\x86\Debug</Command>
@@ -88,7 +88,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\lib\glad\include;$(ProjectDir)..\lib\glm-0.9.9.0\glm;$(ProjectDir)..\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\lib\glad\include;$(ProjectDir)..\lib\glm-0.9.9.0\glm;$(ProjectDir)..\src\include;$(ProjectDir)..\lib\event-system\dist\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
       <Command>copy $(ProjectDir)..\x64\Debug\* $(ProjectDir)..\dist\lib\x64\Debug</Command>
@@ -102,7 +102,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\lib\glad\include;$(ProjectDir)..\lib\glm-0.9.9.0\glm;$(ProjectDir)..\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\lib\glad\include;$(ProjectDir)..\lib\glm-0.9.9.0\glm;$(ProjectDir)..\src\include;$(ProjectDir)..\lib\event-system\dist\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -120,7 +120,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\lib\glad\include;$(ProjectDir)..\lib\glm-0.9.9.0\glm;$(ProjectDir)..\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\lib\glad\include;$(ProjectDir)..\lib\glm-0.9.9.0\glm;$(ProjectDir)..\src\include;$(ProjectDir)..\lib\event-system\dist\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

@@ -39,7 +39,7 @@ public:
 
     Camera& setUpVector(const vec3& upVector) noexcept;
 
-    const mat4& getCameraMatrix(void) const noexcept;
+    mat4 getCameraMatrix(void) const noexcept;
 };
 
 #endif // !CAMERA_HPP

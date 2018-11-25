@@ -7,6 +7,7 @@
 #include <string>
 
 #include <Transform.hpp>
+#include <EventManager.hpp>
 
 using namespace std;
 using namespace puggo;
@@ -16,6 +17,18 @@ protected:
     Transform transform = Transform();
     vector<shared_ptr<SceneObject>> children;
     string name = string("");
+    EventManager manager;
+
+public:
+    struct ON_ADD_TO_SCENE_OBJECT {
+        SceneObject const* parent;
+        const shared_ptr<SceneObject>& child;
+    };
+
+    struct ON_REMOVE_FROM_SCENE_OBJECT {
+        SceneObject const* parent;
+        const shared_ptr<SceneObject>& child;
+    };
 
 public:
     SceneObject(const string& name, const Transform& transform = Transform());
@@ -41,6 +54,12 @@ public:
     void setName(const string& name) noexcept;
 
     vector<shared_ptr<SceneObject>>& getChildren(void) noexcept;
+
+    unsigned long subscribeToOnAddToSceneObject(function<void(const ON_ADD_TO_SCENE_OBJECT&)> callable) noexcept;
+
+    unsigned long subscribeToOnRemoveFromSceneObject(function<void(const ON_REMOVE_FROM_SCENE_OBJECT&)> callable) noexcept;
+
+    EventManager& getManager(void) noexcept;
 };
 
 #endif // !SCENE_OBJECT_HPP

@@ -74,7 +74,7 @@ Camera& Camera::setUpVector(const vec3& upVector) noexcept {
     return *this;
 }
 
-const mat4& Camera::getCameraMatrix(void) const noexcept {
+mat4 Camera::getCameraMatrix(void) const noexcept {
     const mat4 matrix = transform.getMatrix();
     return lookAt(
         vec3(matrix * vec4(eyePosition, 1.f)),

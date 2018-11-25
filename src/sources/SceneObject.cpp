@@ -60,3 +60,15 @@ void SceneObject::setName(const string& name) noexcept {
 vector<shared_ptr<SceneObject>>& SceneObject::getChildren(void) noexcept {
     return children;
 }
+
+unsigned long SceneObject::subscribeToOnAddToSceneObject(function<void(const ON_ADD_TO_SCENE_OBJECT&)> callable) noexcept {
+    return manager.subscribe(callable);
+}
+
+unsigned long SceneObject::subscribeToOnRemoveFromSceneObject(function<void(const ON_REMOVE_FROM_SCENE_OBJECT&)> callable) noexcept {
+    return manager.subscribe(callable);
+}
+
+EventManager& SceneObject::getManager(void) noexcept {
+    return manager;
+}

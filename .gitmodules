@@ -1,0 +1,3 @@
+[submodule "lib/event-system"]
+	path = lib/event-system
+	url = https://github.com/jmher019/GameEngine-EventSystem.git
