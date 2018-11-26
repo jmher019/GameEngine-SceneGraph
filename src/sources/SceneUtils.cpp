@@ -208,6 +208,12 @@ void SceneUtils::appendChild(SceneObject& sceneObject, const shared_ptr<SceneObj
     };
     newChild->getManager().emit(payload);
 
+    SceneObject::ON_CHILD_APPENDED childAppendedPayload = {
+        &sceneObject,
+        newChild
+    };
+    sceneObject.getManager().emit(childAppendedPayload);
+
     unsigned long id = 0;
     id = newChild->subscribeToOnAddToSceneObject([&sceneObject, &id](const SceneObject::ON_ADD_TO_SCENE_OBJECT& e) {
         if (e.parent != &sceneObject) {
@@ -237,14 +243,21 @@ void SceneUtils::insertChild(SceneObject& sceneObject, const size_t& index, cons
         }
     };
 
+    SceneObject::ON_CHILD_APPENDED childAppendedPayload = {
+        &sceneObject,
+        newChild
+    };
+
     if (index >= sceneObject.getChildren().size()) {
         sceneObject.getChildren().insert(sceneObject.getChildren().begin() + index, newChild);
         newChild->getManager().emit(payload);
+        sceneObject.getManager().emit(childAppendedPayload);
         id = newChild->subscribeToOnAddToSceneObject(onAddLambda);
     }
     else if (!sceneObject.getChildren().empty()) {
         sceneObject.getChildren().push_back(newChild);
         newChild->getManager().emit(payload);
+        sceneObject.getManager().emit(childAppendedPayload);
         id = newChild->subscribeToOnAddToSceneObject(onAddLambda);
     }
 }

@@ -30,6 +30,11 @@ public:
         const shared_ptr<SceneObject>& child;
     };
 
+    struct ON_CHILD_APPENDED {
+        SceneObject const* parent;
+        const shared_ptr<SceneObject>& child;
+    };
+
 public:
     SceneObject(const string& name, const Transform& transform = Transform());
     
@@ -58,6 +63,8 @@ public:
     unsigned long subscribeToOnAddToSceneObject(function<void(const ON_ADD_TO_SCENE_OBJECT&)> callable) noexcept;
 
     unsigned long subscribeToOnRemoveFromSceneObject(function<void(const ON_REMOVE_FROM_SCENE_OBJECT&)> callable) noexcept;
+
+    unsigned long subscribeToOnChildAppended(function<void(const ON_CHILD_APPENDED&)> callable) noexcept;
 
     EventManager& getManager(void) noexcept;
 };

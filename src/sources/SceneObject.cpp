@@ -69,6 +69,10 @@ unsigned long SceneObject::subscribeToOnRemoveFromSceneObject(function<void(cons
     return manager.subscribe(callable);
 }
 
+unsigned long SceneObject::subscribeToOnChildAppended(function<void(const ON_CHILD_APPENDED&)> callable) noexcept {
+    return manager.subscribe(callable);
+}
+
 EventManager& SceneObject::getManager(void) noexcept {
     return manager;
 }
