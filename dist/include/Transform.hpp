@@ -56,19 +56,19 @@ namespace puggo {
         const vec3& getScale(void) const noexcept;
     };
 
-    inline Transform inverse(const Transform& transform) noexcept;
+    Transform inverse(const Transform& transform) noexcept;
 
-    inline Transform translate(const Transform& transform, const vec3& t) noexcept;
-    inline Transform translate(const Transform& transform, const float& tX, const float& tY, const float& tZ) noexcept;
+    Transform translate(const Transform& transform, const vec3& t) noexcept;
+    Transform translate(const Transform& transform, const float& tX, const float& tY, const float& tZ) noexcept;
 
-    inline Transform rotate(const Transform& transform, const vec3& degrees) noexcept;
-    inline Transform rotate(const Transform& transform, const float& degreesX, const float& degreesY, const float& degreesZ) noexcept;
+    Transform rotate(const Transform& transform, const vec3& degrees) noexcept;
+    Transform rotate(const Transform& transform, const float& degreesX, const float& degreesY, const float& degreesZ) noexcept;
 
-    inline Transform orbit(const Transform& transform, const vec3& degrees) noexcept;
-    inline Transform orbit(const Transform& transform, const float& degreesX, const float& degreesY, const float& degreesZ) noexcept;
+    Transform orbit(const Transform& transform, const vec3& degrees) noexcept;
+    Transform orbit(const Transform& transform, const float& degreesX, const float& degreesY, const float& degreesZ) noexcept;
 
-    inline Transform scale(const Transform& transform, const vec3& s) noexcept;
-    inline Transform scale(const Transform& transform, const float& sX, const float& sY, const float& sZ) noexcept;
+    Transform scale(const Transform& transform, const vec3& s) noexcept;
+    Transform scale(const Transform& transform, const float& sX, const float& sY, const float& sZ) noexcept;
 }
 
 #endif // !TRANSFORM_HPP
