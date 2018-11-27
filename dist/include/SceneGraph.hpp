@@ -22,7 +22,7 @@ public:
 
     shared_ptr<SceneObject> getSceneObject(const string& name) const noexcept;
 
-    const shared_ptr<SceneObject>& getRoot(void) const noexcept;
+    shared_ptr<SceneObject>& getRoot(void) noexcept;
 
     const shared_ptr<Camera>& getCamera(void) const noexcept;
 

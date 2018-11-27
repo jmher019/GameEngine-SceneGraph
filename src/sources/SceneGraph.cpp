@@ -30,7 +30,7 @@ shared_ptr<SceneObject> SceneGraph::getSceneObject(const string& name, const sha
     return nullptr;
 }
 
-const shared_ptr<SceneObject>& SceneGraph::getRoot(void) const noexcept {
+shared_ptr<SceneObject>& SceneGraph::getRoot(void) noexcept {
     return root;
 }
 
